@@ -28,22 +28,6 @@ The original project structure is preserved:
 - sancho-src/src/ → Java source code (Eclipse/SWT project layout)
 - sancho-src/LICENSE.txt → original license terms
 
-## Source layout
-
-The original project structure is preserved:
-
-- sancho-src/ → original distribution snapshot
-- sancho-src/src/ → Java source code (Eclipse/SWT project layout)
-- sancho-src/LICENSE.txt → original license terms
-
-## Source layout
-
-The original project structure is preserved:
-
-- sancho-src/ → original distribution snapshot
-- sancho-src/src/ → Java source code (Eclipse/SWT project layout)
-- sancho-src/LICENSE.txt → original license terms
-
 ## Versions
 
 - v0.9.4-23 → original upstream snapshot (circa 2005)
