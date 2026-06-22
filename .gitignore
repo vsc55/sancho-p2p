@@ -1,0 +1,6 @@
+# build output
+appimage/
+Sancho.AppDir/
+*.AppImage
+*.exe
+*.sh

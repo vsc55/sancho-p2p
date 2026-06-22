@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Sancho MLDonkey GUI
+Exec=sancho-wrapper.sh
+Icon=sancho
+Type=Application
+Categories=Network;

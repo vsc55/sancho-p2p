@@ -1,0 +1,22 @@
+
+sancho : the premiere p2p graphical user interface
+--------------------------------------------------
+
+Installation
+------------
+Extract and run "sancho"  (or ./sancho)
+
+Run "sancho -?" for any command line paramters.
+
+By default, preferences are created in ~/.sancho/
+
+(ie: C:\Documents and Settings\<name>\.sancho\ on windows)
+
+
+More Information
+----------------
+The FAQ on the homepage contains more information (with pictures):
+
+http://sancho-gui.sf.net
+
+

@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# Sample script to send *.torrent files in a directory to core
+
+# Configure your sancho path:
+
+mysancho=/home/sancho/sancho-linux-gtk/sancho
+
+if [ $# -ne 1 ]; then
+	echo 1>&2 "Usage: $0 [directory]"
+	exit 127
+fi
+
+fulldir=`(cd $1;pwd)` 
+
+for x in $fulldir/*.torrent; do 
+  if [ -f "$x" ]; then 
+		echo "Sending: $x"  
+		`$mysancho -l "$x"`
+		# rm "$x"
+  fi 
+done 

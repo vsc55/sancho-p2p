@@ -1,0 +1,16 @@
+Sancho Preserve Repository
+
+This repository contains an archival snapshot of Sancho GUI.
+
+Original copyright:
+Copyright (C) 2004-2005 Rutger M. Ovidius
+
+This project includes third-party components under their respective licenses:
+
+- Eclipse SWT / JFace: CPL
+- GNU Trove: LGPL
+- GNU RegExp: LGPL
+- JSch: BSD-style license
+- PircBot: permissive license
+
+See original LICENSE.txt for full details.

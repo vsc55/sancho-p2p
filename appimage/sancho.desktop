@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Sancho
+Exec=sancho
+Icon=sancho
+Type=Application
+Categories=Network;
+Comment=GUI client for MLDonkey peer-to-peer system
+GenericName=P2P Download Client
+StartupNotify=true
+X-Homepage=https://web.archive.org/web/20190304231314/http://sancho.awardspace.com/
+StartupWMClass=sancho

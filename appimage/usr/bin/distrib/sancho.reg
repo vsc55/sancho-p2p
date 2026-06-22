@@ -1,0 +1,11 @@
+REGEDIT4
+[HKEY_CLASSES_ROOT\ed2k]
+@="URL: ed2k Protocol"
+"URL Protocol"=""
+
+[HKEY_CLASSES_ROOT\ed2k\shell]
+
+[HKEY_CLASSES_ROOT\ed2k\shell\open]
+
+[HKEY_CLASSES_ROOT\ed2k\shell\open\command]
+@="\"c:\\sancho\\sancho.exe\" \"-l\" \"%1\""

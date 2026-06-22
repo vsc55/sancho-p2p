@@ -1,0 +1,1120 @@
+# (c) sancho : properties file
+# translation by flaq@gazeta.pl
+#
+# Changes:
+# 2004/08/18 [+] autoReconnect strings
+# 2004/08/20 [+] previewExtensions strings
+# 2004/08/24 [+] cmdline.j
+# 2004/09/08 [+] m.d.requestFileInfo
+# 2004/09/20 [+] s.r.resultDetails p.r.search.tooltips
+#                p.r.downloads.interestedInSources
+# 2004/10/05 [!] p.previewInfo
+# 2004/10/10 [+] ssh strings
+# 2004/10/15 [+] dd.f.setBrothers
+# 2004/10/17 [+] p.r.downloads.requestFileInfoDelay
+# 2004/10/20 [+] b.connect, b.exit, b.quit
+# 2004/11/15 [+] p.d.general.tableHilightSorted, p.d.general.tableSortedColumnBGColor
+#                p.r.general.useLastFile
+# 2004/12/20 [+] download.numClients, download.numSources
+# 2005/01/08 [+] mi.web.razorback2, chunkGraph color strings
+# 2005/01/24 [+] p.r.search.tooltipsOffset, hm.ask_pass, l.expandBranch
+#  	             p.r.downloads.fileDoubleClick
+# 2005/02/02 [+] l.find, l.stringNotFound, p.r.search.saveEntries, mi.clearCombos
+# 2005/02/22 [+] hm.ssh_http_proxy, hm.ssh_socks5_proxy
+# 2005/03/02 [+] l.all
+# 2005/03/09 [+] mi.web.filehash
+# 2005/03/26 [!] Shortened: e.state.connectedAndQueud, Downloading, Initiating, WasQueued
+#            [+] s.r.waiting, l.tableColumns, l.tabs, p.r.webbrowser.bookmarksFile,
+#                p.r.webbrowser.adrFile, s.r.tag.*, stats.*
+#                p.r.downloads.percentDecimals, p.r.downloads.rateDecimals
+# 2005/03/31 [+] hm.ssh_fwd_p, hm.ssh_plport, hm.ssh_prport
+# 2005/04/20 [+] p.d.general.humanReadable, mi.sig2datCopy, mi.magnetCopy
+# 2005/04/24 [+] menu.tools.screenshot*, m.srv.rename, p.d.general.humanReadableDecimals
+# 2005/05/05 [+] client.availability
+# 2005/05/07 [+] p.r.general.startMinimized, p.r.general.startTray, cmdline.min, cmdline.tray
+# 2005/05/23 [+] dd.f.remaining, p.d.general.maxMegabytes
+# 2005/07/01 [+] p.r.general.killSpawnedCoreDelay l.bandwidthConfigTitle, p.d.general.tableSortIndicator
+# 2005/08/02 [+] download.remaining
+# 2005/08/20 [+] p.d.general.addrBlockedColor, e.state.blocked, l.computeTorrent, l.tracker, l.comment
+#                menu.tools.coreVerbosity, b.deselectAll
+# 2005/09/20 [+] dd.c.identification*, l.passed, l.failed, l.none, *.sui, *tooltip
+# 2005/09/22 [+] p.d.downloads.containesFake, p.r.downloads.indicateFakes, p.r.general.systrayEnabled
+# 2005/10/24 [+] p.r.downloads.maxChunkGraphLength, p.r.general.systraySingleClick
+# 2005/10/26 [+] l.subFiles, l.general, fd.subFiles.*, l.networks, networks.*, p.d.stats.networkEnabled
+#                menu.file.loadTorrents
+# 2005/12/18 [+] td.*, p.r.downloads.previewDownloadDirectory, m.d.searchSimilar
+# 2006/01/04 [+] client.country
+
+b.connect = Polacz
+b.exit = Wyjscie
+b.quit = Koniec
+b.close = Zamknij
+b.default = Domyslny
+b.cancel = Anuluj
+b.noChange = Bez zmian
+b.ok = Ok
+b.okNoClose = Ok (nie zamykaj)
+b.registerLink = Zarejestruj skojarzenie
+b.reportBug = Zglos ten blad!
+b.unregisterLink = Wyrejestruj skojarzenie
+b.updateRegistry = Aktualizuj rejestr
+b.makeDefault = Aktualne ustawienia domyslnie
+b.saveAsCurrent = Zapisz ustawienia hosta jako aktualne
+b.deleteEntry = Usun wpis
+b.addAsNewEntry = Dodaj jako nowy wpis
+b.downloadAll = Pobierz wszystko
+b.browse = Przegladaj
+b.deleteLogFile = Usun log
+b.add = Dodaj
+b.remove = Usun
+b.deselectAll = Odznacz wszystko
+
+bw.default = Aktualne ustawienia
+bw.preset1 = Ustawienie: Wysokie pasmo
+bw.preset2 = Ustawienie: Srednie pasmo
+bw.preset3 = Ustawienie: Niskie pasmo
+
+channelUsers.name = Nick
+
+client.addr = Adres
+client.connectTime = Polaczony
+client.downloaded = DL
+client.kind = Rodzaj
+client.name = Nick
+client.network = Siec
+client.port = Port
+client.software = Soft
+client.state = Stan
+client.uploaded = UL
+client.hasFiles = Ma pliki
+client.availability = Dostep
+client.sui = SUI
+client.country = Kraj
+
+client.addr.tooltip = Adres klient
+client.connectTime.tooltip = Czas polaczenia
+client.downloaded.tooltip = Pobrano
+client.kind.tooltip = Rodzaj
+client.name.tooltip = Nazwa uzytkownika
+client.network.tooltip = Siec
+client.port.tooltip = Port
+client.software.tooltip = Program
+client.state.tooltip = Stan
+client.uploaded.tooltip = Wyslano
+client.hasFiles.tooltip = Ma pliki
+client.availability.tooltip = Dostepnosc
+client.sui.tooltip = Identyfikacja bezpiecznego uzytkownika
+client.country.tooltip = Panstwo
+
+clientDirectories.directory = Katalog
+clientDirectories.directory.tooltip = Katalog
+
+clientFiles.name = Nazwa
+clientFiles.size = Rozmiar
+clientFiles.format = Format
+clientFiles.media = Media
+clientFiles.codec = Kodek
+clientFiles.bitrate = Bitrate
+clientFiles.length = Czas
+clientFiles.hash = Hash
+
+clientFiles.name.tooltip = Nazwa
+clientFiles.size.tooltip = Rozmiar
+clientFiles.format.tooltip = Format
+clientFiles.media.tooltip = Media
+clientFiles.codec.tooltip = Kodek
+clientFiles.bitrate.tooltip = Bitrate
+clientFiles.length.tooltip = Czas
+clientFiles.hash.tooltip = Hash
+
+cmdline.c = uzyj tej konfiguracji
+cmdline.j = uzyj tego katalogu na konfiguracje 
+cmdline.l = wyslij link ed2k/sig2dat/magnet/torrent do silnika
+cmdline.h = polacz do host:port
+cmdline.u = polacz jako uzytkownik
+cmdline.p = uzyj tego hasla do polaczenia
+cmdline.f = wymus lokalizacje (np: en_US | de_DE | pl_PL)
+cmdline.b = nie laduj zakladki przegladarki
+cmdline.n = startuj bez silnika
+cmdline.d = wlacz opcje debugowania (jezeli dostepne)
+cmdline.m = monitor pasma
+cmdline.min = po starcie minimalizuj
+cmdline.tray = po starcie do tray'a
+
+core.connectionDeniedText = Proba polaczenia z silnikiem nieudana.\n(mldonkey: sprawdz ustawienie "allowed_ips" w "downloads.ini")\nSprobowac ponownie?
+core.connectionDeniedTitle = Polaczenie zabronione!
+core.invalidAddressText = Nazwa hosta nieprawidlowa, sprobowac ponownie?
+core.invalidAddressTitle = Zla nazwa hosta!
+core.invalidLoginText = Nieprawidlowa nazwa uzytkownika lub haslo, sprobowac ponownie?
+core.invalidLoginTitle = Zly login!
+core.multipleCoresText = Mozliwe, ze jest uruchomiona inna sesja programu!\n (lub poprzednia sesja zostala zakonczona nieprawidlowo)\n\nZakoncz ja, lub wlacz opcje "Pozwol na wielokrotne uruchomienie"\n\nWcisnij "Tak" aby kontynuowac mimo to.
+core.multipleCoresTitle = Blad sesji!
+core.notFoundText = nie akceptuje polaczen (nie znaleziono silnika), sprobowac ponownie?
+core.notFoundTitle = Nie znaleziono silnika!
+core.sshFailedText = Inicjalizacja SSH nieudana, sprobowac ponownie?
+core.sshFailedTitle = Polaczenie SSH nieudane!
+
+dd.c.activity = Stan:
+dd.c.addFriend = Dodaj do przyjaciol
+dd.c.address = Adres:
+dd.c.clientChunks = Fragmenty pliku u klienta
+dd.c.clientInformation = Informacja o kliencie
+dd.c.downloaded = Pobrano:
+dd.c.hash = Hash:
+dd.c.kind = Rodzaj:
+dd.c.localChunks = Fragmenty lokalnego pliku
+dd.c.name = Nick:
+dd.c.network = Siec:
+dd.c.port = Port:
+dd.c.rating = Ocena:
+dd.c.software = Soft:
+dd.c.uploaded = Wyslano:
+dd.c.hasFiles = Ma liste plikow: 
+dd.c.identification = Identyfikacja:
+dd.c.identification.invalid = Bledna
+dd.c.identification.successful = Poprawna
+dd.c.identification.none = Brak
+
+dd.f.age = Wiek:
+dd.f.alternativeFilenames = Alternatywna nazwa
+dd.f.availability = Dostepnosc:
+dd.f.cancelFile = Usun plik
+dd.f.chunks = Fragmenty:
+dd.f.chunkAges = Wiek fragmentow:
+dd.f.chunksInformation = Fragmenty (wszystkie sieci)
+dd.f.comment = Komentarz:
+dd.f.commitFile = Zrzuc plik
+dd.f.eta = ETA:
+dd.f.fileInformation = Informacja o pliku
+dd.f.fileName = Nazwa pliku:
+dd.f.hash = Hash:
+dd.f.last = Ostatnio:
+dd.f.pauseFile = Pauzuj
+dd.f.percent = Procent:
+dd.f.priority = Priorytet:
+dd.f.rate = Szybkosc:
+dd.f.renameFile = Zmien nazwe
+dd.f.resumeFile = Rozpocznij
+dd.f.reallyCancel = Naprawde skasowac?
+dd.f.size = Rozmiar:
+dd.f.sources = Zrodel:
+dd.f.transferInformation = Informacja o transferze
+dd.f.transferred = Pobrano:
+dd.f.remaining = Zostalo:
+dd.f.addComment = Dodaj komentarz
+dd.f.addMirror = Dodaj alternatywne
+dd.f.addMirrorInfo = Dodaj alternatywne linki http:// lub ftp:// (do tego samego pliku)
+dd.f.setBrothers = Ustaw jako rodzine
+
+download.age = Wiek
+download.availability = Dostep
+download.chunks = Fragmenty
+download.downloaded = DL
+download.eta = ETA
+download.eta2 = ETA2
+download.id = Id
+download.last = Ostatnio
+download.name = Nazwa pliku
+download.network = Siec
+download.percent = %
+download.priority = Priorytet
+download.rate = Kb/s
+download.size = Rozmiar
+download.sources = Zrodel
+download.numClients = Klientow
+download.numSources = Zrodel2
+download.remaining = Zostalo
+
+download.age.tooltip = Wiek
+download.availability.tooltip = Dostepnosc (Relatywna)
+download.chunks.tooltip = Fragmenty
+download.downloaded.tooltip = Pobrano
+download.eta.tooltip = ETA = (zostalo / predkosc)
+download.eta2.tooltip = ETA2 = (zostalo * wiek) / pobrano
+download.id.tooltip = Id
+download.last.tooltip = Ostatnio
+download.name.tooltip = Nazwa pliku
+download.network.tooltip = Siec
+download.percent.tooltip = Pobrano procent
+download.priority.tooltip = Priorytet
+download.rate.tooltip = Predkosc
+download.size.tooltip = Rozmiar
+download.sources.tooltip = Zrodel
+download.numClients.tooltip = Klientow (podane przez silnik)
+download.numSources.tooltip = Zrodel2 (podane przez silnik)
+download.remaining.tooltip = Pozostalo
+
+fd.subFiles.name = Nazwa
+fd.subFiles.size = Rozmiar
+
+fd.subFiles.name.tooltip = Nazwa pliku
+fd.subFiles.size.tooltip = Rozmiar pliku
+
+downloadComplete.name = Nazwa
+downloadComplete.size = Rozmiar
+downloadComplete.hash = Hash
+downloadComplete.date = Data
+
+downloadComplete.name.tooltip = Nazwa
+downloadComplete.size.tooltip = Rozmiar
+downloadComplete.hash.tooltip = Hash
+downloadComplete.date.tooltip = Data
+
+e.clientType.contact = Przeglad
+e.clientType.friend = Przyjaciel
+e.clientType.source = Zrodlo
+e.clientmode.direct = publiczne IP
+e.clientmode.firewalled = za firewallem
+e.extension.archive = Archiwum
+e.extension.audio = Muzyka
+e.extension.cdimage = ObrazCD
+e.extension.document = Dokument
+e.extension.picture = Obraz
+e.extension.video = Wideo
+e.fileState.aborted = Usunieto
+e.fileState.cancelled = Anulowano
+e.fileState.downloaded = Pobrano
+e.fileState.downloading = Sciaganie
+e.fileState.new = Nowy
+e.fileState.paused = Pauza
+e.fileState.queued = W kolejce
+e.fileState.shared = Udostepniony
+e.format.avi = avi
+e.format.generic = ogolny
+e.format.mp3 = mp3
+e.format.unknown = nieznany
+e.message.private = Prywatna
+e.message.public = Publiczna
+e.message.server = Serwer
+e.network.bittorrent = BitTorrent
+e.network.directconnect = DirectConnect
+e.network.donkey = Donkey
+e.network.fasttrack = FastTrack
+e.network.gnutella = Gnutella
+e.network.gnutella2 = Gnutella2
+e.network.multinet = MultiNet
+e.network.opennap = OpenNap
+e.network.overnet = Overnet
+e.network.soulseek = Soulseek
+e.network.unknown = Nieznany
+e.network.filetp = FileTP
+e.priority.high = Wysoki
+e.priority.low = Niski
+e.priority.normal = Normalny
+e.priority.very_high = B. wysoki
+e.priority.very_low = B. niski
+e.rating.excellent = doskonaly
+e.rating.fake = fake
+e.rating.high = wysoki
+e.rating.low = niski
+e.rating.normal = normalny
+e.rating.veryHigh = b. wysoki
+e.roomState.closed = Zamkniety
+e.roomState.open = Otwarty
+e.roomState.paused = Pauza
+e.roomState.unknown = Nieznany
+e.state.blacklisted = Czarna lista
+e.state.connected = Polaczony
+e.state.connectedAndQueued = W kolejce
+e.state.connectedDownloading = Sciaganie
+e.state.connectedInitiating = Inicjacja
+e.state.connecting = Laczenie
+e.state.newHost = Nowy host
+e.state.notConnected = Nie polaczony
+e.state.notConnectedWasQueued = Byl w kolejce
+e.state.removeHost = Usun host
+e.state.blocked = Zablokowany
+
+friends.addr = Adres IP
+friends.connectTime = Polaczony
+friends.downloaded = Pobrano
+friends.kind = Rodzaj
+friends.name = Nick
+friends.network = Siec
+friends.port = Port
+friends.software = Soft
+friends.state = Stan
+friends.uploaded = Wyslano
+friends.hasFiles = Ma pliki
+
+friends.addr.tooltip = Adres IP
+friends.connectTime.tooltip = Polaczony od
+friends.downloaded.tooltip = Pobrano
+friends.kind.tooltip = Rodzaj
+friends.name.tooltip = Nazwa uzytkownika
+friends.network.tooltip = Siec
+friends.port.tooltip = Port
+friends.software.tooltip = Program
+friends.state.tooltip = Stan
+friends.uploaded.tooltip = Wyslano
+friends.hasFiles.tooltip = Ma pliki
+
+graph.avg = kb/s srednio
+graph.max = kb/s max
+graph.uploads = Wyslano
+graph.downloads = Pobrano
+graph.clearHistory = Wyczysc historie
+graph.hourlyHistory = Godzinna historia
+graph.noHistory = Brak godzinnej historii...
+graph.historyAvg = Avg: 
+graph.historyMax = Max: 
+graph.historyHour = Godz: 
+graph.historyKBS = kb/s
+graph.reverseGraph = Odwroc wykres
+
+hm.message = To GUI pokazuje informacje dostarczane przez silnik.\nPodaj nazwe uzytkownika, haslo, adres IP i port GUI silnika.\n\nOpcjonalny menedzer hostow pozwala na zapamietanie ustawien silnika dla wielu hostow.
+hm.info = Podaj konfiguracje silnika.
+hm.host = Host:
+hm.port = Port:
+hm.username = Uzytkownik:
+hm.password = Haslo:
+hm.ask_pass = Pytaj o haslo przy laczeniu
+hm.description = Opis:
+hm.protocol = Protokol:
+hm.hostSettings = Ustawienia hosta: 
+
+hm.use_ssh = Uzyj tunelu ssh2 do przekierowania portow (zaawansowana opcja)
+
+hm.ssh_host = SSH host:
+hm.ssh_user = SSH uzytkownik:
+hm.ssh_pass = SSH haslo:
+hm.ssh_port = SSH port:
+
+hm.ssh_rhost = SSH zdalny host:
+hm.ssh_rport = SSH zdalny port:
+hm.ssh_lport = SSH lokalny port:
+
+hm.ssh_fwd_p = SSH przekieruj port podgladu http
+hm.ssh_plport = SSH lokalny port podgladu:
+hm.ssh_prport = SSH zdalny port podgladu:
+
+hm.ssh_socks5_proxy = SSH SOCKS5 proxy [host:port]:
+hm.ssh_http_proxy = SSH HTTP proxy [host:port]: 
+
+hm.setupTitle = Menedzer konfiguracji hostow
+hm.welcome = Witaj!
+hm.configureCore = Skonfiguruj silnik na kolejnych stronach.
+hm.coreSettings = Konfiguracja silnika
+hm.prefFile = Plik konfiguracji: 
+
+l.active = aktywnych
+l.available = Dostepny
+l.client = Klient
+l.clients = Zrodla
+l.connected = polaczonych
+l.default = Domyslnie
+l.delay = opoznienie
+l.details = detale
+l.disconnected = Rozlaczony
+l.downloads = Plikow
+l.false = nie
+l.file = Plik
+l.friends = Przyjaciele
+l.inUse = W uzyciu
+l.invalidInput = Bledny wpis
+l.lookupError = Blad wyszukania
+l.messageTabs = Zakladki wiadomosci
+l.rank = ranga:
+l.resolveError = Blad wyszukania hosta
+l.room = Pokoj
+l.rooms = Pokoje
+l.selector =  - Wybor
+l.selectorInfo = Przeciagnij i upusc lub uzyj przyciskow.
+l.sending = Wysylanie: 
+l.total = razem
+l.transferring = sciaganie
+l.true = tak
+l.uploaders = Klientow
+l.uploads = Plikow
+l.linkRipper = linkRipper
+l.serverUsers = Uzytkownicy serwera
+l.clientDirectories = Katalogi klienta
+l.clientFiles = Pliki klienta
+l.toolItems = Odnosniki
+l.favorites = Ulubione
+l.protocols = Protokoly
+l.fileExtensions = Rozszerzenia pliku
+l.current = Aktualna wersja: 
+l.latest = Ostania wersja: 
+l.users = Uzytkownikow
+l.IRC = IRC
+l.connectToIRC = Polaczyc z IRC?
+l.highID = wysoki
+l.lowID = niski
+l.colors = Kolory
+l.fonts = Czcionki
+l.pending = Kolejka
+l.disabled = (wylaczone)
+l.enableTable = Wlacz odswiezanie tabeli
+l.disableTable = Wylacz odswiezanie tabeli
+l.newBrowserTab = Nowa zakladka przegladarki?
+l.up = W gore
+l.down = W dol
+l.downloadComplete = Zakonczono sciaganie!
+l.downloadCompleteTitle = Zakonczone sciagania
+l.noCompleteDownloads = Nie znaleziono historii sciagnietych plikow (nie ma zakonczonych pobran?)
+l.downloaded = Sciagnieto
+l.paused = Pauzowanych
+l.queued = W kolejce
+l.bandwidthSettings = Ustawienia pasma
+l.bandwidthConfigTitle = Wybierz opcje (dodaj do listy na prawo)
+l.toggleDNDBox = Wlacz pole DND
+l.advanced = Zaawansowane
+l.all = Wszystkie
+l.unknown = <nieznany>
+l.newVersionTitle = Dostepna nowa wersja!
+l.newVersionText = Nowa wersja jest teraz dostepna!
+l.visit = Odwiedz
+l.empty = <pusty>
+l.shareDirectory = Udostepnij katalog
+l.unshareDirectory = Zakoncz udostepnianie katalogu
+l.waitingToReconnect = Czekam na ponowne polaczenie... 
+l.ext = ext:
+l.chunkGraphs = Fragmenty Graficznie
+l.expandBranch = Rozwin drzewo
+l.find = Znajdz
+l.stringNotFound = Nie znaleziono lancucha!
+l.tableColumns = Kolumny Tabeli
+l.tabs = Zakladki
+l.computeTorrent = Generuj plik torrent
+l.tracker = Tracker:
+l.comment = Komentarz:
+l.passed = ok
+l.failed = zla
+l.none = brak
+l.general = Ogolnie
+l.subFiles = Pliki
+l.networks = Sieci
+
+menu.file = Plik
+menu.view = Widok
+menu.tools = Narzedzia
+menu.help = Pomoc
+
+menu.view.tabSelector = Wybor zakladek
+
+menu.file.inputLink = Wprowadz link
+menu.file.loadTorrents = Wczytaj pliki .torrent
+menu.file.killCore = Zabij silnik
+menu.file.disconnect = Rozlacz
+menu.file.connect = Polacz
+menu.file.reconnect = Polacz ponownie
+menu.file.exit = Koniec
+menu.file.exitAndKill = Zabij silnik i wyjdz
+menu.file.stopAutoReconnect = Nie lacz ponownie
+
+menu.tools.irc = Klient IRC
+menu.tools.downloadHistory = Historia sciagania
+menu.tools.hostManager = Menedzer hostow
+menu.tools.preferences = Ustawienia
+menu.tools.debug = Debug
+menu.tools.coreVerbosity = Wyjscie silnika
+
+menu.tools.screenshot = Zrzut ekranu
+menu.tools.screenshot.window = Okno
+menu.tools.screenshot.screen = Ekran
+
+menu.help.homepage = Strona domowa
+menu.help.faq = FAQ
+menu.help.bugs = Zglos blad
+menu.help.features = Prosba o funkcje
+menu.help.checkVersion = Sprawdz nowa wersje
+menu.help.about = O...
+
+m.d.cancel = Anuluj
+m.d.clientDetails = Detale klienta
+m.d.commitAs = Zapisz jako
+m.d.rename = Zmien nazwe
+m.d.commitInput =  <Wprowadz nazwe pliku>
+m.d.commitSelected = Zapisz wybrane
+m.d.connectAll = Polacz wszystkie
+m.d.copyTo = Skopiuj do schowka
+m.d.editMP3Tags = Edytuj taga MP3
+m.d.fileDetails = Detale pliku
+m.d.pause = Pauza
+m.d.preview = Podglad
+m.d.priority = Priorytet
+m.d.priorityAbsolute = absolutny
+m.d.priorityRelative = relatywny
+m.d.reallyCancel = Jestes pewien, ze chcesz skasowac?
+m.d.resume = Przywroc
+m.d.verifyChunks = Zweryfikuj fragmenty
+m.d.requestFileInfo = Aktualizuj detale pliku
+m.d.searchSimilar = Szukaj podobnych
+
+m.srv.disconnect = Rozlacz
+m.srv.copyTo = Kopiuj adres do schowka
+m.srv.connect = Polacz
+m.srv.connectMore = Polacz wiecej serwerow
+m.srv.removeServer = Usun serwer
+m.srv.blacklist = Serwer na czarna liste
+m.srv.getServerUsers = Pobierz uzytkownikow serwera
+m.srv.preferredServer = Ustaw jako ulubiony
+m.srv.rename = Zmien nazwe
+
+mi.cb.lock = Zablokuj pasek narzedzi
+mi.cb.small = Male przyciski
+mi.cb.tabSelector = Wybor zakladek
+
+mi.d.addTab = Dodaj zakladke
+mi.d.removeTab = Usun zakladke
+mi.tabsOnTop = Zakladki na gorze
+mi.toggleTabs = Przelacz zakladki
+
+mi.refineFilterNegation = Zaneguj filter
+mi.refineFilterAlternates = Szukaj alternatywnych nazw (jezeli dostepne)
+mi.areYouSure = Jestes pewien?
+mi.clear = Wyczysc
+mi.close = Zamknij
+mi.columnSelector = Wybor kolumn
+mi.copy = Kopiuj
+mi.copyAll = Kopiuj wszystko
+mi.downloadSelected = Pobierz wybrane
+mi.downloadAll = Pobierz wszystkie
+mi.dynamicColumn = Dynamiczna kolumna
+mi.dynamicColumn = Dynamiczna kolumna
+mi.ed2kCopy = ed2k:// do schowka
+mi.sig2datCopy = sig2dat:// do schowka
+mi.magnetCopy = magnet:// do schowka
+mi.showAll = Pokaz wszystkie linki
+mi.clearCombos = Wyczysc pola
+
+mi.f.addByIP = Dodaj przyjaciela po IP
+mi.f.removeAllFriends = Usun wszystkich przyjaciol
+mi.f.removeFriend = Usun przyjaciela
+mi.f.sendMessage = Wyslij wiadomosc
+
+mi.disconnectClient = Rozlacz klienta
+mi.connectClient = Polacz klienta
+mi.getClientFiles = Pobierz liste plikow
+mi.viewClientFiles = Wyswietl liste plikow
+mi.filter = Pokaz
+mi.flipSash = Pion/Poziom
+mi.hide = Schowaj
+mi.maximize = Maksymalizuj
+mi.noFilters = Pokaz wszystko
+mi.refresh = Odswiez
+mi.restore = Przywroc
+mi.selectAll = Wybierz wszystko
+mi.setMinWidth = Ustaw min szerokosc
+mi.show = Pokaz
+mi.sort = Sortuj
+mi.sort = Sortuj
+mi.web.bitzi = Namiary w Bitzi
+mi.web.donkeyFakes = Sprawdz Donkey fake
+mi.web.filedonkey = Namiary w Filedonkey
+mi.web.filehash = Namiary w Filehash
+mi.web.jigle = Namiary w Jigle
+mi.web.srFakeCheck = Sprawdz fake w ShareReactor
+mi.web.razorback2 = Statystyki w Razorback2
+mi.webServices = Uslugi Web
+
+networks.name = Nazwa
+networks.uploaded = UL
+networks.downloaded = DL
+
+networks.name.tooltip = Nazwa sieci
+networks.uploaded.tooltip = Wyslano
+networks.downloaded.tooltip = Pobrano
+
+p.node.main = Ogolne
+p.node.display = Grafika
+p.node.windowsRegistry = Rejestr Windows
+
+p.localeInfo = Plik jezykowy sancho*.properties (np: sancho_pl_PL.properties)\nmusi sie znajdowac w katalogu HOME/.sancho/. (<puste>=zaden)
+p.coreExecutableInfo = *** Opcja ***\nSilnik moze byc odpalony (i utrzymywany) przez GUI przy kazdym starcie,\na takze silnik moze zostac automatycznie zabity przy zamykaniu GUI.\n\n(Nie uzywaj jezeli odpalasz silnik osobno)\n\nPrzyklad: c:\\mldonkey\\mlnet.exe lub /home/me/bin/mlnet\n
+p.explorerInfo = *** Opcja ***\nJezeli chcesz szybkiego dostepu do katalogu pobranych plikow, podaj przegladarke plikow\ni katalog (%1) do otworzenia gdy klikniesz ikone explorera.\n(Ikona pokaze sie tylko gdy pole jest wypelnione (*))\n
+p.d.console.background = Kolor tla:
+p.d.console.font = Czcionka:
+p.d.console.foreground = Kolor czcionki:
+p.d.console.highlight = Kolor podswietlenia:
+p.d.console.inputBackground =  Kolor tla pola komend:
+p.d.console.inputForeground = Kolor czcionki pola komend:
+p.d.downloads.available = Plik dostepny:
+p.d.downloads.background = Tlo:
+p.d.downloads.downloaded = Plik sciagniety:
+p.d.downloads.font = Czcionka:
+p.d.downloads.paused = Plik zapauzowany:
+p.d.downloads.queued = Plik w kolejce:
+p.d.downloads.rateAbove0 = Predkosc ponad 0:
+p.d.downloads.rateAbove10 = Predkosc ponad 10:
+p.d.downloads.rateAbove20 = Predkosc ponad 20:
+p.d.downloads.unavailable = Plik niedostepny:
+p.d.downloads.containsFake = Zawiera "Fake":
+p.d.downloads.rateAbove20FontData = Predkosc ponad 20:
+p.d.downloads.rateAbove10FontData = Predkosc ponad 10:
+p.d.downloads.rateAbove0FontData = Predkosc ponad 0:
+p.d.downloads.pausedFontData = Zapauzowane:
+p.d.downloads.queuedFontData = Zakolejkowane:
+p.d.downloads.downloadedFontData = Sciagniete:
+p.d.chunk.clientCColor2 = Klient: Fragment nie kompletny
+p.d.chunk.clientAColor0 = Klient: Nie ma fragmentu
+p.d.chunk.clientAColor1 = Klient: Ma fragment
+p.d.chunk.clientAColor2 = Klient: (nieznane) 
+p.d.chunk.fileCColor2 = Plik: Fragment kompletny
+p.d.chunk.fileCColor3 = Plik: Fragment kompletny/zweryfikowany
+p.d.chunk.fileAColor0 = Plik: Fragment nie dostepny
+p.d.chunk.fileIRGB = Plik: Fragment dostepny (zmienna intensywnosc) 
+p.d.chunk.progress1 = Poczatek paska postepu
+p.d.chunk.progress2 = Koniec paska postepu
+p.d.general.addrBlockedColor = Kolor zablokowanych adresow:
+p.d.general.displayGridLines = Pokaz linie siatki w tabelach
+p.d.general.displayTableColors = Pokaz kolory w tabelach
+p.d.general.humanReadable = Pokaz rozmiary czytelnie (k/M/G)
+p.d.general.maxMegabytes = Ogranicz konwersje rozmiaru do k/M (bez G lub T)
+p.d.general.humanReadableDecimals = Cyfr po przecinku (domyslnie=-1)
+p.d.general.flatInterface = Uzyj plaskiego interfejsu (*)
+p.d.general.headerFont = Czcionka naglowka:
+p.d.general.splashScreen = Pokaz okno powitalne
+p.d.general.tableFont = Czcionka tabel:
+p.d.general.useGradient = Uzyj gradientu w naglowkach (*)
+p.d.general.tablesBackgroundColor = Domyslny kolor tla tabel:
+p.d.general.tableAlternateBGColors = Alternatywne kolory tla wierszy w tabelach
+p.d.general.tableAlternateBGColor = Alternatywny kolor tla wierszy w tabelach:
+p.d.general.tableSortIndicator = Uzyj wskaznika posortowanej kolumny
+p.d.general.tableHilightSorted = Podswietl posortowana kolumne
+p.d.general.tableSortedColumnBGColor = Kolor tla posortowanej kolumny:
+p.d.general.dndBackgroundColor = Kolor tla pola DND:
+p.d.general.dndForegroundColor = Kolor czcionki pola DND:
+p.d.general.dndFont = Czionka pola DND:
+p.d.general.dndWidth = Rozmiar pola DND (znakow): 
+p.d.graphs.background = Kolor tla:
+p.d.graphs.downloads1 = Pobieranie kolor1:
+p.d.graphs.downloads2 = Pobieranie kolor2:
+p.d.graphs.grid = Kolor siatki:
+p.d.graphs.labelBackground = Kolor tla aktualnej predkosci:
+p.d.graphs.labelLine = Kolor linii aktualnej predkosci:
+p.d.graphs.labelText = Kolor tekstu aktualnej predkosci:
+p.d.graphs.text = Kolor tekstu:
+p.d.graphs.uploads1 = Wysylanie kolor1:
+p.d.graphs.uploads2 = Wysylanie kolor2:
+p.d.stats.networkEnabled = Kolor wlaczonej sieci:
+p.d.irc.inNickColor = Kolor wiadomosci o przychodzacej osobie:
+p.d.irc.outNickColor = Kolor wiadomosci o odchodzacej osobie:
+p.d.irc.joinColor = Kolor: Wejscie:
+p.d.irc.partColor = Kolor: Wyjscie:
+p.d.irc.modeColor = Kolor: Status:
+p.d.clients.hasFilesColor = Kolor: Ma pliki:
+p.d.clients.connectedColor = Kolor: Polaczony:
+p.d.clients.disconnectedColor = Kolor: Rozlaczony:
+p.d.search.alreadyDownloaded = Kolor: Juz pobrane:
+p.d.search.default = Kolor: Domyslny:
+p.d.search.fake = Kolor: Wynik zawiera "fake":
+p.d.server.connected = Kolor: Polaczony:
+p.d.server.connecting = Kolor: Laczenie:
+p.d.server.disconnected = Kolor: Rozlaczony:
+p.delayInfo = Wieksze opoznienie odswiezania = mniejsze uzycie CPU.\n
+
+pending.addr = Adres
+pending.connectTime = Polaczony
+pending.downloaded = DL
+pending.filename = Nazwa pliku
+pending.kind = Rodzaj
+pending.name = Nick
+pending.network = Siec
+pending.port = Port
+pending.software = Soft
+pending.state = Stan
+pending.uploaded = UL
+pending.sui = SUI
+
+pending.addr.tooltip = Adres
+pending.connectTime.tooltip = Polaczony od
+pending.downloaded.tooltip = Pobrano
+pending.filename.tooltip = Nazwa pliku
+pending.kind.tooltip = Rodzaj
+pending.name.tooltip = Nazwa uzytkownika
+pending.network.tooltip = Siec
+pending.port.tooltip = Port
+pending.software.tooltip = Program
+pending.state.tooltip = Stan
+pending.uploaded.tooltip = Wyslano
+pending.sui.tooltip = Identyfikacja bezpiecznego uzytkownika
+
+p.mouseOverHelp = Najedz kursorem na nazwe opcji aby zobaczyc opis
+p.registerInfo = *** Wazne ***\nRejestruj skojarzenia tylko jezeli silnik uruchomiony jest na *tym samym komputerze* co gui!\nSilnik bedzie odczytywal pliki z pamieci podrecznej przegladarki (lokalny dysk twardy).\n(jezeli uzywasz silnika > 2.5.17 ten wymog jest nieaktualny)
+p.empty = Wybierz pozycje z listy
+p.emptyFavorites = Skonfiguruj podkatalog ulubionych IE w ustawieniach.
+p.general = Ogolne
+p.explorer = Eksplorer
+p.previewInfo = *** Opcja ***\nJesli nie chcesz uruchamiac komendy "preview" z silnika, ta opcja\npozwala odpalic binarke z tymczasowa nazwa pliku jako argumentem.\nDomyslnie=puste. (uzywany katalog=mld temp katalog)
+p.previewHttpInfo = *** Ekstra ***\nJezeli chcesz uzyc strumienia HTTP silnika jako parametru %1\nzamiast lokalnej nazwy pliku, wlacz ta opcje. Zostana uzyte http_port ustawiony w silniku\ni aktualne ustawienia polaczonego hosta.\nNp: "mplayer http://user:pass@connected_host:http_port/preview_download?q=#"
+p.previewExtensionsInfo = Opcja: Uzyj aplikacji okreslonych dla rozszerzen pliku\n(musisz wyzej ustawic domyslna binarke do podgladu)
+p.favoritesDirectoryInfo = *** Opcja ***\nUstaw katalog ulubionych IE dla zakladki przegladarki.\nNajlepiej wybierz maly podkatalog aby menu ulubionych tworzylo sie szybciej\n\nPrzyklad: C:\\Documents and Settings\\<Name>\\Favorites\\P2P\\\n\n
+p.r.console.toolItem = Komenda odnosnika konsoli:
+p.r.console.toolItems = Liczba odnosnikow w konsoli do pokazania (0-9):
+p.r.console.maxLines = Maxymalna liczba pamietanych linii:
+p.r.downloads.downloadCompleteDialog = Otworz wyskakujace okno po zakonczeniu sciagania
+p.r.downloads.displayChunkGraphs = Pokaz fragmenty graficznie
+p.r.downloads.maxChunkGraphLength = Maksymalna dlugosc grafiki fragmentow w tabeli (dluzszy=wolniej):
+p.r.downloads.dragAndDrop = Wlacz "Przeciagnij i Upusc" (*)
+p.r.downloads.maintainSortOrder = Zachowaj porzadek sortowania (moze powodowac dodatkowe mruganie)
+p.r.downloads.previewExecutable = Binarka podgladu:
+p.r.downloads.previewWorkingDirectory = Uzywany katalog podgladu:
+p.r.downloads.previewDownloadDirectory = Katalog do pobierania podgladu:
+p.r.downloads.previewUseHttp = Uzyj strumienia http silnika jako %1
+p.r.downloads.tableCellEditors = Wlacz edycje komorek tabeli (zmiana nazwy w tabeli) (*)
+p.r.downloads.pollUpstats = Automatyczne odswiezanie tabeli klientow (upload)
+p.r.downloads.pollDelay = Odswiezanie (sekundy):
+p.r.downloads.requestFileInfoDelay = Odswiezania detali aktywnego pliku (sekundy) (0=nigdy):
+p.r.downloads.fileDoubleClick = Podwojne klikniecie na plik:
+p.r.downloads.updateDelay = Odswiezanie (sekundy): 
+p.r.downloads.explorerExecutable = Binarka eksplorera:
+p.r.downloads.explorerOpenFolder = Katalog pobranych:
+p.r.downloads.downloadCompleteLog = Loguj zakonczone sciagania (katalog domowy)
+p.r.downloads.downloadTabsOnBottom = Naglowek tabeli pobierania na dole (*)
+p.r.downloads.interestedInSources = Pobierz zrodla z silnika mldonkey (wylaczenie moze zaoszczedzic pasmo/pamiec)
+p.r.downloads.percentDecimals = Procent: cyfr po przecinku
+p.r.downloads.rateDecimals = Predkosc: cyfr po przecinku
+p.r.downloads.indicateFakes = Zmien kolor plikow ktore zawieraja "Fake" w nazwie/komentarzu
+p.r.general.autoReconnect = Polacz ponownie po rozlaczeniu
+p.r.general.autoReconnectDelay = Czas (sekundy) pomiedzy probami polaczenia
+p.r.general.coreExecutable = Opcjonalna binarka silnika:
+p.r.general.defaultBrowser = Domyslna przegladarka:
+p.r.general.killSpawnedCoreOnExit = Zabij odpalony silnik przy zamykaniu sancho
+p.r.general.killSpawnedCoreDelay = Wymus zabicie po X sekundach:
+p.r.general.hostManagerOnStart = Pokaz menedzera hostow przy starcie
+p.r.general.useLastFile = Uzyj ostatnich ustawien polaczen menedzera hostow przy wysylaniu linkow (*)
+p.r.general.killCoreOnExit = Zabij silnik przy wyjsciu
+p.r.general.versionCheck = Alarmuj kiedy nowa wersja bedzie dostepna (*)
+p.r.general.multipleInstances = Pozwol na wielokrotne uruchomienie
+p.r.general.systrayOnClose = Przycisk zamkniecia: minimalizuj do tray'a
+p.r.general.systrayOnMinimize = Przycisk minimalizacji: minimalizuj do tray'a
+p.r.general.systrayEnabled = Uzyj tray'a jezeli dostepny
+p.r.general.systraySingleClick = Pojedyncze klikniecie na tray przywraca/chowa (odznaczone=podwojne)
+p.r.general.startMinimized = Po starcie: minimalizuj
+p.r.general.startTray = Po starcie: minimalizuj do tray'a
+p.r.general.locale = (*) Uzyj pliku jezykowego:
+p.r.graphs.updateDelay = Odswiezanie (sekundy):
+p.r.irc.ircServer = Domyslny serwer: 
+p.r.irc.ircChannel = Domyslny kanal: 
+p.r.irc.ircNickname = Domyslny nick: 
+p.r.irc.autoConnect = Automatyczne laczenie (jezeli nie, spytaj Tak/Nie zanim odpalisz klienta)
+p.r.rooms.autoClose = Automatyczne zamykanie "zamknietych" pokoi
+p.r.rooms.autoOpen = Automatyczne otworz aktywne (ale nie otwarte) pokoje (nie zalecane)
+p.r.search.forceDownload = Zakladaj 'force_download' mozliwych zduplikowanych pobran
+p.r.search.filterPornography = Filtruj pornografie
+p.r.search.filterProfanity = Filtruj profanacje
+p.r.search.saveEntries = Zapisz lancuchy wyszukiwania (z rozwijalnego menu) pomiedzy sesjami
+p.r.search.tooltips = Pokaz podpowiedz po najechaniu na wynik wyszukiwania
+p.r.search.tooltipsOffset = Odsun podpowiedzi (daleko od kursora, ale nie interaktywne)
+p.r.servers.displayNodes = Dolacz wezly GNUT/FastTrack w tabeli (lista moze byc wielka i powolna!) (*)
+p.r.webbrowser.toolItems = Liczba odnosnikow do pokazania (0-9):
+p.r.webbrowser.toolItem = Odnosnik do:
+p.r.webbrowser.maxFavoriteLength = Maksymalna szerokosc ulubionych w menu:
+p.r.webbrowser.favoritesDirectory = Katalog ulubionych:
+p.r.webbrowser.bookmarksFile = Zakladki: plik bookmarks.html:
+p.r.webbrowser.adrFile = Zakladki: plik .ADR:
+p.r.webbrowser.tabsOnTop = zakladki na gorze (dol = domyslnie) (*)
+p.restart = (*) = Opcja wymaga restartu GUI
+p.webBrowserInfo = Przy uzywaniu funkcji ktore odpalaja przegladarke, zostana uzyte wyszczegolnione tutaj aplikacje.\nW linuxie, domyslna kolejnosc poszukiwan (jezeli to ustawienie jest puste) to: Mozilla>Konqueror>Netscape\n
+
+r.tt.alreadyDownloaded = Juz pobrano!
+r.tt.availability = Dostep: 
+r.tt.bitrate = Bitrate: 
+r.tt.format = Format: 
+r.tt.length = Czas: 
+r.tt.md4 = MD4: 
+r.tt.network = Siec: 
+r.tt.size = Rozmiar: 
+r.tt.sources = Zrodel: 
+
+rip.rip = Rip
+rip.ripping = Ripuje...
+rip.url = URL: 
+rip.waiting = Czekam na dane...
+rip.found = Znaleziono linki
+rip.error = Blad polaczenia!
+
+result.availability = Dostep
+result.bitrate = Bitrate
+result.codec = Kodek
+result.format = Format 
+result.length = Czas
+result.media = Media
+result.name = Nazwa
+result.network = Siec
+result.size = Rozmiar
+result.completeSources = CS
+
+result.availability.tooltip = Dostepnosc
+result.bitrate.tooltip = Bitrate
+result.codec.tooltip = Kodek
+result.format.tooltip = Format
+result.length.tooltip = Czas
+result.media.tooltip = Media
+result.name.tooltip = Nazwa
+result.network.tooltip = Siec
+result.size.tooltip = Rozmiar
+result.completeSources.tooltip = Kompletne zrodla
+
+roomUsers.addr = Adres IP
+roomUsers.name = Nick
+roomUsers.port = Port
+roomUsers.server = Serwer
+roomUsers.tags = Tagi
+
+roomUsers.addr.tooltip = Adres IP
+roomUsers.name.tooltip = Nazwa uzytkownika
+roomUsers.port.tooltip = Port
+roomUsers.server.tooltip = Serwer
+roomUsers.tags.tooltip = Tagi
+
+rooms.name = Nazwa
+rooms.network = Siec
+rooms.number = Liczba
+rooms.state = Stan
+rooms.users = Uzytkownikow
+
+rooms.name.tooltip = Nazwa
+rooms.network.tooltip = Siec
+rooms.number.tooltip = Liczba
+rooms.state.tooltip = Stan
+rooms.users.tooltip = Uzytkownikow
+
+s.a.album = Album:
+s.a.artist = Artysta:
+s.a.bitrate = Bitrate:
+s.a.title = Tytul:
+
+s.alreadyDownloadedText = Ten plik juz zostal sciagniety, sciagnac ponownie?
+s.alreadyDownloadedTitle = Juz pobrano!
+s.continue = Kontynuuj szukanie
+s.download = Pobierz
+s.format = Format:
+s.fileType = Typ pliku:
+s.minAvail = Min dostep:
+s.m.noNetwork = Brak polaczenia z siecia
+s.m.all = Wszystko
+s.m.audio = Muzyka
+s.m.image = Obraz
+s.m.software = Soft
+s.m.document = Dokument
+s.m.video = Wideo
+s.maxResults = Max wynikow
+s.maxSize = Max rozmiar
+s.minSize = Min rozmiar
+s.network = Siec
+s.noNetwork = Brak sieci z mozliwoscia szukania
+s.r.resultDetails = Detale wyniku
+s.r.copyName = Kopiuj nazwe do schowka
+s.r.download = Pobierz
+s.r.searchesWaiting = Oczekujacych wyszukiwan 
+s.r.waiting = Oczekujacych: 
+s.r.searching = szukam...
+s.r.searchingFor = Szukam 
+s.r.jigleComplete = Szukanie w Jigle zakonczone (brak wynikow)
+s.results = wynikow
+s.search = Szukaj
+s.searchFor = Szukaj:
+s.searchTip = Wskazowka
+s.searchTipText = Dostepne wyrazenia logiczne to "AND", "OR" i "ANDNOT". Wyrazy sa "AND"owane domyslnie.
+s.sl.startedDownload = Rozpoczetych pobran: 
+s.stop = Zatrzymaj wyszukiwanie
+s.jigle.availability = Dostep:
+s.jigle.offset = Odstep:
+s.jigle.extension = Rozszerzenie:
+s.jigle.sort = Sortowanie:
+s.jigle.sort.d_availability = Dostep (malejaco)
+s.jigle.sort.a_avail = Dostep (rosnaco)
+s.jigle.sort.d_relevance = Ocena (malejaco)
+s.jigle.sort.a_relevance = Ocena (rosnaco)
+s.jigle.sort.d_size = Rozmiar (malejaco)
+s.jigle.sort.a_size = Rozmiar (rosnaco)
+s.min = Min
+s.max = Max
+s.tab.advanced = Zaawansowane
+s.tab.audio = Muzyka
+s.tab.simple = Proste
+s.tab.jigle = Jigle
+s.searchType = Typ szukania:
+s.st.remote = Zdalne
+s.st.local = Lokalne
+s.st.subscribe = Zapisz
+s.r.tag.length = czasX
+s.r.tag.time = czas
+s.r.tag.seconds = sekundy
+s.r.tag.codec = kodek
+s.r.tag.resolution = rozdzielczosc
+s.r.tag.samplerate = samplerate
+s.r.tag.bitrate = bitrate
+s.r.tag.quality = jakosc
+s.r.tag.availability = dostepnoscV
+s.r.tag.completesources = kompletne zrodla
+
+servers.address = Adres
+servers.description = Opis
+servers.preferred = Ulubiony
+servers.files = Plikow
+servers.name = Nazwa
+servers.network = Siec
+servers.port = Port
+servers.score = Punkty
+servers.state = Stan
+servers.users = Uzytkownikow
+servers.id = Id
+
+servers.address.tooltip = Adres
+servers.description.tooltip = Opis
+servers.preferred.tooltip = Ulubiony
+servers.files.tooltip = Plikow
+servers.name.tooltip = Nazwa
+servers.network.tooltip = Siec
+servers.port.tooltip = Port
+servers.score.tooltip = Punkty
+servers.state.tooltip = Stan
+servers.users.tooltip = Uzytkownikow
+servers.id.tooltip = Id
+
+serverUsers.name = Nick
+serverUsers.tags = Tagi
+serverUsers.addr = Adres IP
+serverUsers.port = Port
+
+serverUsers.name.tooltip = Nazwa uzytkownika
+serverUsers.tags.tooltip = Tagi
+serverUsers.addr.tooltip = Adres IP
+serverUsers.port.tooltip = Port
+
+sl.addLocalTorrents = Dodaj torrenty z HD
+sl.coreConsole = Otworz konsole silnika
+sl.linkEntry = Przelacz okno wprowadzania linkow
+sl.linkEntryHeader = Wpisz/Wklej dowolny link [ed2k], [sig2dat], [torrent], lub [magnet] i wcisnij "Wyslij".
+sl.linksSent = Wyslano linkow: 
+sl.n.connect = polacz wiecej
+sl.n.connectedTo = polaczony do: 
+sl.n.disable = wylacz
+sl.n.disabled = wylaczony
+sl.n.enable = wlacz
+sl.n.enabled = wlaczony
+sl.n.nodes = pola
+sl.n.server = serwer
+sl.send = Wyslij
+sl.clear = Wyczysc
+sl.rip = Otworz Rippera linkow
+sl.httpAdd = Dodaj sciaganie http/ftp/ssh (fileTP)
+sl.http.linkTo = Link  http://, ftp:// or ssh:// do pobrania:
+sl.http.title = FileTP: Wpisz URL
+
+splash.connecting = Lacze z silnikiem
+splash.creatingGUI = Tworze GUI
+splash.creatingTab = Tworze zakladke: 
+splash.initializeSocket = Inicjalizuje gniazdo
+splash.spawningCore = Odpalam silnik
+splash.spawningAborted = Nie odpalam silnika (port w uzyciu)
+
+stats.downloading = Plikow
+stats.downloaded = Pobrano
+stats.uploaded = Wyslano
+stats.shared = Udostepniono
+stats.downRate = DL
+stats.upRate = UL
+stats.network = Siec
+stats.enabled = wlaczone
+stats.disabled = wylaczone
+ 
+t.f.addByIP = Dodaj po IP
+t.f.host = Host:
+t.f.port = Port:
+t.r.availableRooms = Dostepne Pokoje
+t.r.closeAll = Zamknij wszystkie pokoje
+t.r.closeClosed = Zamknij wszystkie zamkniete pokoje
+t.r.roomConsole = Konsola
+t.r.roomUsers = Uzytkownicy w pokoju
+t.r.rooms = Pokoje
+
+t.search.results = Wyniki
+t.srv.linkToMet = Link do pliku server.met:
+t.srv.linkToMetDefault = http://ocbmaurice.dyndns.org/pl/slist.pl/server.met?download/server-best.met
+
+tab.console = Konsola
+tab.console.tooltip = Okno Konsoli
+tab.friends = Przyjaciele
+tab.friends.tooltip = Okno Przyjaciol/Wiadomosci
+tab.preferences = Ustawienia
+tab.preferences.tooltip = Ustawienia
+tab.rooms = Pokoje
+tab.rooms.tooltip = Pokoje 
+tab.search = Szukaj
+tab.search.tooltip = Okno szukania
+tab.servers = Serwery
+tab.servers.tooltip = Okno serwerow
+tab.shares = Udostepnione
+tab.shares.tooltip = Udostepnione
+tab.statistics = Statystyki
+tab.statistics.tooltip = Wykres
+tab.transfers = Transfery
+tab.transfers.tooltip = Okna transferow
+tab.webbrowser = Przegladarka
+tab.webbrowser.tooltip = Przegladarka
+
+td.menuText = Pobierz (lokalnie)
+td.title = Katalog docelowy
+td.file = Plik:
+td.destination = Cel:
+td.status = Status:
+td.invalidDirectory = Zly katalog
+
+ti.d.tabName = Nazwa zakladki?
+ti.d.collapseAll = Zwin wszystko
+ti.d.commitAll = Zrzuc wszystkie pliki
+ti.d.expandAll = Rozwin wszystko
+ti.d.fileExplorer = Otworz eksplorera plikow
+ti.d.toggleClients = Przelacz tabele zrodel
+ti.f.closeAllTabs = Zamknij wszystkie zakladki
+ti.s.addServer = Dodaj serwer po IP
+ti.s.addServerMet = Dodaj server.met
+ti.s.cleanOld = Wyczysc stare serwery
+ti.u.reshare = Udostepnij ponownie katalogi (aktualizuj udostepnione)
+ti.u.share = Udostepnij nowy katalog
+ti.u.unshare = Zakoncz udostepnianie katalogu
+ti.refine = Filtr
+ti.clearRefine = Wyczysc filtr
+ti.pauseSearch = Pauzuj to wyszukiwanie 
+ti.continueSearch = Kontynuuj pobieranie wynikow wyszukiwania
+ti.extendSearch = Rozszerz poszukiwania
+ti.web.forward = W przod
+ti.web.back = Wstecz
+ti.web.home = Strona startowa
+ti.web.stop = Stop
+ti.web.refresh = odswiez
+ti.web.sancho = strona domowa sancho
+
+upload.name = Nazwa pliku
+upload.network = Siec
+upload.requests = Prosb
+upload.uploaded = UL
+upload.size = Rozmiar
+
+upload.name.tooltip = Nazwa pliku
+upload.network.tooltip = Siec
+upload.requests.tooltip = Prosb
+upload.uploaded.tooltip = UL
+upload.size.tooltip = Rozmiar
+
+uploaders.addr = Adres
+uploaders.connectTime = Polaczony
+uploaders.downloaded = DL
+uploaders.filename = Nazwa pliku
+uploaders.kind = Rodzaj
+uploaders.name = Nick
+uploaders.network = Siec
+uploaders.port = Port
+uploaders.software = Soft
+uploaders.state = Stan
+uploaders.uploaded = UL
+uploaders.sui = SUI
+
+uploaders.addr.tooltip = Adres
+uploaders.connectTime.tooltip = Polaczony
+uploaders.downloaded.tooltip = Pobrano
+uploaders.filename.tooltip = Nazwa pliku
+uploaders.kind.tooltip = Rodzaj
+uploaders.name.tooltip = Nazwa uzytkownika
+uploaders.network.tooltip = Siec
+uploaders.port.tooltip = Port
+uploaders.software.tooltip = Program
+uploaders.state.tooltip = Stan
+uploaders.uploaded.tooltip = Wyslano
+uploaders.sui.tooltip = Identyfikacja bepiecznego uzytkownika
+

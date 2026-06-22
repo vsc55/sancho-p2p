@@ -1,0 +1,1035 @@
+2006/09/24:
+  * Fix file details crash on older cores [#1564486]
+  * Remove set brothers option
+  
+2006/08/23:
+  * Add basic user/group support
+    - add columns to download table, and file details dialog 
+    - chgrp/chown from download rt-click menu
+    - requires latest mldonkey with multi-user support 
+    - regex filter works on user/groups as well
+    
+2006/07/05;
+  * Allow extending of searches when no results are displayed [#1543381]
+  * Support libMagic file comments in File Details, Subfile Table, and Shares 
+    Table (requires latest mldonkey)
+  * Support file comments display in Rt-clk File Details + Comments column
+    (toggleable in TableColumn Selector) (requires latest mldonkey)
+  * Statistics Tab includes additional tabs with network specific client 
+    software/stat tables
+     - copy to clipboard retains column layout (tableColumn selector)
+     - refresh interval can be set in Prefs->Stats 
+     - requires latest mldonkey
+
+2006/07/02:
+  * Upgrade to SWT 3.2 final
+  * *nix binaries now search for and set MOZILLA_FIVE_HOME env variable
+    just like Eclipse (for Webbrowser tab). If it fails you can set your 
+    own env variables or disable web tab (see online FAQ).  The gcj binaries
+    no longer require a startup script (experimental).
+  * Fix some display quirks on OSX
+  * Prefs->Display->Console Toggle UnderlineUrls option (might be slow on gtk)
+  * Prefs->Transfers->Display file completion percent on chunk graphs option
+  
+2006/05/28:
+  * Servers: change "add_url" to "urladd" [#1488169]
+  * Fix unshare directory dialog [1495747]
+  * Prefs->Display toggle verbose numbers (avail/priority) [#1484442]
+  * SSH2: add SOCKS4 proxy support
+  
+2006/05/27:
+  * Win32: gcj compiled version now also works on Win98 (requires 
+    latest comctl32.dll and unicows.dll; links on download page)
+
+2006/05/03:
+  * Fix dock icon resolution on OSX [#email]
+  * Fix ssh2 banners being hidden behind splash screen [#email]
+  * Toggle chunk graphs on/off directly from downloads table menu
+  * SWT update: 
+    - download table chunk graphs use latest swt api (experimental)
+ 
+2006/04/22:
+  * Fix ampersand display in search tabs [#1464382]
+  * LinkRipper supports basic ftp directory lists (doubleClick a dir to cd) [#email]
+  * Updated libgcj - local preview over ssh2 connections now works with the gcj builds
+  * SWT updates:
+    - gtk table columns can shrink thinner than header text
+    - gtk table columns with right aligned text should be fixed
+
+2006/04/01:
+  * Experimental: SWT supports virtual trees now, so all trees have been made virtual. 
+    (downloads tree) They sort & update much faster and alternating tableRow colors are 
+    quicker to update (if enabled in prefs->display). 
+    (win32 requires XP with manifest for best flicker-free results)
+  * Tables: Disabled sort-column colour configuration - SWT now uses the OS's setting
+  * Files/clients not reporting chunk availability will have their chunk graphs rendered in
+    all black (if chunk graphs are enabled)
+  * Sharing strategies added to the share dialog ("+" button in shares tab) [#1427308]
+  * Clicking status line when it reports new messages will switch to friends tab [#1431001]
+  * Changed Razorback2 web service link
+  * Prefs->Downloads->Web services lets you set up a few of your own web services that 
+    will be added to the rt-click menu. The URL allows %FILEHASH% %FILESIZE% and %FILEED2K%
+    replacement variables.
+  * Add preference to disable version popup on new verions (Prefs->general) (#1411070)
+    - If "new version check" is enabled, the statusline will still be updated but there 
+    will be no popup if this option is disabled
+  * Servers: DoubleClick servers to toggle connect/disconnect status
+  * Fix: crash on delete keypress in File Details->Subfiles table
+  * SWT updates: 
+    - chunk graphs should now work on gtk 
+    - x86_64 version should load properly
+    - OSX blank white box (due to web browser) should be fixed
+    - OSX now has a universal binary (for ppc and intel)
+
+2006/01/23:
+  * Fix spawning 'Explorer' button from transfers vew [#1413220]
+  
+2006/01/19:
+  * Fix Percent column sort order [#1410247]
+  * Win32 Java version: Writes a "javaw.exe.manifest" file to the directory
+    containing javaw.exe if one does not exist (from system path), so that XP 
+    uses the XP theme.
+    
+2006/01/18:
+  * Preview->Local download now works properly if mldonkey requires a password 
+    [#1409189]
+  * Search: support result updating
+    - If mldonkey reports X sources for a result but later finds that same result
+    on another server with >X sources, it now sends an update for this result  
+    (requires latest mldonkey)
+
+2006/01/16:
+  * Servers: Add more columns to the server table for ping/version/maxusers/...
+    (requires latest mldonkey)
+  * Servers: Remove 'connect server' option from non-preferred ed2k 
+    servers if ED2K-connect_only_preferred_server true [#1406220]
+
+2006/01/05:
+  * Add country flag images to all ip address columns 
+    - Client table has an added column for the country name (toggleable in 
+      TableColumnSelector)
+    - requires latest cvs mldonkey, with a valid "geoip_dat" setting
+
+2006/01/02:
+  * Add Preview subMenu to shared files -- works by connecting to the web interface 
+    preview port (remember to set a preview app in transfers->preview that supports 
+    http (ie: vlc))
+  * Add File details rt-click menuItem to shared files that have sub files available
+  * Add "Download (local)" menuItem to all preview subMenus. This uses the preview 
+    function of the mldonkey web interface and saves the bytes to disk (useful 
+    if your core is remote).  Set a default download dir in Prefs->Transfers->
+    Preview Download directory.  Requires access to the web interface port of 
+    mldonkey (or ssh port forward it in the host manager, [gcj bug: gcj compiled 
+    binaries don't work when downloading over ssh2 fowarded ports [IOexception]). 
+    Download individual files from multiFiles from the FileInfo subfile table.
+    (mldonkey seems to send files slower than a normal web server)
+    Requires latest mldonkey 
+  * Default command line param (no flags) is accepted as a link (-l) to send 
+    to the core [#1358506]
+  * Add "Search for similar" to download items rt-click menu [#1364482]
+  * Close/kill self-spawned core when terminating session on win (ie: user logoff) 
+    (Workaround SWT bug #56910) [#1387867]
+
+2005/11/12:
+  * Add web services menu to shared files rt-click menu [#1349177]
+  * FileDetailDialog: Display subfiles table (ie: bittorrent internal files) in
+    a tab if available (Preview from rt-click menu in table)
+    (requires latest mldonkey) [#1339537]
+  * Keyboard shortcuts: Global: CTRL+T load torrents from HD, Console: CTRL+L clear
+    screen [#1355609]
+  * Miscellaneous
+
+2005/10/23:
+  * Add: Drag&Drop .torrent files onto downloads view or link entry [#1333043] 
+  * Workaround swt-gtk blank combo bug (bandwidth presets) [#1333126]
+  * Prefs->Downloads: Add option to set chunkGraph max length. In the download 
+    tree if a file has > X chunks it will squish to X chunks to save time drawing
+    the graph (needed for files with many chunks (bt files in particular) which take
+    too long to draw) [#1208707]
+  * Prefs->General: Add toggle for singleClick or doubleClick to restore/hide 
+    from systray [#1336527]
+    
+2005/10/14:
+  * Add: copy links to clipboard with BBCode menu option [#1321465]
+  * Keyboard shortcuts to switch tabs: ALT+# or CTRL+# to swith to tab #. 
+    ALT+[LEFT ARROW]=left, ALT+[RIGHT ARROW]=right (CTRL+arrows are already 
+    used in text input to jump words)  [#1319360]
+  * Console: Underline links, launch when clicked
+  * Add bandwidth settings submenu to quickly change to another preset
+
+2005/10/04:
+  * Preferences: add scrollbars to long pages [#1304604]
+  * Downloads: Show files that contain "Fake" in their name/comment in
+    a configurable color (toggleable in preferences) [#1204298]
+  * Re-enable download arrow for downloading files in search results [#1310729]
+  * Option to disable systray icon (Prefs-General) [#1310561]
+  * Two column sort [#1250044]
+    - If you sort column X, and then sort column Y, any entries
+    in column Y that are equal will be ordered by the previously
+    sorted column's order (column X).
+  * Experimental: SWT supports virtual tables now, so all tables have been made virtual. 
+    They sort & update much faster (no delay with 1000 search results), and
+    alternating tableRow & sortColumn colors are quicker to update (if enabled).
+    - The one exception is the downloads view which is a tree -- SWT doesn't 
+    support virtual trees ...yet. 
+
+2005/09/24:
+  * Added tooltips to all table column headers 
+  * Remove extra quotes in winRegistry link associations [#1274278]
+  * Single click on tray icon restores/hides main window [#1300364]
+  * Clients: Add column to display secure user ident status (requires core with sui),
+    display a checked icon if verified, and status in client details dialog
+  * Include: distrib/sancho2 && distrib/sendalltorrents sample scripts
+  * Include: distrib/sancho_hu_HU.properties (Hungarian)
+  * Include: distrib/sancho_gl_ES.properties (Galician)
+
+2005/08/21:
+  * Add Tools->Core verbosity convenience dialog to set core verbosity keywords
+  * Fix NPE in messages [#1263968]
+  * Fix NPE in IRC client [#1260851]
+  * Support mldonkey gui proto 34 (2.6.3):
+    - Servers with blocked ips appear in red with blocked state
+    - Right click->compute_torrent available from shares tab
+      (blank tracker uses default in mldonkey, requires bittorent enabled)
+
+2005/08/14:
+  * Fix NPE on SSH2 info dialog [#1250687]
+  
+2005/08/02:  
+  * Add Remaining column to downloads table [#1252647]
+  * Include: distrib/sancho_no_NO.properties (Norsk)
+
+2005/07/20:
+  * Upgrade to SWT 3.1 
+    - Support drag&drop table/tree column re-ordering 
+    - Support table/tree column sort indicator (toggleable in prefs->display)
+    - Tray icon background is transparent on gtk [#1218766]
+  * Bandwidth settings dialog (accessible from status line or tray) allows 
+    adding/removing/renaming custom entries [#1230686]
+    - Entries are saved when you switch to a different one, or press OK. 
+    (if you had previously changed the presets you'll have to redo them)
+  * Configurable hard kill delay for self-spawned cores (prefs>general) [#1231036]
+  * Support mldonkey proto 33: show client donkey software version string [#1235931]
+  
+2005/06/10:
+  * Add Remaining: to file transfers info dialog  [#1211351]
+  * Add pref (pref->display) to limit byte conversions to k/M (no G/T) [#1208522]
+  * Add filetype icons to search results [#1215167]
+  * Fix chunkgraph display in downloads table [#1208707]
+  * Double-click chunk graphs to show/edit color prefs [#1201627]
+  * Console toolItem commands (prefs->console) allow multiple commands separated
+    by ";"   ex: close_fds;commit;whatever [#1209676]
+  * Add optional popup console to status line (far right button on status line)
+  
+2005/05/22:
+  * Use UTF8 strings to communicate with mldonkey -- searching in japanese seems 
+    to work but requires a unicode system font to see it, and a unicode font in 
+    Prefs->Display->Table font to view the results in the table [#1205541]
+
+2005/05/10:
+  * Fix: If started in tray, and close button was mapped to min-to-systray, there 
+    might be a strange recursive event loop [#1199196]
+
+2005/05/07:
+  * Add options to always start minimized or in systray (if platform has a 
+    tray) Prefs->General, or with cmdline params "-min"/"-tray" [#1197449]
+
+2005/05/05:
+  * Add relative availability % column to clients table (mlnet patch 3971 
+    updates this field more frequently) 
+    - updated all .properties files (copied the downloads.avail string)
+  * No longer retain all search results once a search is closed (mlnet used to
+    require it, but now it seems results can be disposed when a result tab is 
+    closed which should save mem if you search a lot)
+  * Add F2 hotkey to rename all selected entries in download & server table 
+    (popup dialog per entry) [#1195996]
+
+2005/05/03:
+  * Include: distrib/sancho_ru_RU.properties (Russian)
+  * Fixed another reference holding resource, which didn't release memory 
+    properly after a disconnect/reconnect (in eclipse-jface classes)
+
+2005/05/01:
+  * Fix crash when searching on a specific network [#1193423]
+
+2005/04/29:
+  * Put currently connected host description (or IP if no desc) in titlebar
+    and taskbar to help distinguish multiple instances [#1192531]
+  * Filter out commas from refine filter regexps (exception) [#1192183]
+
+2005/04/25:
+  * Support gui protocol 32 (Server->rename)
+  * Add: Tools->Screenshot (screen capture the window or desktop and save
+    to jpg file)  (doesn't work on FOX)
+  * Profiled, and fixed a mem leak when disconnecting/reconnecting, 
+    repositioned some threads when searching, and other minor fixes
+
+2005/04/24:
+  * Replaced: distrib/sancho_pl_PL.properties (Polish) - This contribution 
+    is a new translation from scratch. An ASCII version is available on the 
+    downloads page for the FOX version which does not yet support UTF8.
+ 
+2005/04/20:
+  * Fix rare NPE on disconnect [#1186425]
+  * Added toggle for human-readable byte counts (k/M/G) - disabled
+    will display file sizes in bytes (Prefs->Display->General) [#1181822]
+  * Added option to copy header bar text to clipboard from rt-clk menus
+  * File->(rt-click)->Copy to clipboard now has sig2dat and magnet options 
+    (along with ed2k) if the file has these types of hashes
+  
+2005/04/10:
+  * Limit regex filter strings to 1000 chars since RE (gnu regex) doesn't 
+    seem to like super long strings [#1178085]
+  * Make default mldonkey host "127.0.0.1" instead of "localhost" 
+  	
+2005/03/31:
+  * SSH: Add ability to also port forward an HTTP preview port if using 
+    the internal mldonkey preview-over-http feature  (Tools->Host manager) 
+    [#1174444]
+  * Prefs: System paths can contain environment variables enclosed with %'s. 
+    Does not work with JVMs at 1.4 level. (gcj/JVM 1.5's work) 
+    Bookmarks example: %APPDATA%\Opera\Opera7\profile\Opera6.adr  [#1172540]
+  * Add some more bt client software icons
+
+2005/03/28:
+  * Read gui protocol 31 (file/shared_file uids) (remotely previewing bt 
+    files now seems to work with vlc)
+
+2005/03/26:
+  * Fix file extension limitation when choosing a core binary [#1171473]
+  * Add preference to specify # of decimals to display in rate & percent 
+    download columns: Prefs->Transfers [#1170551]
+  * Shortened status text in .properties file by removing "Connected and" 
+    from user connection info [#1170010]
+  * WebTab: Basic support for reading mozilla bookmarks.html, and opera's 
+    opera6.adr in prefs->webBrowser->favorites setting [#1171057]
+  * Update some locale strings & misc changes [#1171057]
+
+2005/03/22:
+  * Include: distrib/sancho_ca_ES.properties (Català)
+
+2005/03/20:
+  * Fix copy to clipboard of empty clipboard contents crash [#1167029]
+  * Use proper background color when highlighting sorted columns [#1167067]
+  
+2005/03/15:
+  * Fix copy/paste typo mixing ssh2 socks5 & http proxy settings [#1163818]
+  * Include: distrib/sancho_pt_BR.properties (Brazilian Portuguese)
+  
+2005/03/13:
+  * Fix rare crash in File Detail dialog [#1162480]
+  
+2005/03/12:
+  * Set scroll page increment on preference pages with scrollbars [#1161946]
+
+2005/03/09:
+  * Preview: mldonkey changed temp file name format in 2.5.30 -- sancho now 
+    searches the working directory (if set in preferences) for urn_*_[hash] 
+    files before falling back to the old filename format ([hash]) when 
+    using a local preview app [#1159234]
+  * Show file hashes in search result tooltips/details 
+  * Download History: Save/restore window size/location
+  * Parse network in search results (fuzzy)
+  * Display corrupt Gnutella filenames properly
+  * WebServices: Rename FileDonkey -> FileHash
+  
+2005/03/01:
+  * Mac: Updated SWT version which should now support tableColumn sorting 
+    [#1154679]
+  * Add Preferences->All (if connected to a core) to show all core preferences
+    in one page, with an option to regex filter the names  [#1152860]
+  * Fix bug in Bandwidth dialog when changing Current Settings [#1154400]
+  
+2005/02/27:
+  * Support sfdl:// links & add winRegistry option (they are mutilated ed2k links)
+    [#1152909]
+    
+2005/02/22:
+  * Restore minimized window when doubleClicking DNDbox [#1145172]
+  * SSH2: Add HTTP/SOCKS5 proxy support
+  
+2005/02/20:
+  * Fix new file detail crash when chunkGraphs disabled [#1144927]
+  * Show connection string in statusline on startup [#1144838]
+  * SSH2: Prompt for passphrase when using key encryption [#1144830]
+  
+2005/02/14:
+  * DownloadsTable: Cache OS preview app (speed up rt-click menu)
+  * Statistics: Graph history now horizontally scrollable (instead of being squished)
+  * Fix NPE when using bandwidth presets without a core connection [#1122086]
+  * Add more precision to time columns (#m#s) [#1117227]
+  * Use 2 decimal precision in rate column [#1117227]
+  * DEL key removes selected search results from results table [#1118838]
+  * DNDBox checks to see if it is within screen bounds [#1117632]
+
+2005/02/11:
+  * DoubleClick DNDbox restores/hides mainWindow [#1117631]
+  * DoubleClick "Disconnected" status text attempts to reconnect [#1120954]
+  
+2005/02/06:
+  * Fix another bug (due to rewrite) in graphs timer
+  
+2005/02/05:
+  * Fix crash on stats tab when using a language other than english 
+    (middle of a rewrite .. oops)
+    
+2005/02/03:
+  * Prefs->Search->Save entries can be toggled off to not save search history
+    between sessions (in the combo boxes)
+  * Search view has 'Clear combos' option in the pulldown menu to clear the search
+    history (click the icon, or right click on the "Search" view titlebar) [#1115047]
+
+2005/02/02:
+  * Console input line responds to NumPad ENTER key [#1114847]
+  * Add "DEL" shortcutKey to tables: DL=Cancel, Servers=Remove, Friends=Remove,
+    Clients=Disconnect.  [#1114428]
+  * Add simple Find (searchString) popup dialog to Console windows 
+    (CTRL-F/rt click menu)  [#1114226]
+
+2005/01/25:
+  * Fix OOB exception on some search results [#1109226]
+  * Fix SearchTab "Networks" pulldown updating at certain times
+  * Reverse order of 'Preview' and 'Rename' in dl rt-clk popup menu 
+  * Prefs->Tranfers - Can select operation to perform on file double click 
+    (default=Expand branch, other=Preview.  Preview(OS) will try to preview
+    with OS default app first, and then try the one you have configured as the 
+    default in sancho)  [#1109020]
+
+2005/01/24:
+  * Prefs->Search->TooltipsOffset - on by default, maybe this makes tooltips less 
+    obtrusive in search results [#1107794]
+  * HostManager: Can select to 'ask password' (for mldonkey core) each time you
+    connect -- leave pw blank [#1107813]
+
+2005/01/08:
+  * Add Razorback2 file stats web service link (downloads/search)
+  * Preferences->Display->Transfers->ChunkGraphs can configure colors of the chunk
+    graphs [#1092567]
+  * Display seconds instead of 0m [#1100473]
+  * Fix ArrayOOB [#1091452]
+  * File preview: If the OS has a default app associated with the file extension
+    it will be added to the list of preview apps.  The "Preview working directory"
+    must be set to your mldonkey temp path (since mldonkey can be on a remote
+    machine) This directory + file hash becomes the only argument sent to the preview
+    app [#1100500]
+
+2004/12/21:
+  * WinInstaller: Store path in registry for easier updating to future versions
+    [#1088111]
+  * Add Clients/Sources2 columns to the download table.  These are numbers reported
+    by mldonkey rather than calculated based on what mldonkey sends. (mldonkey is
+    not consistent, so everything is optional for you to choose, and these numbers
+    are only updated when the full file is refreshed).  The mldonkey gui protocol is
+    far from intelligent.  Use the TableColumn selector to re-order/choose columns 
+    you want. (see faq)
+  * Fix(?): ConcurrentModificationException [#1088882]
+
+2004/12/14:
+  * Fix: If using "-c"/"-j" cmdline option it will be preserved when registering 
+    links in windows registry [#email]
+  * swt-fox: updated swt-fox lib which hopefully fixes resource leak
+    
+2004/11/24:
+  * SSH2: Add support for ~/.ssh/id_dsa & id_rsa if it exists (no password required)
+    (see online faq)
+
+2004/11/19:
+  * Add batch rename: Select multiple files from the downloads table, Rename->Input
+    filename, will cycle through each one allowing you to rename them [#1069640]
+    
+2004/11/17:
+  * Preferences->General->Use most recent host manager settings when sending links
+    - If you have multiple hosts in the host manager, and you want to use sancho to
+      automatically send links to the core (ie: from a web browser), this will use
+      the settings of the most recent host to which you connected when sending links
+      ie: Connect to host 1, clicking on links in browser will be sent to host 1
+        : Connect to host 3, now clicked links will be sent to host 3.. 
+    [#1056976]
+  * Fix NPE if CommitingAs or RenamingAs while a file autoCommits
+      
+2004/11/15:
+  * The table column which is currently determining sort order can now be hilighted 
+    by a different background color 
+    - Preferences->Display->Highlight sorted column  (color configurable)
+
+2004/11/14:
+  * Resize tray icon on gnome [#1066131]
+
+2004/11/03:
+  * Fix #1059638 (pause a queued file)
+
+2004/10/27:
+  * Table default font size didn't update on Downloads/Clients table [#1055399]
+    - Prefs->Display->Table font
+  * Workaround another libgcj NoSuchElementException [#1049025]
+  * Fix popup on download completion hang [#1054402]
+  * Preview extensions can be duplicated for multiple choice preview apps [#1051725]
+    - Prefs->Transfer->Preview->extensions
+    if you have duplicate extensions, like:
+    avi=c:\path\zplayer.exe
+    avi=c:\another\bsplay.exe
+    they will be available to choose from in the dl table's right click preview menu
+    
+2004/10/20:
+  * swt-fox: Added the WebBrowser tab (still being developed by swt-fox..)
+    - run with "sancho -b" to disable it if it causes any problems
+  * swt-fox: remove weird blue color hardcoding from swt-fox code 
+  * convkderc: a small util (on download page) to convert ~/.kderc font and
+    color settings and write them to ~/.foxrc/Desktop  
+  * Show connection error dialogs in taskbar [#1050602]
+  * Make host manager use more intuitive when quitting and selecting
+    alternate hosts [#1050605]
+
+2004/10/17:
+  * Preferences->Transfers->Resync fileInfos  = 300s (5min) by default
+    - Since mldonkey doesn't update fileInfos regularly (it doesn't do a 
+    full update when just refreshing the rate/downloaded total) sancho can 
+    be set to poll mldonkey & fully resync active files at a certain interval. 
+    This updates avail%/chunks which would normally seem 'stuck'. [#1048914]
+  * ssh2: If local port is already bound, skip attempt to port forward 
+    and connect directly to the local port
+  * jsch: fix ssh1 known_hosts compatibility problem (not my bug, but..)
+   
+2004/10/15:
+  * Add "set as brothers" option to file context menu [#1047787]
+
+2004/10/10:
+  * swt-fox upgraded: should fix [#1046290] [#1043513] crashes, and
+    [#1041979] text input color bug
+    - uses ~/.foxrc/Desktop for font settings (no more .kderc support)
+  * added ssh2 port forwarding support (see faq for more details)
+    [#1009465]
+  * fixed some minor stuff
+
+2004/10/05:
+  * Fix negative values in preferences [#1040735]
+  * Fix expandall/sorting crash in dl table [#1040746]
+  
+2004/09/23:
+  * Preferences->Downloads->Receive client sources
+    - If you turn this setting off, mldonkey will not send client source
+    information to sancho, which can save core<->gui bandwidth and memory
+  * Workaround gtk slowness in file info dialog for files with lots of chunks 
+    [#1031231]
+    	
+2004/09/20:
+  * Search: Tooltips can be disabled in Preferences->Search [#975068]
+  * Search: Added "Result info" dialog to result right click menu
+
+2004/09/19:
+  * Fix java bundle packaging [#1030680]
+  * Workaround ctrl-a selection problem on gtk/fox [#1030280]
+    
+2004/09/14:
+  * Fix sending links to core from cmdline #1028034 (caused by new threads)
+  * swt-fox is now compiled with xft (anti-aliased fonts)
+
+2004/09/08:
+  * Re-weaved all threads (testing)
+    - source #s are now updated in the dl table more frequently - if it flickers 
+      too often you can set a longer preferences->transfers->update delay
+  * Rewrote chunkgraphs to use less cpu and hopefully have less problems
+    (mostly win32/fox)
+  * Add 'Update fileInfo' menuItem to rt-click menu in downloads table
+    (ex: if mldonkey isn't updating chunksInfo often enough you can manually
+    request a resync or ctrl-a to select all and resync them all)
+  * Added text statistics view to the stats tab - (temporary format until the 
+    mldonkey core sends more complete stats) - 30s update
+  * swt-fox should now support table item specific fonts in dl table
+  
+2004/09/03:
+  * Fix link spawning on motif #1022204
+
+2004/09/02:
+  * Fix input of ftp links in 'input link' dialog #1019579
+  * Miscellaneous fixes (possible NPEs, columns)
+  
+2004/08/30:
+  * Fix cosmetic searches waiting display bug [#1011633]
+  * Fix dbl-click header of some views not maximizing/restoring
+
+2004/08/24:
+  * Fix(?) rare IllegalMonitorStateException in gcj-win32 [#1014718]
+  * Add some bt client icons
+  * Add "-j" cmdline option to specify home directory (store pref+other files)
+    instead of the default ~/.sancho/ directory  ie: "sancho -j ."
+    
+2004/08/20:
+  * Fix ArrayOOB in console [#1007071][#1013491]
+  * Preferences->Transfers->Preview
+  In addition to specifying an app to use to preview files locally,
+  you can also select different apps to spawn based on file extension. The
+  main preview app must be filled it -- it becomes the default [#1012362]
+  - input an extension and a program and "Add" it to the list
+  - select an entry from the list and press "Remove" to remove it
+  ie:  mp3 = c:\mp3player\mp3player.exe
+       avi = /usr/local/bin/aviplayer
+       txt = d:\windows\system32\notepad.exe
+
+2004/08/18:
+  * Fix(?) some threading issues 
+  * Fix clients as active sources to multiple files in downloads table
+  * Fix shares amount column updating
+  * Fix sending torrents to core from case sensitive filesystems 
+  * autoReconnect upon disconnection now retries to connect without human
+    intervention but with a delay interval configurable in 
+    Preferences->General (autoReconnect is off by default) 
+    - terminate an autoReconnect from the File menu [#1009496]
+  * Include: distrib/sancho_nl_NL.properties (Dutch)
+  * diffprop - small util to find missing keys in a translated properties
+    file (hopefully this makes it easier to update translations)- available 
+    in the translation section of the downloads page (sancho.properties will
+    also contain a changeLog on the top in the comments section [#mail req]
+
+2004/08/15:
+  * All tab folders can swap tab position top/bottom by right clicking a 
+    tab and choosing the menu item
+  * Fix SWT_Close cosmetic bug [#1009215]
+
+2004/08/11:
+  * Fix console bug (memory)
+  * Workaround libgcj toArray bug [#1006244] [#1007740] [#1008289]
+  * Fix rare crash on search tab close
+  * Change regex refine filter to a combo & save last 25 entries
+  * Add regex refine filter box to Download history/Uploaders/Pending/Clients
+  * Servers/Clients/Shares: Added optional tab categories: same as the 
+    tabs from the downloads view -> see ChangeLog 2004/06/07  [#mail req]
+    - To toggle tabs to be on the top rather than bottom, right click a tab 
+      and choose the menu item 
+  	- ie: Servers->Toggle tabs->
+  	  "Donkey Connected" Show->Donkey + Connected, with regex "Razor|Proben"
+      "FastTrack Connected" Show->FastTrack + connected ...
+      "All" Show->all
+    - ie: Clients->Toggle tabs->
+      "All"
+      "Connected clients" Show->Connected*
+    - ie: Shares->Toggle tabs->
+      "mp3 and ogg files" regex "mp3|ogg"
+      "avis" regex "avi"
+    * NB: You must Preferences->Servers->Show GNUT/FT to see fasttrack/gnut
+      supernodes in the servers table
+      
+2004/08/10:
+  * Servers: Show preferred status column
+  * Servers: Right click -> Toggle preferred status (donkey servers only)
+  * Support latest mldonkey protocol
+
+2004/08/08:
+  * SearchResults: fix saving of table column widths [#1005894]
+    - Disable any dynamicColumn by clicking the result window icon and
+      deselecting any checked column name in the menu 
+  * Search: Save 25 most recent search terms between sessions (combo dropdown)
+    [#1005939]
+
+2004/08/04:
+  * Statistics in opposite direction [#1002136]
+    - Optionally set graph to draw in reverse (Stats->click icon->Reverse graph)
+  * Support latest mldonkey protocol
+  * Fix Webbrowser link address updating on mac & prepend http when needed
+  * Fix an autoReconnection bug
+  * Shares Tab: Add size column & add totalSize to the header [#979381]
+  
+2004/07/28:
+  * Search: completeSources (CS) in separate sortable column [#997197]
+  * Activate gui bug dialog if core thread dies
+  * Fix ArrayOOB in column selector
+  * Add WebBrowser tab to the Mac binary (it still has bugs due to SWT bugs)
+  * Add local/subscribed search option to searches 
+  	(whether these work or not are determined by the core)
+    2.5.22 has bugs with searches
+
+2004/07/11:
+  * Add optional ETA2 column to the downloads table [#email req]
+    - Use column selector to enable
+    - ETA  = based on current download rate = (remaining / rate)
+    - ETA2 = based on past performance = (remaining * age) / downloaded
+
+2004/07/09:
+  * Share/Unshare dialog supports drag&drop (plus/minus icon on shares tab)
+    - drag multiple directories and drop them on the input line and they will all
+      be sent to the core with the currently selected priority (share)
+  * Add "has files" column to friends & clients tables [#977060]
+  * Add "-m" commandline param to only run the dndbox speed monitor [#986547]
+    - changed dndbox to display ul/dl speed (access via rt-click on statusline)
+    - config colors and font in Preferences->Display->General
+
+2004/06/24:
+  * Update donkeyfakes URL [#970393]
+
+2004/06/07:
+  * Added optional tab categories to the download table [#913455]
+  	Usage:   
+    - first, click the upper left icon on the downloads table and
+      "toggle tabs on" from the menu
+    - Add/remove tabs by right clicking on an existing tab and using the popup
+  	  context menu
+    - Apply filters (in the upper left icon menu (Show->) or type something in
+      the refine search regular expression filter) and they will apply 
+      exclusively to the active tab
+      ex: "Tab 1" Show->Donkey+FastTrack + Audio files with Regex "nas|jay"
+          "Videos from Bittorrent" Show->Bittorrent + Video files 
+          "My jpg files" Show->Image files with Regex "jpg"
+          "All downloads" Show->All
+          etc...
+    - tabs are on the bottom by default - toggle in preferences->transfers
+    - drag and drop tabs to reorder them 
+    - with a ton of files, filtering/redrawing is faster with chunk graphs off
+
+2004/05/30:
+  * Text change kb/s to KB/s  [#963669]
+  * Fix: crash on refine search on gtk (swt) [#962071]
+    
+2004/05/28:
+  * Attempt to fix rare crashes on exit & other minor housekeeping
+
+2004/05/03:
+  * Fix npe when resharing directories & disconnected #947059
+  * Include: distrib/sancho_it_IT.properties (Italiano)
+
+2004/04/27:
+  * Added completesources display to the avail column in search results
+    - ie: if a server sends completesources:  high(7/55) = 7 complete of 55.
+  * Fix a npe/fail to exec runnable 
+  * Fix npe in friends tab
+  * Workaround gcj-win32 handle leaks
+  * fyi: the options "maintain sort order" and "display chunk graphs" are 
+    probably the #1 cause of extra cpu load (esp. when dling a lot of files)
+   
+2004/04/13:
+  * Workaround swt-fox frozen updates bug?
+  * Fix swt-win32 not runnable/oob bug
+  * Fix console clipboard crash?
+  * Many other performance issues addressed
+  * Include: distrib/sancho_pl_PL.properties (Polish)
+  
+2004/04/09:
+  * Fix GTK filename column width bug and other GTK performance fixes
+  
+2004/04/07:
+  * Extend spawn core timeout (to account for the slow loading of 
+      the blocklist/guarding.p2p)
+  * add "-f" cmdline param to force a locale (ie: sancho -f pl_PL)
+  * fix cmdline parsing 
+
+2004/04/01:
+  * Add browse directories button to "share new directory" dialog #928073
+  * Fix: Audio search tab crash #927881, #928986
+  * Fix/Add properties strings (reverse console fg/bg,l.empty, bw.* menu.*)
+  * Workaround gcj-linux catch bug
+  * Add small tools>debug info window to see core structure sizes & more
+  * Micellaneous bug fixes/improvements
+  * Added icons/graphics contributed by Bruce Thomas, and changed some 
+    default colours (console)
+
+2004/03/30:
+  * Bandwidth settings: Added 3 presets.  If you change the values while
+    a preset is selected and press OK it will save these values for that
+    preset (as well as changing them in the core).  #925708
+
+2004/03/26:
+  * Add Menu File>Input link item #923804
+  * Fix regression on older mldonkey cores #923566
+  * Fix null pointer crash #922207
+  
+2004/03/23:
+  * Win32: Fix link registration path in win registry preferences
+  
+2004/03/15:
+  * Fix #916445 (image registry exception)
+  * Statistics: Move avg/max to header, add time marks to axis #916865
+  * Disabled sr/jigle stuff (services are down)
+  * Finish core rewrite, sancho is autonomous
+  
+2004/03/11:
+  * Modified the linkEntry (the thing that pops up when the green arrow is 
+    pressed) to parse single line torrent URLs #913624
+    - this might affect html parsing of pasted data in this area, but the 
+    linkripper should probably be used for html ripping
+  * Added right click menu for quick access to bandwidth settings from the 
+    up/down rate indicators in the status line, and from systray menu #914325  
+  * Negate individual refine searches more easily by prepending the string 
+    with a "-"   
+  
+2004/03/07:
+  * Preference pages are not hidden in a tree anymore
+  * win32 distribution is now a simple installer with uninstall option
+  * Added option to use the core's new internal streaming preview URL
+    Prefs->Transfers->Preview
+    - You can set a local preview app and if you toggle the streaming option on, 
+    the first cmdline param will be the http url of the core's stream of the file
+    instead of a local filename (if your preview app supports http streams)
+    - The settings for the URL are derived from your current core connection, and 
+    the http_port of your core settings
+    - tested with mplayer.exe on windows (works)
+      - set previewExecutable to "c:\mplayer\mplayer.exe"
+      - set previewWorkingDirectory to "c:\mplayer"
+    - note: seems to fail if you use a password in mldonkey 
+      (mplayer bug? mldonkey bug? it fails even from cmdline)
+  * If using the "spawn core from within sancho" option, the gui port is now 
+    checked to see if it is already open, and if so, doesn't spawn another 
+    core but only connects to the existing one (and kills it when closed)
+    
+2004/03/05:
+  * Fix updating of friends list 
+  * Modified some .properties strings to allow more complete foreign translations 
+    (graph.*/l.downloaded/queued/paused)
+  * Add tray support for gtk
+  * Fix #910862 (blacklist)
+  * Fix #911842 (server remove)
+  * started rewriting a bunch of core stuff from scratch (hopefully it still works, 
+    please report any anomalies);
+  noticable changes:
+    Searching:
+      "one two three" != (one two three == one and two and three)
+      one or two or three == one | two | three
+      one -two -three == one andnot two andnot three
+      every other search option hopefully works
+    + tables are faster
+  * Disabled/hid server favorites column until it is implemented in core
+  * LinkRipper supports more link types (right click and toggle the option in 
+      the context menu to "show all links" if you want) (+suprnova mainpage works)
+    - http/ftp links can be sent to core from linkRipper #909928
+  * Add small drag&drop box that can be left open on the desktop as a drop target 
+    for supported link types (toggle from systray menu, or status line rightClick 
+    menu) #909933  
+      
+2004/03/01:
+  * Fix: cmdline -? works again #906528
+  * Moved search minAvail processing (faster)
+  * Add .torrent file sending support (requires latest mldonkey 2.5.17+)
+    - win32: You can now associate torrents with sancho even if your core is 
+      on another machine
+      (old setting: Preferences->Windows Registry->File associations)
+    - all: The torrent folder icon in the link entry header bar now works even
+      if your core is not on the same machine as sancho
+    - other examples (or associate sancho to file/mime types in browser):
+      sancho -l c:\directory\myfile.torrent
+      sancho -l /home/dl/myfile.torrent
+
+2004/02/29:
+  * Add optional downloads toolItem button to quickly spawn a file explorer 
+    and open it to the downloads folder #906372
+    - Preferences->Transfers->Explorer to configure the file explorer to spawn 
+    and the initial folder to open
+  * Add option to save a file history of completed downloads #906475
+    - this is a text file stored in the home directory
+    - this log can be turned off in Preferences->Transfers->2, 
+      and easily viewed as a table in the Tools pulldown menu
+  * Ask to retry when core connection denied
+  * Fix statusline disappearing networks bug
+  * Queued files are not filtered out by default anymore
+  * Externalized more strings
+  * Include: distrib/sancho_fr_FR.properties (Français)
+
+2004/02/27:
+  * Setup Wizard: Add core executable (optional) page on initial setup
+  * Host manager: Hide characters in the password field 
+  * Fix browser disposed auth crash on linux
+
+2004/02/25:
+  * Add "rename" submenu to the File context menu #904703
+  * Add optional "min avail" filter to advanced/audio search tabs #904399
+  
+2004/02/23:
+  * Fix server states not updating #899465 (yet another gcj bug)
+  * Option to popup a dialog window when a download completes #902582
+    - Preferences->Transfers
+  
+2004/02/22:
+  * Search: Add Jigle search tab
+    - This tab uses the jigle.com SOAP interface to search the jigle database
+    - jigle limits results to 100 at a time 
+      - use the Offset field to set a result offset
+      - the sort option tells jigle to sort its results when determining 
+      which 100 results to return (if > 100), it doesn't change the result
+      table sorting
+  * Fix some bugs
+
+2004/02/18:
+  * Fix statistics crash when using translated .properties #899487
+  * Workaround gcj linux zombie proc creation bug when previewing 
+  * Fix table font setting
+  
+2004/02/17:
+  * Selector (tabs/columns) rewritten #897743
+  * Fix chunks column crash #899192
+  * Fix web browser hang on gtk #898879
+  * Add optional working directory to preview command
+    - if this is set, the preview command will run from the working directory
+
+2004/02/16:
+  * Support latest mldonkey gui protocol (large file sizes)
+  * Show more filenames in uploaders table 
+  * The web browser is now a tabbed browser
+    - click the globe for a "new tab" menuItem
+    - tabs can be configured top or bottom in preferences->webbrowser
+
+2004/02/15:
+  * IRC: ask for nick/channel before connecting 
+  * Include: distrib/sancho_es_ES.properties (Español)
+    
+2004/02/11:
+  * Add chunk ages to file details dialog
+  * Fix crash on age column sorting
+  * Changed multiple instance detection method
+  * LinkEntry: Add local torrents file input dialog (only works if core & gui 
+    are on the same machine) (click green arrow->folder icon)
+  * Include: distrib/sancho_de_DE.properties (Deutsch)
+
+2004/02/09:
+  * Add pending (uploaders) slots table (initially hidden & disabled)
+    - doubleClick "uploaders" header to view it ("+" to enable updates)
+    - requires latest mldonkey (2.5-11)
+  * Uploaders table now shows bittorrent clients (latest mldonkey required)
+  * Configurable poll delay: Preferences->sancho->Transfers
+    - poll the core every X seconds for uploaders/pending/upstats(shares)
+  * Add disconnect/connect rt-clk context menu option to all clients (requires
+    latest mldonkey 2.5-11)
+  * Fix #893771 (failure to close after ed2k link clicked)
+  * Fix row selection on fox
+  * Per row fonts now available on gtk and motif (see 02/06)
+  * Added ability to configure language file support:
+    - sancho.properties is a "key = value" text file.  It can be renamed and
+    translated to other languages (in /distrib dir) (ie: sancho_de_DE.properties) 
+    - If you make a translation, send it in and it will be included by default
+     (email or submit it as a patch)
+    - properties files must be in your $HOME/.sancho/ directory, examples:
+      c:\documents and settings\username\.sancho\sancho_en_US.properties
+      /home/username/.sancho/sancho_fr_FR.properties
+    - WINDOWS: You might have to copy this file to the directory containing
+        "sancho.exe" (gcj windows compiler bug)
+    Once the file is copied there, you can select it and restart sancho:
+    - Preferences->sancho->general->locale (lists available files, blank = none)
+    - Naming conventions are from the Java Locale class:
+    http://java.sun.com/j2se/1.4.1/docs/api/java/util/Locale.html  
+
+2004/02/06:
+  * Add table alternating row background color support on win32/fox/motif
+    (gtk does this automatically when table gridlines are toggled on)
+    - Preferences->Display->General
+  * Add win32 table row font support (ie: show files > 0 kb/s in a different font)
+    - Preferences->Display->Transfers
+  * Support mldonkey fileTP protocol (latest mldonkey core required)
+    - click the globe+ in the status line to feed the core with http://
+    or ftp:// links (mldonkey downloads them) - add mirrors in file details
+    or in the file->rightClick menu 
+  * Moved statusline buttons to the right
+  * Fix some bugs
+
+2004/02/05:
+  * Fix refine search/server filter crash
+  * Fix queue rankings
+  * Add file icons
+
+2004/02/01:
+  * Added refine search box to more tables
+    - RightClick a view's toolbar (top right of any view) for an option
+    to toggle the inclusion of alternative filenames in the search filter
+  * Right aligned table column headers fixed on gtk
+  * gtk/motif browser updated
+  * Support latest mldonkey gui protocol
+  * IRC: add static status tab
+  * Show donkey server id (high/low) in server table
+
+2004/01/29:
+  * Clients: Request client files from anywhere (right click on client, 
+    "Request client files" (clients table/uploaders/etc))
+  * Clients: View client files from anywhere (if they are offering files,
+    right-click "View client files" (clients table/uploaders/etc))
+  * Clients/Prefs: Add color config to tables 
+  (disconnected/connected/hasFiles)
+
+2004/01/26:
+  * Fix crash when closing message tab [#884985]
+  * IRC client: support notices (!urls command on #mldonkey)
+  * Preferences: Ask yes/no before opening irc client 
+  * Add cmdline parameter: "-b" = no web browser tab
+ 
+2004/01/22:
+  * Clipboard: Fix ed2k->copyToClipboard on swt-fox
+  * Search: Fixed close tab bug [#879382], uppercase [#881581]
+  * Help>Check for updates will inform you if a new version
+    of sancho is available (if you want to leave auto-notify off)
+    
+  * Tools>IRC Client
+    - Added a very basic irc client (quick support with mldonkey?)
+    "/help" to list cmds, click window close button to disconnect/close 
+
+2004/01/20:
+  * Core: Fix bug if hosting core within gui (Prefs>spawn core option)
+  * Core: Fix copy to clipboard on the core console
+  * Link Entry: Supports local links if your core is on the same
+    machine as the gui (c:\dir\file.torrent)
+    (this is the thing at the bottom of the gui that is displayed
+    when the green arrow is pressed)
+  
+  * Win32 Preferences: Support .torrent handling in the windows registry
+    (Only use it if your gui and core are on the same machine)
+  
+  * Win32 Browser:
+    If you know that a link is a torrent, but it doesn't have a
+    torrent extension, hold down CTRL while you click it -- this
+    will send it to the core with a .torrent extension and it should
+    work from there (ie: http://site.com/redirect.php?hash=234234)
+    - tested with the nx01.us site
+
+  * Integrated the web browser on gtk/motif/photon
+    - All supported links that you click will be sent to the core 
+    for download
+    - linkRipper URL is updated as you browse sites (manual rip)
+    - See the FAQ for details on system requirements (mozilla, etc)
+    - Disable the tab with the Tab Selector (right click toolbar) if
+    you want
+
+2004/01/18:
+  * Major gcj upgrade: hopefully this fixes the pref path problem on win32
+    as well as other miscellaneous exceptions
+  * Refine search box can be negated by right clicking toolbar
+    (note: this box supports regular expressions)
+
+2004/01/14: 
+  * Console/Web: Configurable # of shortcut items
+
+2004/01/12:
+  * Fix a few soulseek related room bugs
+
+2004/01/09:
+  * Win32: Integrated an optional browser tab:
+    If you use this tab to browse a web site, any supported
+    links (ed2k/magnet/etc) that you click will be immediately sent
+    to the core for download.  This includes .torrent links!
+
+    - Configure your 'favorites' subdirectory in preferences (click the
+    globe to see your favorites menu) (nb: choose a small subdir of favs)
+    
+    - If you leave the linkRipper open while browsing, it will automatically
+    rip the links from the currently displayed page
+    - The input field supports drag & drop
+
+2004/01/08:
+  * Preferences: Added an option to notify (w/popup box) when a new
+    version of sancho becomes available (off by default) 
+    - if on, this is checked at each startup
+  * StatusLine: Added basic linkRipper (input http:// url and it will
+    retrieve the page and list the supported links contained within)
+  * Servers: Added server users table
+  * Friends: Changed messages to friends tab, added client files
+    and client directories support
+  * Miscellaneous bug fixes
+
+2004/01/07: 
+  * Statistics: Fix negative values 
+  * Statistics: Save/restore graph type
+  * Transfers: Note: Queued files are not displayed by default anymore 
+    Click the Show->Queued menuitem to turn them on. 
+  * Clients: Note: a correct 'Connected time' column mldonkey 2.5-4 patch:
+    http://savannah.nongnu.org/patch/?func=detailitem&item_id=2421
+  
+2004:
+  * Other: Most code rewritten, while adding/changing a ton of stuff
+  * Core: disconnect/reconnect/autoreconnect support
+  * Host manager: Manage multiple core hosts 
+  * Main: Tab selector (toggle which tabs you want)
+  * Rooms: Added rooms support (DirectConnect/Soulseek)
+  * Transfers: local preview option (nfs)
+  * Fork/Split (based on author's original code)

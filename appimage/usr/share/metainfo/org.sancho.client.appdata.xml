@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>org.sancho.client.desktop</id>
+
+  <name>Sancho</name>
+  <summary>MLDonkey GUI client</summary>
+
+  <metadata_license>MIT</metadata_license>
+  <project_license>GPL-2.0+</project_license>
+
+  <url type="homepage">https://web.archive.org/web/20190304231314/http://sancho.awardspace.com/</url>
+
+  <description>
+  <p>
+    Sancho is a Java/SWT graphical user interface for the MLDonkey peer-to-peer client.
+    It allows users to manage downloads, search networks, and monitor transfer activity.
+  </p>
+</description>
+  <releases>
+  <release version="0.9.4-59" date="2008-09-25"/>
+</releases>
+<launchable type="desktop-id">org.sancho.client.desktop</launchable>
+
+</component>

@@ -19,3 +19,27 @@ It is not actively maintained.
 Sancho was originally developed in the early 2000s as a graphical interface for the MLDonkey peer-to-peer client.
 
 This repository contains a frozen snapshot of the original source tree.
+
+## Source layout
+
+The original project structure is preserved:
+
+- sancho-src/ → original distribution snapshot
+- sancho-src/src/ → Java source code (Eclipse/SWT project layout)
+- sancho-src/LICENSE.txt → original license terms
+
+## Source layout
+
+The original project structure is preserved:
+
+- sancho-src/ → original distribution snapshot
+- sancho-src/src/ → Java source code (Eclipse/SWT project layout)
+- sancho-src/LICENSE.txt → original license terms
+
+## Source layout
+
+The original project structure is preserved:
+
+- sancho-src/ → original distribution snapshot
+- sancho-src/src/ → Java source code (Eclipse/SWT project layout)
+- sancho-src/LICENSE.txt → original license terms
