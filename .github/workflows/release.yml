@@ -48,24 +48,30 @@ jobs:
           New-Item -ItemType Directory -Force out | Out-Null
 
           if ($IsWindows) {
+            $plat = "win64"
             pwsh -NoProfile -File tools/build-app.ps1 -Type app-image
             Compress-Archive -Path target/dist/sancho/* -DestinationPath "out/sancho-$ver-win64.zip" -Force
-            # Also ship the plain jar (built once here; it is platform-independent).
-            $jar = Get-ChildItem target/*.jar | Where-Object { $_.Name -notmatch 'sources|javadoc' } | Select-Object -First 1
-            Copy-Item $jar.FullName "out/sancho-$ver.jar"
           }
           elseif ($IsMacOS) {
+            $plat = "macos-arm64"
             # macOS rejects a leading-zero bundle version (0.9.4); use 1.0.0 for the
             # bundle. The file name and the app's own version stay 0.9.4-<n>.
             pwsh -NoProfile -File tools/build-app.ps1 -Type dmg -AppVersion 1.0.0
             Get-ChildItem target/dist/*.dmg | ForEach-Object { Copy-Item $_.FullName "out/sancho-$ver-macos-arm64.dmg" }
           }
           else {
+            $plat = "linux-x86_64"
             pwsh -NoProfile -File tools/build-app.ps1 -Type deb
             pwsh -NoProfile -File tools/build-app.ps1 -Type rpm
             Get-ChildItem target/dist/*.deb | ForEach-Object { Copy-Item $_.FullName "out/sancho-$ver-linux-x86_64.deb" }
             Get-ChildItem target/dist/*.rpm | ForEach-Object { Copy-Item $_.FullName "out/sancho-$ver-linux-x86_64.rpm" }
           }
+
+          # Self-contained runnable uber-jar for this platform (needs only a JRE):
+          # java -jar sancho-<ver>-<plat>.jar
+          $uber = Get-ChildItem target/*-all.jar | Select-Object -First 1
+          Copy-Item $uber.FullName "out/sancho-$ver-$plat.jar"
+
           Get-ChildItem out | ForEach-Object { Write-Host $_.Name }
 
       - name: Upload artifacts

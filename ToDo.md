@@ -19,9 +19,9 @@ Backlog of improvements for the modernized `sancho-p2p` build. Done items live i
 
 ## Nice to have
 
-- [ ] **Uber-jar (shaded).** `sancho-0.9.4-60.jar` needs its `lib/` next to it.
-  Produce a single runnable `sancho-all.jar` (deps are already unsigned, so the
-  shade plugin works) and attach it to releases for a one-file `java -jar`.
+- [x] ~~Uber-jar (shaded)~~ — done: `mvn package` produces `sancho-<ver>-all.jar`
+  (maven-shade-plugin); releases ship a per-platform `sancho-<ver>-<plat>.jar` for
+  one-file `java -jar`. See CHANGELOG.
 
 - [ ] **Drop `gnu.regexp`.** It is used in only a few files (e.g. `SwissArmy`,
   the preference filter). Migrate to `java.util.regex` and remove the ancient,

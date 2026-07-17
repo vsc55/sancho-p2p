@@ -36,13 +36,14 @@ Grab the latest build from the **[Releases](../../releases)** page:
 | Debian / Ubuntu | `sancho-<ver>-linux-x86_64.deb` | `sudo apt install ./sancho-*.deb` |
 | Fedora / RHEL | `sancho-<ver>-linux-x86_64.rpm` | `sudo dnf install ./sancho-*.rpm` |
 | macOS (Apple Silicon) | `sancho-<ver>-macos-arm64.dmg` | Open the `.dmg`, drag **Sancho** to Applications |
-| Any (needs a JRE) | `sancho-<ver>.jar` | `java -jar` with SWT/JFace + deps on the classpath |
+| With your own JRE | `sancho-<ver>-<platform>.jar` | `java -jar sancho-<ver>-<platform>.jar` — self-contained, one file (pick your platform) |
 
-Every artifact except the plain jar bundles its own Java runtime. The macOS `.dmg`
-is **unsigned**, so Gatekeeper will warn — right-click → **Open** the first time
-(or `xattr -dr com.apple.quarantine /Applications/sancho.app`). Sancho needs a
-reachable **MLDonkey core** — set the host/port and login in Preferences (or the
-first-run setup wizard).
+The native packages bundle their own Java runtime; the `sancho-<ver>-<platform>.jar`
+is a self-contained uber-jar (all dependencies inside) that needs only an installed
+JRE. The macOS `.dmg` is **unsigned**, so Gatekeeper will warn — right-click →
+**Open** the first time (or `xattr -dr com.apple.quarantine /Applications/sancho.app`).
+Sancho needs a reachable **MLDonkey core** — set the host/port and login in
+Preferences (or the first-run setup wizard).
 
 ## 🏷 Versions
 
@@ -55,6 +56,7 @@ Sancho used a `0.9.4-NN` snapshot scheme.
 | `0.9.4-60` | First **modernized** build: decompiled `-59` ported to modern SWT/JFace + JDK 17, plus bug fixes | [Release](../../releases/tag/0.9.4-60) |
 | `0.9.4-61` | Maintained **JSch** fork + CI build check | [Release](../../releases/tag/0.9.4-61) |
 | `0.9.4-62` | **Cross-platform** release artifacts (Windows / Linux / macOS) | [Release](../../releases/tag/0.9.4-62) |
+| `0.9.4-63` | Self-contained **uber-jar** (one-file `java -jar`) | [Release](../../releases/tag/0.9.4-63) |
 
 **`main`** always holds the newest modernized build; [CHANGELOG.md](CHANGELOG.md)
 and the [Releases](../../releases) page are the authoritative, up-to-date list.

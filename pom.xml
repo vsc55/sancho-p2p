@@ -11,7 +11,7 @@
          CHANGELOG.md. -59 already used Tree (not the deprecated TableTree), but it
          injects a few classes into org.eclipse.jface.viewers, so JFace is consumed
          unsigned from local-repo. -->
-    <version>0.9.4-62</version>
+    <version>0.9.4-63</version>
     <packaging>jar</packaging>
 
     <name>Sancho</name>
@@ -132,6 +132,48 @@
                 <configuration>
                     <mainClass>sancho.core.Sancho</mainClass>
                 </configuration>
+            </plugin>
+
+            <!-- Self-contained runnable jar: target/sancho-<version>-all.jar bundles
+                 every dependency (incl. the active-platform SWT), so it runs with just
+                 a JRE: `java -jar sancho-<version>-all.jar`. It is therefore
+                 platform-specific (one SWT fragment). Jar signatures and duplicate
+                 module-info are stripped so the shaded SWT/JFace load cleanly. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals><goal>shade</goal></goals>
+                        <configuration>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>all</shadedClassifierName>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                        <exclude>META-INF/ECLIPSE_.*</exclude>
+                                        <exclude>module-info.class</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <Main-Class>sancho.core.Sancho</Main-Class>
+                                    </manifestEntries>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
