@@ -14,7 +14,6 @@ import sancho.view.statusline.CoreConsoleItem;
 import sancho.view.statusline.IStatusItem;
 import sancho.view.statusline.LinkEntry;
 import sancho.view.statusline.LinkEntryItem;
-import sancho.view.statusline.LinkEntryItem_win32;
 import sancho.view.statusline.NetworkItem;
 import sancho.view.statusline.RateItem;
 import sancho.view.statusline.StatusConsole;
@@ -78,11 +77,9 @@ public class StatusLine {
       this.addSeparator(this.statusLineComposite);
       this.statusConsole = new StatusConsole(var1, var2, var3);
       this.statusItemList.add(this.statusConsole);
-      if (Sancho.forceMozilla()) {
-         new LinkEntryItem(this, this.statusConsole);
-      } else {
-         new LinkEntryItem_win32(this, this.statusConsole);
-      }
+      // The win32-specific link entry paired with the removed WebBrowserTab_win32;
+      // the standard WebBrowserTab is now used everywhere, so use LinkEntryItem.
+      new LinkEntryItem(this, this.statusConsole);
 
       this.addSeparator(this.statusLineComposite);
       this.statusItemList.add(new RateItem(this));
