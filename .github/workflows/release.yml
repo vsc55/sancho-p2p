@@ -1,22 +1,65 @@
 name: Release
 
 # Tag a commit (on any branch) to build and publish that snapshot.
-#   git tag 0.9.4-62 && git push origin 0.9.4-62
+#   git tag 0.9.4-65 && git push origin 0.9.4-65
 # The tagged commit decides what gets built.
 on:
   push:
     tags:
       - 'v*'
-      - '[0-9]*'            # bare version tags too, e.g. 0.9.4-62
+      - '[0-9]*'            # bare version tags too, e.g. 0.9.4-65
   workflow_dispatch:        # manual run builds artifacts without publishing
 
 permissions:
   contents: write            # needed to create the GitHub Release
 
 jobs:
-  # Build a native package per platform (jpackage), plus the plain jar on Windows.
+  # Create the Release first (with CHANGELOG notes) so the per-platform jobs can
+  # upload straight into it — this avoids upload/download-artifact entirely. On a
+  # manual run the create step is skipped, so the matrix still runs as a build check.
+  prepare-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Create release with CHANGELOG notes
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = "${{ github.ref_name }}"
+          gh release delete "$tag" --yes --cleanup-tag=false 2>$null
+
+          # Release notes from the matching CHANGELOG.md section (else auto-generate).
+          $hasNotes = $false
+          if (Test-Path CHANGELOG.md) {
+            $lines = Get-Content CHANGELOG.md
+            $start = ($lines | Select-String -Pattern ("^##\s*\[" + [regex]::Escape($tag) + "\]") | Select-Object -First 1).LineNumber
+            if ($start) {
+              $body = @()
+              for ($i = $start; $i -lt $lines.Count; $i++) {
+                if ($lines[$i] -match '^##\s') { break }
+                $body += $lines[$i]
+              }
+              ($body -join "`n").Trim() | Set-Content -Encoding UTF8 release-notes.md
+              $hasNotes = $true
+            }
+          }
+
+          if ($hasNotes) {
+            gh release create "$tag" --title "Sancho $tag" --notes-file release-notes.md
+          } else {
+            gh release create "$tag" --title "Sancho $tag" --generate-notes
+          }
+          if ($LASTEXITCODE -ne 0) { throw "gh release create failed (check Settings -> Actions -> Workflow permissions = Read and write)" }
+
+  # Build a native package per platform (jpackage) + a self-contained uber-jar, and
+  # upload them straight into the release created above.
   package:
     name: package (${{ matrix.os }})
+    needs: prepare-release
     strategy:
       fail-fast: false
       matrix:
@@ -74,56 +117,13 @@ jobs:
 
           Get-ChildItem out | ForEach-Object { Write-Host $_.Name }
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v5
-        with:
-          name: sancho-${{ matrix.os }}
-          path: out/*
-          if-no-files-found: error
-
-  # Collect all platform artifacts and publish one Release with CHANGELOG notes.
-  release:
-    needs: package
-    if: startsWith(github.ref, 'refs/tags/')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Download all artifacts
-        uses: actions/download-artifact@v5
-        with:
-          path: dist
-          merge-multiple: true
-
-      - name: Publish GitHub Release
+      - name: Upload to release
+        if: startsWith(github.ref, 'refs/tags/')
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           $tag = "${{ github.ref_name }}"
-          gh release delete "$tag" --yes --cleanup-tag=false 2>$null
-          $files = Get-ChildItem dist -File -Recurse | ForEach-Object { $_.FullName }
-
-          # Release notes from the matching CHANGELOG.md section (else auto-generate).
-          $useChangelog = $false
-          if (Test-Path CHANGELOG.md) {
-            $lines = Get-Content CHANGELOG.md
-            $start = ($lines | Select-String -Pattern ("^##\s*\[" + [regex]::Escape($tag) + "\]") | Select-Object -First 1).LineNumber
-            if ($start) {
-              $body = @()
-              for ($i = $start; $i -lt $lines.Count; $i++) {
-                if ($lines[$i] -match '^##\s') { break }
-                $body += $lines[$i]
-              }
-              ($body -join "`n").Trim() | Set-Content -Encoding UTF8 release-notes.md
-              $useChangelog = $true
-            }
-          }
-
-          if ($useChangelog) {
-            gh release create "$tag" $files --title "Sancho $tag" --notes-file release-notes.md
-          } else {
-            gh release create "$tag" $files --title "Sancho $tag" --generate-notes
-          }
-          if ($LASTEXITCODE -ne 0) { throw "gh release create failed (check Settings -> Actions -> Workflow permissions = Read and write)" }
+          $files = Get-ChildItem out -File | ForEach-Object { $_.FullName }
+          gh release upload "$tag" $files --clobber
+          if ($LASTEXITCODE -ne 0) { throw "gh release upload failed" }

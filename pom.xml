@@ -11,7 +11,7 @@
          CHANGELOG.md. -59 already used Tree (not the deprecated TableTree), but it
          injects a few classes into org.eclipse.jface.viewers, so JFace is consumed
          unsigned from local-repo. -->
-    <version>0.9.4-64</version>
+    <version>0.9.4-65</version>
     <packaging>jar</packaging>
 
     <name>Sancho</name>

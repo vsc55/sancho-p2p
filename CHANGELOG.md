@@ -8,6 +8,15 @@ The upstream project's original changelog (2004–2006) is preserved at
 authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 (`git checkout 0.9.4-23`).
 
+## [0.9.4-65] — 2026-07-18
+
+### Build & tooling
+
+- CI: the Release workflow no longer uses `actions/upload-artifact` /
+  `download-artifact` (which still forced the deprecated Node 20). A
+  `prepare-release` job creates the Release, then each platform job uploads its
+  packages straight into it with `gh release upload`. No more Node 20 warnings.
+
 ## [0.9.4-64] — 2026-07-18
 
 ### Changed
