@@ -31,7 +31,6 @@ $root = Split-Path -Parent $PSScriptRoot   # repo root (tools\ is one level down
 Set-Location $root
 
 $appVersion = "0.9.4"
-$mainJar    = "sancho-0.9.4-59.jar"   # matches <version> in pom.xml (the -59 decompiled sources)
 $icon       = "packaging\windows\sancho.ico"
 
 Write-Host "==> mvn clean package"
