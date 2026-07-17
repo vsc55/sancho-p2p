@@ -1,7 +1,9 @@
 name: Build
 
-# Fast compile/package check on every push and pull request to main, so
-# regressions surface before a release tag is cut.
+# Fast compile/package check on pushes and PRs to main, so regressions surface
+# quickly. Full multi-OS packaging happens in the Release workflow (on tags), so
+# this stays a single lightweight Linux build and skips release commits (which the
+# Release workflow already builds) to avoid running twice for one push.
 on:
   push:
     branches: [main]
@@ -17,12 +19,8 @@ permissions:
 
 jobs:
   build:
-    name: build (${{ matrix.os }})
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+    if: ${{ !startsWith(github.event.head_commit.message, 'Release ') }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -34,7 +32,7 @@ jobs:
           java-version: '21'
           cache: maven
 
-      # The pom's OS/arch profiles auto-select the SWT fragment, so the same
-      # command builds on Linux (gtk), Windows (win32) and macOS (cocoa/aarch64).
+      # The pom's OS/arch profiles auto-select the SWT fragment; a Linux build is
+      # enough as a regression guard (all three OSes are exercised in Release).
       - name: Build
         run: mvn -B -ntp clean package

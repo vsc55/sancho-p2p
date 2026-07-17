@@ -8,6 +8,14 @@ The upstream project's original changelog (2004–2006) is preserved at
 authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 (`git checkout 0.9.4-23`).
 
+## [Unreleased]
+
+### Build & tooling
+
+- CI: the **Build** check is now a single lightweight Linux compile (the full
+  multi-OS packaging runs in **Release**) and skips `Release …` commits, so a
+  release push no longer runs two overlapping workflows at once.
+
 ## [0.9.4-62] — 2026-07-17
 
 ### Added
