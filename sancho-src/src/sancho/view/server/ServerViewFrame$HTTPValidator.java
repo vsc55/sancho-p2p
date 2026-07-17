@@ -1,7 +1,7 @@
 package sancho.view.server;
 
-import gnu.regexp.RE;
-import gnu.regexp.REException;
+import sancho.utility.regex.RE;
+import sancho.utility.regex.REException;
 import org.eclipse.jface.dialogs.IInputValidator;
 import sancho.view.utility.SResources;
 

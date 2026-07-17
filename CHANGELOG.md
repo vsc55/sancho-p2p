@@ -8,7 +8,15 @@ The upstream project's original changelog (2004–2006) is preserved at
 authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 (`git checkout 0.9.4-23`).
 
-## [Unreleased]
+## [0.9.4-64] — 2026-07-18
+
+### Changed
+
+- Dropped the abandoned **`gnu-regexp:1.1.4`** (~2001) dependency. Regexes now run
+  on the JDK's `java.util.regex`, behind a thin `sancho.utility.regex` adapter
+  (`RE` / `REMatch` / `REException`) so the ~24 call sites only needed their
+  imports changed. All patterns — including the `ed2k` / `magnet` / `.torrent`
+  link parsing — were verified to compile and match under `java.util.regex`.
 
 ### Build & tooling
 

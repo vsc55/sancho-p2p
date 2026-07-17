@@ -1,8 +1,8 @@
 package sancho.view;
 
-import gnu.regexp.RE;
-import gnu.regexp.REException;
-import gnu.regexp.REMatch;
+import sancho.utility.regex.RE;
+import sancho.utility.regex.REException;
+import sancho.utility.regex.REMatch;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;

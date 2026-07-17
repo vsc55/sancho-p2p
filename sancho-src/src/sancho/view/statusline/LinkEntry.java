@@ -1,8 +1,8 @@
 package sancho.view.statusline;
 
-import gnu.regexp.RE;
-import gnu.regexp.REException;
-import gnu.regexp.REMatch;
+import sancho.utility.regex.RE;
+import sancho.utility.regex.REException;
+import sancho.utility.regex.REMatch;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.FileTransfer;

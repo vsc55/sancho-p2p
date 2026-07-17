@@ -1,6 +1,6 @@
 package sancho.view;
 
-import gnu.regexp.REMatch;
+import sancho.utility.regex.REMatch;
 import org.eclipse.jface.action.Action;
 import sancho.view.utility.SResources;
 

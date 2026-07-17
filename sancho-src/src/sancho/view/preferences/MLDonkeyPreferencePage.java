@@ -1,7 +1,7 @@
 package sancho.view.preferences;
 
-import gnu.regexp.RE;
-import gnu.regexp.REException;
+import sancho.utility.regex.RE;
+import sancho.utility.regex.REException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;

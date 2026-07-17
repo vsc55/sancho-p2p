@@ -1,7 +1,7 @@
 package sancho.model.mldonkey;
 
-import gnu.regexp.RE;
-import gnu.regexp.REException;
+import sancho.utility.regex.RE;
+import sancho.utility.regex.REException;
 import java.util.StringTokenizer;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;

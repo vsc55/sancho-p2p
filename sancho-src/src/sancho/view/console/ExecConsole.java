@@ -1,7 +1,7 @@
 package sancho.view.console;
 
-import gnu.regexp.RE;
-import gnu.regexp.REException;
+import sancho.utility.regex.RE;
+import sancho.utility.regex.REException;
 import java.io.File;
 import java.io.IOException;
 import org.eclipse.swt.custom.StyleRange;

@@ -1,7 +1,7 @@
 package sancho.view.viewer.filters;
 
-import gnu.regexp.RE;
-import gnu.regexp.REException;
+import sancho.utility.regex.RE;
+import sancho.utility.regex.REException;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import sancho.model.mldonkey.Client;

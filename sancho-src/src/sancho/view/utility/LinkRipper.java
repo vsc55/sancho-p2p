@@ -1,7 +1,7 @@
 package sancho.view.utility;
 
-import gnu.regexp.RE;
-import gnu.regexp.REMatch;
+import sancho.utility.regex.RE;
+import sancho.utility.regex.REMatch;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
