@@ -256,13 +256,12 @@ public class MainWindow implements ShellListener, MyObserver, DisposeListener {
                this.registeredTabs.add(new RoomsTab(this, ALL_TAB_IDS[var1]));
                break;
             case 8:
-               Object var2 = null;
-               if (!Sancho.forceMozilla() && !SWT.getPlatform().equals("wpf")) {
-                  var2 = new WebBrowserTab_win32(this, ALL_TAB_IDS[var1]);
-               } else {
-                  var2 = new WebBrowserTab(this, ALL_TAB_IDS[var1]);
-               }
-
+               // WebBrowserTab_win32 reimplemented OLE/COM event dispatch for the
+               // 2008-era 32-bit SWT. Its COMObject callbacks (int method(int[]))
+               // no longer match modern 64-bit SWT (long method(long[])), so it is
+               // broken. The standard Browser widget handles win32 natively now, so
+               // always use the portable WebBrowserTab.
+               Object var2 = new WebBrowserTab(this, ALL_TAB_IDS[var1]);
                this.registeredTabs.add(var2);
          }
       }
