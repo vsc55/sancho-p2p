@@ -10,16 +10,39 @@ transfers, search, servers, friends, shares, IRC and a built-in web browser.
 
 This repository (`sancho-p2p`) **revives** it — the source has been recovered and
 ported to build and run on a **current JDK (17+)** against modern SWT/JFace, with
-reproducible Maven builds, a portable Windows executable, and automated releases.
+reproducible Maven builds, native packages for **Windows, Linux and macOS**, and
+automated releases.
 
 ## ⚙️ Status
 
-- ✅ Builds and runs on **JDK 17+** (verified on Windows) against **SWT 3.124 / JFace 3.31**.
-- ✅ Reproducible **Maven** build, **VS Code** F5 run config, portable Windows **`sancho.exe`** (jpackage), and a **GitHub Actions** release on tag.
-- 📄 Changes are tracked in **[CHANGELOG.md](CHANGELOG.md)**; downloads are on the **[Releases](../../releases)** page.
+- ✅ Builds and runs on **JDK 17+** against **SWT 3.124 / JFace 3.31**; CI builds on
+  **Linux, Windows and macOS**.
+- ✅ Every tag publishes native packages via `jpackage` — Windows portable `.zip`,
+  Linux `.deb` + `.rpm`, macOS `.dmg` (plus a plain jar) — with **VS Code** F5 run
+  config and a reproducible **Maven** build.
+- 📄 Changes are tracked in **[CHANGELOG.md](CHANGELOG.md)**; downloads are on the
+  **[Releases](../../releases)** page.
 
 It is **not affiliated** with the original authors' (inactive) project, and no
 guarantees of compatibility, security or correctness are provided.
+
+## ⬇️ Download & install
+
+Grab the latest build from the **[Releases](../../releases)** page:
+
+| Platform | File | Install / run |
+| --- | --- | --- |
+| Windows | `sancho-<ver>-win64.zip` | Unzip anywhere, run `sancho.exe` (portable, bundled JRE) |
+| Debian / Ubuntu | `sancho-<ver>-linux-x86_64.deb` | `sudo apt install ./sancho-*.deb` |
+| Fedora / RHEL | `sancho-<ver>-linux-x86_64.rpm` | `sudo dnf install ./sancho-*.rpm` |
+| macOS (Apple Silicon) | `sancho-<ver>-macos-arm64.dmg` | Open the `.dmg`, drag **Sancho** to Applications |
+| Any (needs a JRE) | `sancho-<ver>.jar` | `java -jar` with SWT/JFace + deps on the classpath |
+
+Every artifact except the plain jar bundles its own Java runtime. The macOS `.dmg`
+is **unsigned**, so Gatekeeper will warn — right-click → **Open** the first time
+(or `xattr -dr com.apple.quarantine /Applications/sancho.app`). Sancho needs a
+reachable **MLDonkey core** — set the host/port and login in Preferences (or the
+first-run setup wizard).
 
 ## 🏷 Versions
 
@@ -29,7 +52,7 @@ Sancho used a `0.9.4-NN` snapshot scheme.
 | --- | --- | --- |
 | `0.9.4-23` | Early **authentic** hand-written source | `0.9.4-23` tag — `git checkout 0.9.4-23` |
 | `0.9.4-59` | Last **published** binary; its source was lost | recovered by decompilation |
-| **`0.9.4-60`** | Current **modernized** build: the decompiled `-59` ported to modern SWT/JFace + JDK 17, plus bug fixes | **`main`** |
+| **`0.9.4-60` → latest** | Current **modernized** build: the decompiled `-59` ported to modern SWT/JFace + JDK 17, made cross-platform, plus bug fixes | **`main`** / [Releases](../../releases) |
 
 > `sancho-src/src` on `main` is **not** authentic source. It was recovered by
 > decompiling the last published `0.9.4-59` binary (Vineflower) and then ported to
@@ -48,7 +71,7 @@ Sancho used a `0.9.4-NN` snapshot scheme.
 - `packaging/` — per-OS app icons (windows/linux/macos)
 - `.github/workflows/` — release automation
 - `appimage/` — AppDir used to build the legacy Linux AppImage
-- `CHANGELOG.md`, `LICENSE`
+- `CHANGELOG.md`, `ToDo.md`, `LICENSE`
 
 ## 🔧 Building
 
@@ -140,7 +163,7 @@ Release with all artifacts — Windows portable `.zip` + jar, Linux `.deb` + `.r
 macOS `.dmg` — using the matching [CHANGELOG.md](CHANGELOG.md) section as the notes:
 
 ```bash
-git tag 0.9.4-62 && git push origin 0.9.4-62
+git tag 0.9.4-63 && git push origin 0.9.4-63
 ```
 
 ### AppImage (legacy)
