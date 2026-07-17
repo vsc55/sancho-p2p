@@ -50,9 +50,14 @@ Sancho used a `0.9.4-NN` snapshot scheme.
 
 | Version | What it is | Where |
 | --- | --- | --- |
-| `0.9.4-23` | Early **authentic** hand-written source | `0.9.4-23` tag — `git checkout 0.9.4-23` |
-| `0.9.4-59` | Last **published** binary; its source was lost | recovered by decompilation |
-| **`0.9.4-60` → latest** | Current **modernized** build: the decompiled `-59` ported to modern SWT/JFace + JDK 17, made cross-platform, plus bug fixes | **`main`** / [Releases](../../releases) |
+| `0.9.4-23` | Early **authentic** hand-written source | [`0.9.4-23`](../../releases/tag/0.9.4-23) tag — `git checkout 0.9.4-23` |
+| `0.9.4-59` | Last **published** binary (source lost); recovered by decompilation | [`0.9.4-59`](../../releases/tag/0.9.4-59) tag / `decompiled-0.9.4-59` branch |
+| `0.9.4-60` | First **modernized** build: decompiled `-59` ported to modern SWT/JFace + JDK 17, plus bug fixes | [Release](../../releases/tag/0.9.4-60) |
+| `0.9.4-61` | Maintained **JSch** fork + CI build check | [Release](../../releases/tag/0.9.4-61) |
+| `0.9.4-62` | **Cross-platform** release artifacts (Windows / Linux / macOS) | [Release](../../releases/tag/0.9.4-62) |
+
+**`main`** always holds the newest modernized build; [CHANGELOG.md](CHANGELOG.md)
+and the [Releases](../../releases) page are the authoritative, up-to-date list.
 
 > `sancho-src/src` on `main` is **not** authentic source. It was recovered by
 > decompiling the last published `0.9.4-59` binary (Vineflower) and then ported to
