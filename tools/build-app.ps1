@@ -27,14 +27,18 @@
     dpkg/fakeroot and `rpm` needs rpmbuild.
 #>
 param(
-    [string]$Type = ""
+    [string]$Type = "",
+    # jpackage bundle version (1-3 integers). macOS rejects a leading 0, so the
+    # release passes 1.0.0 there; the real version lives in the file name and the
+    # app's own VersionInfo. Windows/Linux keep the accurate 0.9.4.
+    [string]$AppVersion = "0.9.4"
 )
 
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
 Set-Location $root
 
-$appVersion = "0.9.4"   # jpackage requires a numeric version
+$appVersion = $AppVersion
 
 if (-not $Type) {
     if ($IsMacOS) { $Type = "dmg" } else { $Type = "app-image" }

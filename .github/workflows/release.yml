@@ -55,7 +55,9 @@ jobs:
             Copy-Item $jar.FullName "out/sancho-$ver.jar"
           }
           elseif ($IsMacOS) {
-            pwsh -NoProfile -File tools/build-app.ps1 -Type dmg
+            # macOS rejects a leading-zero bundle version (0.9.4); use 1.0.0 for the
+            # bundle. The file name and the app's own version stay 0.9.4-<n>.
+            pwsh -NoProfile -File tools/build-app.ps1 -Type dmg -AppVersion 1.0.0
             Get-ChildItem target/dist/*.dmg | ForEach-Object { Copy-Item $_.FullName "out/sancho-$ver-macos-arm64.dmg" }
           }
           else {
