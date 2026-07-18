@@ -63,13 +63,17 @@ public class CUser {
    }
 
    public void voice() {
-      if (this.prefix.indexOf(64) == -1 && this.prefix.indexOf(64) == -1) {
+      // second test was a duplicated indexOf('@') (64); it must check '+' (43) so a
+      // user isn't voiced twice ("++nick").
+      if (this.prefix.indexOf(64) == -1 && this.prefix.indexOf(43) == -1) {
          this.prefix = "+" + this.prefix;
       }
    }
 
    public void deVoice() {
-      if (this.prefix.indexOf(43) >= 1 && this.prefix.indexOf(64) == -1) {
+      // a voiced (non-op) user's prefix is exactly "+", so indexOf('+') is 0; the
+      // old ">= 1" never matched and -v never cleared the voice. Use ">= 0".
+      if (this.prefix.indexOf(43) >= 0 && this.prefix.indexOf(64) == -1) {
          this.prefix = "";
       }
    }

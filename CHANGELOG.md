@@ -12,6 +12,12 @@ authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 
 ### Fixed
 
+- **Closing an IRC channel during traffic could throw "Widget is disposed".** The
+  coloured-message runnable (`IRCConsole`) guarded the append but not the styling
+  that followed; it now returns early if the console is disposed.
+- **IRC voice/devoice was broken.** `CUser.voice()` compared for `@` twice (so a
+  user could be voiced twice → `++nick`), and `deVoice()` used `>= 1` where the
+  voiced prefix `+` is at index 0, so `-v` never removed the voice. Both corrected.
 - **"Core Verbosity" dialog discarded changes on Enter.** Cancel was the default
   button (same bug as the IRC Connect dialog), so pressing Enter cancelled instead of
   applying the ticked verbosity keywords. OK is now the default.
