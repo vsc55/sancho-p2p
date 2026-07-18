@@ -4,7 +4,9 @@ public class Base64 {
    public static String encode(byte[] var0) {
       StringBuffer var1 = new StringBuffer();
 
-      for (byte var2 = 0; var2 < var0.length; var2 += 3) {
+      for (int var2 = 0; var2 < var0.length; var2 += 3) {
+         // int, not byte: as a byte the index overflowed past 127 and crashed
+         // (or looped) for inputs longer than 127 bytes, e.g. long HTTP credentials.
          var1.append(encodeBlock(var0, var2));
       }
 
@@ -63,9 +65,9 @@ public class Base64 {
 
       int var3 = var0.length() * 6 / 8 - var1;
       byte[] var4 = new byte[var3];
-      byte var5 = 0;
+      int var5 = 0;
 
-      for (byte var6 = 0; var6 < var0.length(); var6 += 4) {
+      for (int var6 = 0; var6 < var0.length(); var6 += 4) {
          int var7 = (getValue(var0.charAt(var6)) << 18)
             + (getValue(var0.charAt(var6 + 1)) << 12)
             + (getValue(var0.charAt(var6 + 2)) << 6)

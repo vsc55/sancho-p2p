@@ -12,6 +12,10 @@ authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 
 ### Fixed
 
+- **Base64 broke on inputs over 127 bytes.** `Base64.encode`/`decode` used `byte`
+  loop counters and a `byte` output index that overflowed past 127, crashing (array
+  index out of bounds) on larger data — e.g. HTTP Basic-auth credentials or a long
+  preference key. Now use `int`.
 - **Statistics graph-history window hung the UI.** `GraphHistory` drew the vertical
   grid with a `byte` loop counter that overflowed past 127 (120 + 20 → −116), so the
   loop never ended once the window was ≥128 px wide — an infinite loop in the paint
