@@ -17,6 +17,11 @@ public class Addr {
             return -1;
          } else if (this.hasHostName() && var2.hasHostName()) {
             return this.getIpString().compareToIgnoreCase(var2.getIpString());
+         } else if (this.getByteAddress() == null && var2.getByteAddress() == null) {
+            // Both firewalled/unknown -> equal. Returning 1 here (as before) for
+            // both a.compareTo(b) and b.compareTo(a) broke antisymmetry and made
+            // TimSort throw "Comparison method violates its general contract".
+            return 0;
          } else if (var2.getByteAddress() == null) {
             return 1;
          } else {

@@ -895,7 +895,14 @@ public class File extends AObjectO implements MyObserver, IObject_UID, IPreview 
       int[] var3 = new int[var2.length];
 
       for (int var4 = 0; var4 < var2.length; var4++) {
-         var3[var4] = (int)(System.currentTimeMillis() / 1000L) - Integer.parseInt(var2[var4]);
+         // Guard the parse like readAge() does: a non-numeric/empty token from the
+         // core must not throw out of the read loop (which would break the socket
+         // message stream). Default that chunk's age to 0.
+         try {
+            var3[var4] = (int)(System.currentTimeMillis() / 1000L) - Integer.parseInt(var2[var4]);
+         } catch (NumberFormatException var6) {
+            var3[var4] = 0;
+         }
       }
 
       return var3;

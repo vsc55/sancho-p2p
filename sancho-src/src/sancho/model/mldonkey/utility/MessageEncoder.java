@@ -100,7 +100,10 @@ public class MessageEncoder {
       var2[0 + var3] = (byte)(var4 & 0xFF);
       var2[1 + var3] = (byte)((var4 & 65535) >> 8);
       var2[2 + var3] = (byte)((var4 & 16777215) >> 16);
-      var2[3 + var3] = (byte)((var4 & 2147483647) >> 24);
+      // Mask 0x7FFFFFFF cleared bit 31, so any int with the high bit set (large
+      // ids, IP-as-int) had a corrupted top byte on the wire. Just shift; the
+      // (byte) cast keeps the low 8 bits.
+      var2[3 + var3] = (byte)(var4 >> 24);
       return var2;
    }
 

@@ -10,6 +10,27 @@ authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 
 ## [Unreleased]
 
+### Fixed
+
+- **Core would not start from a path with spaces** (e.g. `C:\Program Files\…`).
+  `ExecConsole` used the single-string `Runtime.exec`, which splits on whitespace;
+  it now uses the `String[]` form (and tolerates a null parent dir).
+- **External links were dead on modern Linux.** The GTK path spawned
+  `mozilla`/`konqueror`/`netscape` (none of which exist today). It now opens links
+  via SWT's `Program.launch` (xdg-open/gio), falling back to `xdg-open` and then the
+  legacy chain, while still honouring an explicitly configured browser.
+- **Sorting could crash with "Comparison method violates its general contract".**
+  Three comparators were not antisymmetric for equal elements — `Addr` (two
+  firewalled peers), client State (two downloading clients), and the downloads tree
+  Rate/State column (files sharing a state). All now return a consistent order, so
+  sorting those columns no longer throws on TimSort.
+- **Integers with the high bit set were corrupted on the wire.**
+  `MessageEncoder` masked the top byte with `0x7FFFFFFF`, dropping bit 31; large
+  ids / IP-as-int values sent to the core are now encoded correctly.
+- **A malformed chunk-age token from the core broke the read loop.**
+  `File.readChunkAges` now guards `Integer.parseInt` (like its sibling `readAge`)
+  and defaults to 0 instead of throwing out of the socket message stream.
+
 ### Changed
 
 - **Dropped the deprecated-for-removal boxing constructors.** Replaced all 77

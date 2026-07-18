@@ -54,10 +54,14 @@ public abstract class GSorter extends ViewerSorter implements DisposeListener {
    }
 
    protected int compareClientStates(Client var1, Client var2) {
-      if (var1.getStateEnum() == EnumHostState.CONNECTED_DOWNLOADING) {
-         return -1;
-      } else if (var2.getStateEnum() == EnumHostState.CONNECTED_DOWNLOADING) {
-         return 1;
+      boolean var5 = var1.getStateEnum() == EnumHostState.CONNECTED_DOWNLOADING;
+      boolean var6 = var2.getStateEnum() == EnumHostState.CONNECTED_DOWNLOADING;
+      // Only when exactly one is downloading does it sort first. When both are
+      // downloading, returning -1 (as before) for both a,b and b,a broke
+      // antisymmetry (TimSort "violates its general contract"); fall through to
+      // the rank/activity tie-break instead.
+      if (var5 != var6) {
+         return var5 ? -1 : 1;
       } else {
          int var3 = var1.getState().getRank();
          int var4 = var2.getState().getRank();

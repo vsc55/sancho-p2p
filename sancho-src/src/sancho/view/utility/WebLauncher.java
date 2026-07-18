@@ -75,6 +75,22 @@ public class WebLauncher {
             openWebBrowserError(var2);
          }
       } else {
+         // Linux/other. If the user configured a specific browser, honour it via the
+         // WebLauncher$1 thread. Otherwise use the desktop default through SWT's
+         // Program.launch (xdg-open/gio) instead of the dead mozilla/konqueror/
+         // netscape chain, falling back to xdg-open and finally the legacy path.
+         if (webBrowser == null || webBrowser.equals("")) {
+            if (Program.launch(var0)) {
+               return;
+            }
+
+            try {
+               Runtime.getRuntime().exec(new String[]{"xdg-open", var0});
+               return;
+            } catch (IOException var6) {
+            }
+         }
+
          WebLauncher$1 var7 = new WebLauncher$1("webBrowser", var0, var2);
          var7.start();
       }

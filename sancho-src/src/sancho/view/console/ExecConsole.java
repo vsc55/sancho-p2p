@@ -176,7 +176,10 @@ public class ExecConsole implements MyObserver {
       try {
          File var1 = new File(PreferenceLoader.loadStringEnv("coreExecutable"));
          String var2 = var1.getParent();
-         this.execProcess = Runtime.getRuntime().exec(var1.toString(), null, new File(var2));
+         // Use the String[] overload: the single-String exec() splits the command
+         // on whitespace, so a core path like C:\Program Files\...\mlnet.exe would
+         // try to run "C:\Program". var2 (parent dir) can be null for a bare name.
+         this.execProcess = Runtime.getRuntime().exec(new String[]{var1.toString()}, null, var2 == null ? null : new File(var2));
          Runtime.getRuntime().addShutdownHook(new ExecConsole$4(this));
          this.stdoutMonitor = new ExecConsole$StreamMonitor(this, this.execProcess.getInputStream(), 1);
          this.stdoutMonitor.addObserver(this);

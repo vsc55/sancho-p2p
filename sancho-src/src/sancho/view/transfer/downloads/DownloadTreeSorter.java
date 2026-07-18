@@ -27,6 +27,16 @@ public class DownloadTreeSorter extends GSorter {
       }
    }
 
+   private static int fileStateRank(EnumFileState var0) {
+      if (var0 == EnumFileState.DOWNLOADED) {
+         return 0;
+      } else if (var0 == EnumFileState.QUEUED) {
+         return 1;
+      } else {
+         return var0 == EnumFileState.PAUSED ? 2 : 3;
+      }
+   }
+
    protected int _compare(Viewer var1, Object var2, Object var3, int var4) {
       int var5 = this.category(var2);
       int var6 = this.category(var3);
@@ -52,24 +62,15 @@ public class DownloadTreeSorter extends GSorter {
                return this.compareInts(var11.getSources(), var12.getSources());
             case 7:
                return this.compareInts(var11.getRelativeAvail(), var12.getRelativeAvail());
-            case 8:
-               if (var11.getFileStateEnum() == EnumFileState.DOWNLOADED) {
-                  return -1;
-               } else if (var12.getFileStateEnum() == EnumFileState.DOWNLOADED) {
-                  return 1;
-               } else if (var11.getFileStateEnum() == EnumFileState.QUEUED) {
-                  return 2;
-               } else if (var12.getFileStateEnum() == EnumFileState.QUEUED) {
-                  return -2;
-               } else if (var11.getFileStateEnum() == EnumFileState.PAUSED) {
-                  return 3;
-               } else {
-                  if (var12.getFileStateEnum() == EnumFileState.PAUSED) {
-                     return -3;
-                  }
-
-                  return this.comparePercents(var11.getRate(), var12.getRate());
-               }
+            case 8: {
+               // Rank by state (Downloaded < Queued < Paused < other), then break
+               // ties by rate. The old constant returns (-1/2/3) gave the same sign
+               // for both a,b and b,a on same-state pairs, violating the comparator
+               // contract (TimSort abort with 2+ files sharing a state).
+               int var13 = fileStateRank(var11.getFileStateEnum());
+               int var14 = fileStateRank(var12.getFileStateEnum());
+               return var13 != var14 ? var13 - var14 : this.comparePercents(var11.getRate(), var12.getRate());
+            }
             case 9:
                return this.compareInts(var11.getNumChunks(), var12.getNumChunks());
             case 10:
