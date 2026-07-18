@@ -154,6 +154,14 @@
                                         <exclude>META-INF/*.RSA</exclude>
                                         <exclude>META-INF/ECLIPSE_.*</exclude>
                                         <exclude>module-info.class</exclude>
+                                        <!-- Eclipse/OSGi build metadata that several SWT/JFace
+                                             jars each ship (causes shade "overlapping resource"
+                                             warnings); not needed for our plain non-OSGi launch. -->
+                                        <exclude>.options</exclude>
+                                        <exclude>.api_description</exclude>
+                                        <exclude>about.html</exclude>
+                                        <exclude>about_files/**</exclude>
+                                        <exclude>plugin.properties</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
