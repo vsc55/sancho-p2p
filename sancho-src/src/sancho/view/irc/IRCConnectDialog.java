@@ -50,8 +50,8 @@ public class IRCConnectDialog extends Dialog {
    protected void createButtonsForButtonBar(Composite var1) {
       // OK is the default button so pressing Enter in the fields accepts (was
       // Cancel, which made Enter cancel the connect).
-      this.createButton(var1, 0, IDialogConstants.OK_LABEL, true);
-      this.createButton(var1, 1, IDialogConstants.CANCEL_LABEL, false);
+      this.createButton(var1, 0, SResources.getString("b.ok"), true);
+      this.createButton(var1, 1, SResources.getString("b.cancel"), false);
    }
 
    protected void buttonPressed(int var1) {

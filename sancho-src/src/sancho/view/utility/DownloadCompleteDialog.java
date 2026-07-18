@@ -1,7 +1,6 @@
 package sancho.view.utility;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -12,6 +11,7 @@ import sancho.model.mldonkey.File;
 import sancho.utility.VersionInfo;
 import sancho.view.MainWindow;
 import sancho.view.preferences.PreferenceLoader;
+import sancho.view.utility.SResources;
 
 public class DownloadCompleteDialog extends Dialog {
    MainWindow mainWindow;
@@ -51,7 +51,7 @@ public class DownloadCompleteDialog extends Dialog {
    }
 
    protected void createButtonsForButtonBar(Composite var1) {
-      this.createButton(var1, 0, IDialogConstants.OK_LABEL, true);
+      this.createButton(var1, 0, SResources.getString("b.ok"), true);
    }
 
    public boolean close() {

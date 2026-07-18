@@ -1,7 +1,6 @@
 package sancho.view.console;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -33,7 +32,7 @@ class Console$FindDialog extends Dialog {
 
    protected void createButtonsForButtonBar(Composite var1) {
       this.createButton(var1, 0, SResources.getString("l.find"), true);
-      this.createButton(var1, 1, IDialogConstants.CANCEL_LABEL, false);
+      this.createButton(var1, 1, SResources.getString("b.cancel"), false);
    }
 
    protected Control createDialogArea(Composite var1) {

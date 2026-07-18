@@ -14,8 +14,8 @@ class WebLauncher$2 implements Runnable {
 
    public void run() {
       MessageBox var1 = new MessageBox(new Shell(this.val$display), 1);
-      var1.setText("Fail");
-      var1.setMessage("openWebBrowserError: \nCheck Preferences>Default Web Browser");
+      var1.setText(SResources.getString("l.webBrowserErrorTitle"));
+      var1.setMessage(SResources.getString("l.webBrowserError"));
       var1.open();
    }
 }

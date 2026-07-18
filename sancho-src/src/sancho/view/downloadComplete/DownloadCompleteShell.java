@@ -1,7 +1,6 @@
 package sancho.view.downloadComplete;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
@@ -38,7 +37,7 @@ public class DownloadCompleteShell extends Dialog {
       Button var2 = new Button(var1, 0);
       var2.setText(SResources.getString("b.deleteLogFile"));
       var2.addSelectionListener(new DownloadCompleteShell$1(this, var2));
-      this.createButton(var1, 0, IDialogConstants.OK_LABEL, true);
+      this.createButton(var1, 0, SResources.getString("b.ok"), true);
    }
 
    protected Control createDialogArea(Composite var1) {

@@ -9,6 +9,6 @@ class VersionChecker$3 implements Runnable {
    }
 
    public void run() {
-      VersionChecker$1.access$000(this.this$1).statusLine.setText("VersionCheck unavailable");
+      VersionChecker$1.access$000(this.this$1).statusLine.setText(SResources.getString("l.versionCheckUnavailable"));
    }
 }

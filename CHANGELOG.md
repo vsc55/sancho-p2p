@@ -12,6 +12,30 @@ authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 
 ### Fixed
 
+- **Dialog buttons and the Preferences window stayed English.** Sancho's own dialogs
+  labelled their buttons from JFace's English `IDialogConstants` (OK/Cancel/Yes/No), and
+  the JFace `PreferenceDialog` supplied its own English title and OK/Cancel/Apply/Restore-
+  Defaults labels — none of which follow Sancho's locale. All 17 dialog buttons now pull
+  from `SResources` (`b.ok`/`b.cancel`/`b.yes`/`b.no`), and a `SanchoPreferenceDialog`
+  subclass plus a `CPreferencePage` hook relabel the Preferences window's title and its
+  OK/Cancel/Apply/Restore-Defaults buttons from `SResources` too. A handful of hardcoded
+  status/error strings (IRC connect/disconnect titles, the web-browser-launch failure,
+  the version-check-unavailable line, the link-ripper "Found links" label) were routed
+  through `SResources` as well. The new keys are translated across all 14 bundled
+  locales, and `es_ES` was completed to 100% of the current key set.
+- **UI translations never loaded — the app was always English.** The 14 bundled
+  translations (`sancho_<locale>.properties`) lived only in `appimage/usr/bin/distrib/`,
+  which nothing ships: the Maven build bundled only the English base, and `SResources`
+  looked for a translation solely in the user's home dir (`~/.sancho/`), where no build
+  or installer step ever placed one. The translations now ship on the classpath inside
+  the jar, and `SResources` resolves the chosen locale from there (with the English base
+  as the per-key fallback and a `~/.sancho/sancho_<locale>.properties` still able to
+  override). Language is driven strictly by the `locale` preference — an unset/unknown
+  locale stays on the English base rather than following the OS locale. The language
+  picker in Preferences → General now lists the locales bundled in the jar (plus any
+  home-dir override) instead of scanning only the home dir, so it is no longer empty. The
+  `es_ES` (Spanish) translation was completed to 100% of the current keys. The stale
+  duplicates under `appimage/usr/bin/distrib/` were removed.
 - **Windows Registry preference page tried to run `regedit.exe` off Windows.** In debug
   builds the page also shows on Linux/macOS (for UI preview), where its "Update Registry"
   button shelled `regedit.exe` — a Windows binary. The `updateRegistry` shell-out is now

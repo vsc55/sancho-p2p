@@ -15,6 +15,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -32,6 +33,21 @@ public class CPreferencePage extends PreferencePage {
 
    protected Control createContents(Composite var1) {
       return null;
+   }
+
+   public void createControl(Composite parent) {
+      super.createControl(parent);
+      // JFace labels the Restore-Defaults / Apply buttons from its own English bundle;
+      // relabel them from Sancho's translations so the whole dialog follows the locale.
+      Button defaultsButton = this.getDefaultsButton();
+      if (defaultsButton != null) {
+         defaultsButton.setText(SResources.getString("b.defaults"));
+      }
+
+      Button applyButton = this.getApplyButton();
+      if (applyButton != null) {
+         applyButton.setText(SResources.getString("b.apply"));
+      }
    }
 
    protected void contributeButtons(Composite var1) {

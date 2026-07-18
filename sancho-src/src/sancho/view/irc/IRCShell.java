@@ -30,7 +30,7 @@ public class IRCShell implements IIRCListener {
       this.shell = new Shell();
       this.shell.setLayout(new FillLayout());
       this.shell.setImage(VersionInfo.getProgramIcon());
-      this.setTitle("Connecting...");
+      this.setTitle(SResources.getString("l.irc.connecting"));
       this.shell.setLayout(new FillLayout());
       this.shell.addDisposeListener(new IRCShell$1(this));
       this.shell.addListener(21, new IRCShell$2(this));
@@ -100,7 +100,7 @@ public class IRCShell implements IIRCListener {
    }
 
    public void onDisconnect() {
-      this.setTitle("Disconnected, close window.");
+      this.setTitle(SResources.getString("l.irc.disconnected"));
       int[] var1 = new int[]{0};
       String[] var2 = new String[]{"*** Disconnected"};
       this.getConsole("status").appendRawNL(var1, var2);

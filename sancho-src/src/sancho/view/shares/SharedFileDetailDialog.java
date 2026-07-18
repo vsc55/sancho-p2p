@@ -1,7 +1,6 @@
 package sancho.view.shares;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -33,7 +32,7 @@ public class SharedFileDetailDialog extends Dialog {
    }
 
    protected void createButtonsForButtonBar(Composite var1) {
-      this.createButton(var1, 0, IDialogConstants.OK_LABEL, true);
+      this.createButton(var1, 0, SResources.getString("b.ok"), true);
    }
 
    protected Control createDialogArea(Composite var1) {

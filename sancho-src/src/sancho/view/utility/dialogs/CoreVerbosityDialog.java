@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -179,8 +178,8 @@ public class CoreVerbosityDialog extends Dialog {
       var2.addSelectionListener(new CoreVerbosityDialog$1(this));
       // OK is the default button so Enter accepts instead of cancelling (which
       // discarded the verbosity changes) — same fix as IRCConnectDialog.
-      this.createButton(var1, 0, IDialogConstants.OK_LABEL, true);
-      this.createButton(var1, 1, IDialogConstants.CANCEL_LABEL, false);
+      this.createButton(var1, 0, SResources.getString("b.ok"), true);
+      this.createButton(var1, 1, SResources.getString("b.cancel"), false);
    }
 
    protected void buttonPressed(int var1) {

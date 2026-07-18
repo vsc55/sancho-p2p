@@ -1,8 +1,14 @@
 package sancho.view.preferences;
 
 import java.io.File;
+import java.security.CodeSource;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.TreeSet;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -13,6 +19,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.Text;
+import sancho.core.Sancho;
 import sancho.utility.VersionInfo;
 import sancho.view.utility.SResources;
 import sancho.view.utility.WidgetFactory;
@@ -327,22 +334,60 @@ public class RootPreferencePage extends CPreferencePage {
    }
 
    protected String[] getLocales() {
-      String var1 = VersionInfo.getHomeDirectory();
-      File var2 = new File(var1);
-      File[] var3 = var2.listFiles(new RootPreferencePage$PropertiesFilter());
-      ArrayList var4 = new ArrayList();
+      // Translations now ship on the classpath (inside the jar), so list those; also
+      // include any sancho_<locale>.properties the user dropped in the home dir as an
+      // override. (Previously this scanned only the home dir, so the list came up empty
+      // once the bundled files moved into the jar.)
+      TreeSet locales = new TreeSet();
 
-      for (int var5 = 0; var5 < var3.length; var5++) {
-         String var6 = var3[var5].getName();
-         if (var6.length() >= 18) {
-            String var7 = var6.substring(7, var6.length() - 11);
-            var4.add(var7);
+      try {
+         CodeSource codeSource = RootPreferencePage.class.getProtectionDomain().getCodeSource();
+         if (codeSource != null && codeSource.getLocation() != null) {
+            File classpathRoot = new File(codeSource.getLocation().toURI());
+            if (classpathRoot.isFile()) {
+               ZipFile jar = new ZipFile(classpathRoot);
+
+               try {
+                  Enumeration entries = jar.entries();
+
+                  while (entries.hasMoreElements()) {
+                     this.addLocale(locales, ((ZipEntry)entries.nextElement()).getName());
+                  }
+               } finally {
+                  jar.close();
+               }
+            } else if (classpathRoot.isDirectory()) {
+               this.addLocalesFromDir(locales, classpathRoot);
+            }
          }
+      } catch (Exception e) {
+         Sancho.pDebug("getLocales: " + e);
       }
 
-      String[] var8 = new String[var4.size()];
-      var4.toArray(var8);
-      return var8;
+      this.addLocalesFromDir(locales, new File(VersionInfo.getHomeDirectory()));
+      return (String[])locales.toArray(new String[locales.size()]);
+   }
+
+   private void addLocalesFromDir(Set locales, File dir) {
+      File[] files = dir.listFiles(new RootPreferencePage$PropertiesFilter());
+      if (files != null) {
+         for (int i = 0; i < files.length; i++) {
+            this.addLocale(locales, files[i].getName());
+         }
+      }
+   }
+
+   private void addLocale(Set locales, String fileName) {
+      // Extract <locale> from a top-level "sancho_<locale>.properties"; skip the base
+      // sancho.properties and any nested path such as sancho/version.properties.
+      String prefix = VersionInfo.getName() + "_";
+      String suffix = ".properties";
+      if (fileName.indexOf(47) < 0 && fileName.indexOf(92) < 0 && fileName.startsWith(prefix) && fileName.endsWith(suffix)) {
+         String locale = fileName.substring(prefix.length(), fileName.length() - suffix.length());
+         if (locale.length() > 0) {
+            locales.add(locale);
+         }
+      }
    }
 
    public void refreshList(List var1, ArrayList var2, ArrayList var3) {

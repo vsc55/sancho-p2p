@@ -1,7 +1,6 @@
 package sancho.view.transfer.downloads;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -36,8 +35,8 @@ class DownloadTreeMenuListener$PriorityInputDialog extends Dialog {
    }
 
    protected void createButtonsForButtonBar(Composite var1) {
-      this.okButton = this.createButton(var1, 0, IDialogConstants.OK_LABEL, true);
-      this.createButton(var1, 1, IDialogConstants.CANCEL_LABEL, false);
+      this.okButton = this.createButton(var1, 0, SResources.getString("b.ok"), true);
+      this.createButton(var1, 1, SResources.getString("b.cancel"), false);
       this.spinner.setFocus();
    }
 

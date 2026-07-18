@@ -12,7 +12,7 @@ class LinkRipper$8 implements Runnable {
    }
 
    public void run() {
-      this.this$0.urlGroup.setText("Found links(" + this.val$urlArray.length + "):");
+      this.this$0.urlGroup.setText(SResources.getString("l.foundLinks") + "(" + this.val$urlArray.length + "):");
 
       for (int var1 = 0; var1 < this.val$urlArray.length; var1++) {
          this.this$0.urlList.add(this.val$urlArray[var1]);

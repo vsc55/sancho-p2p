@@ -837,51 +837,65 @@ public class SResources {
    }
 
    static {
-      String var0 = PreferenceLoader.loadString("locale");
+      String localeCode = PreferenceLoader.loadString("locale");
       if (PreferenceLoader.getLocaleString() != null) {
-         var0 = PreferenceLoader.getLocaleString();
+         localeCode = PreferenceLoader.getLocaleString();
       }
 
-      String var1 = VersionInfo.getHomeDirectory();
-      File var2 = new File(var1 + VersionInfo.getName() + "_" + var0 + ".properties");
-      ResourceBundle var3;
-      if (!var2.exists()) {
-         var3 = ResourceBundle.getBundle(VersionInfo.getName());
-      } else {
-         try {
-            String var4 = "";
-            String var5 = "";
-            String var6 = "";
-            StringTokenizer var7 = new StringTokenizer(var0, "_");
-            if (var7.countTokens() > 0) {
-               var4 = var7.nextToken();
-            }
-
-            if (var7.countTokens() > 0) {
-               var5 = var7.nextToken();
-            }
-
-            if (var7.countTokens() > 0) {
-               var6 = var7.nextToken();
-            }
-
-            Locale var8 = new Locale(var4, var5, var6);
-            URL[] var9 = new URL[]{new URL("file:///" + var1)};
-            URLClassLoader var10 = new URLClassLoader(var9);
-            var3 = ResourceBundle.getBundle(VersionInfo.getName(), var8, var10);
-         } catch (Exception var11) {
-            var3 = ResourceBundle.getBundle(VersionInfo.getName());
+      // Language is driven by the "locale" preference (or the -locale option), never by
+      // the OS locale: this Control disables ResourceBundle's default-locale fallback, so
+      // an unset or unknown locale resolves to the bundled English base, not the system
+      // one. Translations (sancho_<locale>.properties) ship on the classpath in the jar;
+      // a matching file dropped in the home dir still overrides them.
+      ResourceBundle.Control noOsFallback = new ResourceBundle.Control() {
+         public Locale getFallbackLocale(String baseName, Locale locale) {
+            return null;
          }
+      };
+      String homeDir = VersionInfo.getHomeDirectory();
+      String bundleName = VersionInfo.getName();
+      ClassLoader classpathLoader = SResources.class.getClassLoader();
+      ResourceBundle bundle;
+      try {
+         if (localeCode == null || localeCode.equals("")) {
+            bundle = ResourceBundle.getBundle(bundleName, Locale.ROOT, classpathLoader, noOsFallback);
+         } else {
+            String language = "";
+            String country = "";
+            String variant = "";
+            StringTokenizer localeParts = new StringTokenizer(localeCode, "_");
+            if (localeParts.countTokens() > 0) {
+               language = localeParts.nextToken();
+            }
+
+            if (localeParts.countTokens() > 0) {
+               country = localeParts.nextToken();
+            }
+
+            if (localeParts.countTokens() > 0) {
+               variant = localeParts.nextToken();
+            }
+
+            Locale locale = new Locale(language, country, variant);
+            File homeOverride = new File(homeDir + bundleName + "_" + localeCode + ".properties");
+            if (homeOverride.exists()) {
+               URLClassLoader homeLoader = new URLClassLoader(new URL[]{new URL("file:///" + homeDir)}, classpathLoader);
+               bundle = ResourceBundle.getBundle(bundleName, locale, homeLoader, noOsFallback);
+            } else {
+               bundle = ResourceBundle.getBundle(bundleName, locale, classpathLoader, noOsFallback);
+            }
+         }
+      } catch (Exception var11) {
+         bundle = ResourceBundle.getBundle(bundleName, Locale.ROOT, classpathLoader, noOsFallback);
       }
 
       stringRegistry = new Hashtable();
-      String var13 = null;
-      Enumeration var15 = var3.getKeys();
+      Enumeration keys = bundle.getKeys();
 
-      while (var15.hasMoreElements()) {
-         String var12 = (String)var15.nextElement();
-         var13 = var3.getString(var12);
-         stringRegistry.put(var12.intern(), var13.intern());
+      while (keys.hasMoreElements()) {
+         String key = (String)keys.nextElement();
+         String value = bundle.getString(key);
+         stringRegistry.put(key.intern(), value.intern());
       }
    }
 }

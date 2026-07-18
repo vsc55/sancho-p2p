@@ -1,7 +1,6 @@
 package sancho.view.mainWindow;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -11,6 +10,7 @@ import org.eclipse.swt.widgets.Shell;
 import sancho.utility.VersionInfo;
 import sancho.view.utility.CSpinner;
 import sancho.view.utility.WidgetFactory;
+import sancho.view.utility.SResources;
 
 class MenuBar$AlphaInputDialog extends Dialog {
    CSpinner spinner;
@@ -29,7 +29,7 @@ class MenuBar$AlphaInputDialog extends Dialog {
    }
 
    protected void createButtonsForButtonBar(Composite var1) {
-      this.okButton = this.createButton(var1, 0, IDialogConstants.OK_LABEL, true);
+      this.okButton = this.createButton(var1, 0, SResources.getString("b.ok"), true);
    }
 
    protected Button getOkButton() {

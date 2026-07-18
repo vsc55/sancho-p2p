@@ -54,7 +54,7 @@ public class CPreferenceManager extends PreferenceManager {
          Sancho.pDebug("PM: " + var3);
       }
 
-      this.prefDialog = new PreferenceDialog(var1, this);
+      this.prefDialog = new SanchoPreferenceDialog(var1, this);
       PreferenceDialog.setDefaultImage(VersionInfo.getProgramIcon());
       if (Sancho.hasCollectionFactory()) {
          this.createMLDonkeyOptions(Sancho.getCore());

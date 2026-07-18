@@ -3,7 +3,6 @@ package sancho.core;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -451,13 +450,13 @@ public class CoreFactory extends MyObservable implements MyObserver, Runnable {
    }
 
    public static boolean openQuestion(Shell var0, String var1, String var2) {
-      String[] var3 = new String[]{IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL};
+      String[] var3 = new String[]{SResources.getString("b.yes"), SResources.getString("b.no")};
       CoreFactory$9 var4 = new CoreFactory$9(var0, var1, VersionInfo.getProgramIcon(), var2, 3, var3, 0);
       return var4.open() == 0;
    }
 
    public static void openInformation(Shell var0, String var1, String var2) {
-      MessageDialog var3 = new MessageDialog(var0, var1, VersionInfo.getProgramIcon(), var2, 2, new String[]{IDialogConstants.OK_LABEL}, 0);
+      MessageDialog var3 = new MessageDialog(var0, var1, VersionInfo.getProgramIcon(), var2, 2, new String[]{SResources.getString("b.ok")}, 0);
       var3.open();
    }
 

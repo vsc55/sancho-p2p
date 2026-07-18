@@ -2,7 +2,6 @@ package sancho.view.utility;
 
 import java.net.HttpURLConnection;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.swt.SWT;
@@ -15,6 +14,7 @@ import org.eclipse.swt.widgets.Shell;
 import sancho.model.mldonkey.IPreview;
 import sancho.utility.VersionInfo;
 import sancho.view.preferences.PreferenceLoader;
+import sancho.view.utility.SResources;
 
 public class TransferDialog extends Dialog {
    boolean cancel;
@@ -79,7 +79,7 @@ public class TransferDialog extends Dialog {
    }
 
    protected void createButtonsForButtonBar(Composite var1) {
-      this.createButton(var1, 1, IDialogConstants.CANCEL_LABEL, false);
+      this.createButton(var1, 1, SResources.getString("b.cancel"), false);
    }
 
    protected void buttonPressed(int var1) {

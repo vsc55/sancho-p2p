@@ -34,10 +34,10 @@ Backlog of improvements for the modernized `sancho-p2p` build. Done items live i
   instead of pre-scaling via `ImageData`, or at least `gc.setInterpolation(SWT.HIGH)`
   + `setAntialias(SWT.ON)` before the blit. Needs a >100% Windows display to observe.
 
-- [ ] **Verify UTF-8 decoding of core strings (charset fix).** `MessageBuffer.getString`
-  now decodes core strings as explicit UTF-8 (was the JVM default charset). Confirm
-  against a real MLDonkey core that non-ASCII filenames/nicknames (accents, ñ, …)
-  still render correctly on Windows; revert to a different charset if they don't.
+- [x] ~~Verify UTF-8 decoding of core strings (charset fix)~~ — done: confirmed against
+  a real MLDonkey core on Windows. `MessageBuffer.getString` decodes core strings as
+  explicit UTF-8, and accented download filenames (e.g. "Hospital de campaña",
+  "Hermana.pequeña.de.alguien") render correctly with no mojibake.
 
 - [~] **Functional end-to-end verification.** ✅ Verified working on **Windows**
   against a real MLDonkey core. Remaining: validate on **Linux** and **macOS**, and
@@ -67,6 +67,30 @@ Backlog of improvements for the modernized `sancho-p2p` build. Done items live i
   CHANGELOG.
 
 ## Housekeeping
+
+- [x] ~~De-duplicate keys in the base `sancho.properties`~~ — done: `mi.dynamicColumn`
+  and `mi.sort` (each duplicated with an identical value) collapsed to one definition
+  each. Base is 1101 unique keys.
+- [x] ~~`mvn package` without `clean` produces a jar missing the resources~~ —
+  investigated: **not a Maven bug.** A controlled A/B/C test (fresh build + two
+  incremental rebuilds, cleaning via `rm`) puts all 15 root `.properties` (base + 14
+  translations) in both the plain and shaded jars every time; `process-resources` copies
+  all 558 resources and the change from a marker key propagates through. The earlier
+  empty-jar readings were caused by broken cleanup during testing — a PowerShell
+  `Remove-Item target\classes` that the sandbox blocked/half-ran (`'\.' is blocked`),
+  leaving `target/classes` partial so the jar built from it was incomplete. Plain
+  `mvn package` (clean or incremental) is correct; no action needed.
+
+- [~] **Refresh the bundled UI translations.** The keys added during this modernization
+  (dialog buttons, PreferenceDialog, the win32-registry message, IRC/web-browser status
+  strings) are now translated in **all 14 locales**, and `es_ES` is 100% complete. Still
+  outstanding: the keys the original 2004-2006 translators never filled in for the other
+  languages (e.g. `fr_FR` ~409, `pt_BR` ~488, `gl_ES` ~433) — those fall back to English.
+  Completing them is a large, lower-value translation pass.
+- [ ] **Prune the leftover `appimage/usr/bin/distrib/` bundle.** All the `.properties`
+  duplicates are gone; the folder still holds legacy docs/icons/`sancho.reg`/preview
+  scripts (`preview.sh`/`.bat`, `sendalltorrents`) that nothing in the build references.
+  Decide what (if anything) the AppImage still needs and drop the rest.
 
 - [x] ~~Dependabot~~ — done: `.github/dependabot.yml` watches GitHub Actions and
   Maven deps/plugins weekly, ignoring the compatibility-pinned ones (Eclipse SWT,
