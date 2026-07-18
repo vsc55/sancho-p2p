@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
@@ -15,23 +16,43 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.CloseWindowListener;
 import org.eclipse.swt.browser.LocationEvent;
+import org.eclipse.swt.browser.LocationListener;
+import org.eclipse.swt.browser.OpenWindowListener;
+import org.eclipse.swt.browser.StatusTextEvent;
+import org.eclipse.swt.browser.StatusTextListener;
+import org.eclipse.swt.browser.TitleEvent;
+import org.eclipse.swt.browser.TitleListener;
+import org.eclipse.swt.browser.WindowEvent;
 import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabFolder2Adapter;
+import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetAdapter;
+import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import sancho.core.Sancho;
 import sancho.utility.SwissArmy;
+import sancho.utility.VersionInfo;
 import sancho.view.preferences.PreferenceLoader;
 import sancho.view.transfer.UniformResourceLocator;
 import sancho.view.utility.AbstractTab;
 import sancho.view.utility.LinkRipper;
 import sancho.view.utility.NoDuplicatesCombo;
+import sancho.view.utility.SResources;
 import sancho.view.utility.WidgetFactory;
+import sancho.view.viewFrame.ViewFrame;
+import sancho.view.viewFrame.ViewListener;
 
 public class WebBrowserTab extends AbstractTab {
    public CTabFolder cTabFolder;
@@ -40,7 +61,7 @@ public class WebBrowserTab extends AbstractTab {
    public Pattern bookmark_href;
    public Pattern bookmark_title;
    public Pattern bookmark_folder;
-   public WebBrowserTab$WebBrowserViewFrame viewFrame;
+   public WebBrowserViewFrame viewFrame;
    protected boolean loaded;
    protected boolean loadedBookmarks;
    public int maxFLen = 10;
@@ -62,12 +83,41 @@ public class WebBrowserTab extends AbstractTab {
       this.updateDisplay();
    }
 
-   private void activateDropTarget(Combo var1) {
-      DropTarget var2 = new DropTarget(var1, 21);
-      UniformResourceLocator var3 = UniformResourceLocator.getInstance();
-      TextTransfer var4 = TextTransfer.getInstance();
-      var2.setTransfer(new Transfer[]{var3, var4});
-      var2.addDropListener(new WebBrowserTab$1(this, var3, var1));
+   private void activateDropTarget(Combo combo) {
+      DropTarget dropTarget = new DropTarget(combo, 21);
+      final UniformResourceLocator uRL = UniformResourceLocator.getInstance();
+      TextTransfer textTransfer = TextTransfer.getInstance();
+      dropTarget.setTransfer(new Transfer[]{uRL, textTransfer});
+      final Combo linkEntryCombo = combo;
+      dropTarget.addDropListener(new DropTargetAdapter() {
+         public void dragEnter(DropTargetEvent event) {
+            // Only request DROP_LINK when the source actually offers it; forcing detail=4
+            // unconditionally made SWT reject a COPY-only drag (plain text/selection), so
+            // the drop was silently never delivered. Fall back to COPY, else NONE.
+            boolean supported = false;
+
+            for (int i = 0; i < event.dataTypes.length; i++) {
+               if (uRL.isSupportedType(event.dataTypes[i])) {
+                  supported = true;
+                  break;
+               }
+            }
+
+            if (supported && (event.operations & 4) != 0) {
+               event.detail = 4;
+            } else if ((event.operations & 1) != 0) {
+               event.detail = 1;
+            } else {
+               event.detail = 0;
+            }
+         }
+
+         public void drop(DropTargetEvent event) {
+            if (event.data != null) {
+               linkEntryCombo.setText((String)event.data);
+            }
+         }
+      });
    }
 
    public void browserBack() {
@@ -111,7 +161,7 @@ public class WebBrowserTab extends AbstractTab {
    }
 
    public Browser createBrowser(Composite var1) {
-      Browser var2;
+      Browser browser;
       try {
          // SWT removed the old Mozilla/XULRunner backend (SWT.MOZILLA). On Windows
          // the plain default (SWT.NONE) is still the legacy Internet Explorer engine,
@@ -119,33 +169,92 @@ public class WebBrowserTab extends AbstractTab {
          // is unavailable it throws, and we fall back to the platform default.
          if ("win32".equals(SWT.getPlatform())) {
             try {
-               var2 = new Browser(var1, SWT.EDGE);
-            } catch (SWTError var4) {
-               Sancho.pDebug("SWT.EDGE unavailable, falling back to default browser: " + var4.toString());
-               var2 = new Browser(var1, SWT.NONE);
+               browser = new Browser(var1, SWT.EDGE);
+            } catch (SWTError edgeUnavailable) {
+               Sancho.pDebug("SWT.EDGE unavailable, falling back to default browser: " + edgeUnavailable.toString());
+               browser = new Browser(var1, SWT.NONE);
             }
          } else {
-            var2 = new Browser(var1, SWT.NONE);
+            browser = new Browser(var1, SWT.NONE);
          }
-      } catch (SWTError var5) {
-         Sancho.pDebug(var5.toString());
-         this.viewFrame.updateCLabelText("Browser failed (see FAQ): " + var5.toString());
-         this.viewFrame.updateCLabelToolTip(var5.toString());
+      } catch (SWTError browserError) {
+         Sancho.pDebug(browserError.toString());
+         this.viewFrame.updateCLabelText("Browser failed (see FAQ): " + browserError.toString());
+         this.viewFrame.updateCLabelToolTip(browserError.toString());
          return null;
-      } catch (Exception var6) {
-         var6.printStackTrace();
+      } catch (Exception otherError) {
+         otherError.printStackTrace();
          return null;
       }
 
       this.loaded = true;
-      var2.setLayoutData(new GridData(1808));
-      WebBrowserTab$2 var3 = new WebBrowserTab$2(this);
-      var2.addStatusTextListener(var3);
-      var2.addTitleListener(new WebBrowserTab$3(this));
-      var2.addCloseWindowListener(new WebBrowserTab$4(this));
-      var2.addOpenWindowListener(new WebBrowserTab$5(this));
-      var2.addLocationListener(new WebBrowserTab$6(this));
-      return var2;
+      browser.setLayoutData(new GridData(1808));
+      browser.addStatusTextListener(new StatusTextListener() {
+         public void changed(StatusTextEvent event) {
+            Browser eventBrowser = (Browser)event.widget;
+            if (eventBrowser != null && !eventBrowser.isDisposed()) {
+               CTabItem tabItem = (CTabItem)eventBrowser.getData("cTabItem");
+               if (tabItem == WebBrowserTab.this.cTabFolder.getSelection()) {
+                  WebBrowserTab.this.getMainWindow().getStatusline().setText(event.text);
+               }
+            }
+         }
+      });
+      browser.addTitleListener(new TitleListener() {
+         public void changed(TitleEvent event) {
+            Browser eventBrowser = (Browser)event.widget;
+            if (eventBrowser != null && !eventBrowser.isDisposed()) {
+               CTabItem tabItem = (CTabItem)eventBrowser.getData("cTabItem");
+               // Null-check BEFORE setText: a title event can arrive before createBrowserTab
+               // stores "cTabItem" (the Edge backend delivers titles from an async pump), so
+               // dereferencing tabItem first threw an NPE and the title stopped updating.
+               if (tabItem != null && !tabItem.isDisposed()) {
+                  tabItem.setText(event.title);
+                  if (tabItem == WebBrowserTab.this.cTabFolder.getSelection()) {
+                     WebBrowserTab.this.viewFrame.updateCLabelText(event.title);
+                  }
+               }
+            }
+         }
+      });
+      browser.addCloseWindowListener(new CloseWindowListener() {
+         public void close(WindowEvent event) {
+            Browser eventBrowser = (Browser)event.widget;
+            if (eventBrowser != null && !eventBrowser.isDisposed()) {
+               CTabItem tabItem = (CTabItem)eventBrowser.getData("cTabItem");
+               if (tabItem != null && !tabItem.isDisposed() && !WebBrowserTab.this.cTabFolder.isDisposed()) {
+                  tabItem.dispose();
+               }
+            }
+         }
+      });
+      browser.addOpenWindowListener(new OpenWindowListener() {
+         public void open(WindowEvent event) {
+            Browser newBrowser = WebBrowserTab.this.createBrowserTab();
+            if (newBrowser != null) {
+               event.browser = newBrowser;
+            }
+         }
+      });
+      browser.addLocationListener(new LocationListener() {
+         public void changed(LocationEvent event) {
+            WebBrowserTab.this.onChanged(event);
+         }
+
+         public void changing(LocationEvent event) {
+            if (event.location != null) {
+               String location = event.location;
+               if (WebBrowserTab.this.regex.matcher(location).find()) {
+                  WebBrowserTab.this.getMainWindow().getStatusline().setText(SResources.getString("l.sending") + location);
+                  event.doit = false;
+                  Sancho.send((short)8, location);
+               } else if (event.top) {
+                  WebBrowserTab.this.onChangingTop(event);
+               }
+            }
+         }
+      });
+      return browser;
    }
 
    public Browser createBrowserTab() {
@@ -169,8 +278,16 @@ public class WebBrowserTab extends AbstractTab {
          var5.printStackTrace();
       }
 
-      WebBrowserTab$7 var3 = new WebBrowserTab$7(this);
-      this.inputCombo.addKeyListener(var3);
+      this.inputCombo.addKeyListener(new KeyAdapter() {
+         public void keyPressed(KeyEvent event) {
+            NoDuplicatesCombo combo = (NoDuplicatesCombo)event.widget;
+            if (event.character == '\r' || event.keyCode == 16777296) {
+               WebBrowserTab.this.navigate(combo.getText());
+               combo.add(combo.getText(), 0);
+               combo.setText("");
+            }
+         }
+      });
       Browser var4 = this.createBrowser(var1);
       if (var4 != null) {
          var4.setData("cTabItem", var2);
@@ -186,7 +303,7 @@ public class WebBrowserTab extends AbstractTab {
    }
 
    protected void createContents(Composite var1) {
-      this.viewFrame = new WebBrowserTab$WebBrowserViewFrame(this, var1, "tab.webbrowser", "tab.webbrowser.buttonSmall", this);
+      this.viewFrame = new WebBrowserViewFrame(var1, "tab.webbrowser", "tab.webbrowser.buttonSmall", this);
       this.addViewFrame(this.viewFrame);
       this.cTabFolder = WidgetFactory.createCTabFolder(
          this.viewFrame.getChildComposite(), 64 | (PreferenceLoader.loadBoolean("webBrowserCTabFolderTabsOnTop") ? 128 : 1024)
@@ -194,14 +311,50 @@ public class WebBrowserTab extends AbstractTab {
       WidgetFactory.addCTabFolderMenu(this.cTabFolder, "webBrowserCTabFolder");
       if (this.createBrowserTab() != null) {
          this.cTabFolder.setSelection(0);
-         this.cTabFolder.addCTabFolder2Listener(new WebBrowserTab$8(this));
-         this.cTabFolder.addSelectionListener(new WebBrowserTab$9(this));
+         this.cTabFolder.addCTabFolder2Listener(new CTabFolder2Adapter() {
+            public void close(CTabFolderEvent event) {
+               CTabItem tabItem = (CTabItem)event.item;
+               Browser browser = (Browser)tabItem.getData("browser");
+               if (WebBrowserTab.this.cTabFolder.getItemCount() == 1) {
+                  if (browser != null && !browser.isDisposed()) {
+                     browser.setUrl("about:blank");
+                  }
+
+                  NoDuplicatesCombo combo = WebBrowserTab.this.getInputCombo(tabItem);
+                  if (combo != null) {
+                     combo.setText("");
+                  }
+
+                  WebBrowserTab.this.viewFrame.updateCLabelText(SResources.getString("tab.webbrowser"));
+                  tabItem.setText("blank");
+                  event.doit = false;
+               } else if (browser != null && !browser.isDisposed()) {
+                  browser.dispose();
+               }
+            }
+         });
+         this.cTabFolder.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent event) {
+               CTabItem tabItem = (CTabItem)event.item;
+               Browser browser = (Browser)tabItem.getData("browser");
+               NoDuplicatesCombo combo = WebBrowserTab.this.getInputCombo(tabItem);
+               if (combo != null) {
+                  if (browser != null && !browser.isDisposed()) {
+                     combo.setText(browser.getUrl());
+                  }
+
+                  combo.setFocus();
+               }
+
+               WebBrowserTab.this.viewFrame.updateCLabelText(tabItem.getText());
+            }
+         });
       }
    }
 
    public void createFavoritesMenu(IMenuManager var1) {
       if (this.loaded) {
-         var1.add(new WebBrowserTab$NewBrowserTabAction(this));
+         var1.add(new NewBrowserTabAction());
          var1.add(new Separator());
          String var2 = PreferenceLoader.loadStringEnv("bookmarksFile");
          File var3 = new File(var2);
@@ -233,7 +386,7 @@ public class WebBrowserTab extends AbstractTab {
 
    protected void addIfFull(IMenuManager var1, String var2, String var3) {
       if (var2 != null && var3 != null) {
-         var1.add(new WebBrowserTab$ADRBookmark(this, var2, var3));
+         var1.add(new ADRBookmark(var2, var3));
       }
    }
 
@@ -303,7 +456,7 @@ public class WebBrowserTab extends AbstractTab {
             } else if (!var4.startsWith("</DL>")) {
                if (var4.startsWith("<DT>")) {
                   if (var4.indexOf("HREF=") != -1) {
-                     ((IMenuManager)var7).add(new WebBrowserTab$NSBookmark(this, var4));
+                     ((IMenuManager)var7).add(new NSBookmark(var4));
                   } else {
                      var3.add(var7);
                      Matcher var14 = this.bookmark_folder.matcher(var4);
@@ -415,5 +568,155 @@ public class WebBrowserTab extends AbstractTab {
       }
 
       return var1;
+   }
+
+   // The tab's view frame: a browser toolbar (configurable link buttons + stop/refresh/
+   // back/forward) plus the favorites menu wiring. Non-static inner class so its tool
+   // buttons can reach the enclosing WebBrowserTab directly.
+   public class WebBrowserViewFrame extends ViewFrame {
+      private int numToolItems;
+
+      public WebBrowserViewFrame(Composite parent, String label, String icon, AbstractTab tab) {
+         super(parent, label, icon, tab);
+         this.createViewToolBar();
+         this.createViewListener(new WebBrowserViewListener(this));
+      }
+
+      public void createViewToolBar() {
+         super.createViewToolBar();
+         this.numToolItems = PreferenceLoader.loadInt("webBrowserToolItems");
+
+         for (int i = 1; i < this.numToolItems + 1; i++) {
+            final int toolIndex = i;
+            this.addToolItem(PreferenceLoader.loadString("webBrowserToolItem" + i), String.valueOf(i), new SelectionAdapter() {
+               public void widgetSelected(SelectionEvent event) {
+                  WebBrowserTab.this.navigate(PreferenceLoader.loadString("webBrowserToolItem" + toolIndex));
+               }
+            });
+         }
+
+         this.addToolItem("ti.web.sancho", "ProgramIcon", new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent event) {
+               WebBrowserTab.this.navigate(VersionInfo.getHomePage2());
+            }
+         });
+         this.addToolSeparator();
+         this.addToolItem("ti.web.stop", "page-stop", new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent event) {
+               WebBrowserTab.this.browserStop();
+            }
+         });
+         this.addToolItem("ti.web.refresh", "page-refresh", new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent event) {
+               WebBrowserTab.this.browserRefresh();
+            }
+         });
+         this.addToolSeparator();
+         this.addToolItem("ti.web.back", "page-back", new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent event) {
+               WebBrowserTab.this.browserBack();
+            }
+         });
+         this.addToolItem("ti.web.forward", "page-forward", new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent event) {
+               WebBrowserTab.this.browserForward();
+            }
+         });
+      }
+
+      public void updateDisplay() {
+         super.updateDisplay();
+         if (this.numToolItems != PreferenceLoader.loadInt("webBrowserToolItems") && this.toolBar != null) {
+            for (int i = this.toolBar.getItemCount() - 1; i >= 0; i--) {
+               this.toolBar.getItems()[i].dispose();
+            }
+
+            this.toolBar.dispose();
+            this.createViewToolBar();
+            this.toolBar.getParent().layout();
+         } else if (this.toolBar != null) {
+            for (int i = 1; i <= this.numToolItems; i++) {
+               this.toolBar.getItems()[i - 1].setToolTipText(PreferenceLoader.loadString("webBrowserToolItem" + i));
+            }
+         }
+      }
+   }
+
+   // Routes the view frame's context-menu build to the tab's favorites menu.
+   public class WebBrowserViewListener extends ViewListener {
+      public WebBrowserViewListener(ViewFrame frame) {
+         super(frame);
+      }
+
+      public void menuAboutToShow(IMenuManager menu) {
+         WebBrowserTab.this.createFavoritesMenu(menu);
+      }
+   }
+
+   // Favorites-menu action: open a fresh browser tab and select it.
+   public class NewBrowserTabAction extends Action {
+      public NewBrowserTabAction() {
+         super(SResources.getString("l.newBrowserTab"));
+      }
+
+      public void run() {
+         Browser browser = WebBrowserTab.this.createBrowserTab();
+         if (browser != null) {
+            CTabItem tabItem = (CTabItem)browser.getData("cTabItem");
+            WebBrowserTab.this.cTabFolder.setSelection(tabItem);
+         }
+      }
+   }
+
+   // A Netscape-style (bookmarks.html) favorite parsed from a <DT><A HREF=...> line.
+   public class NSBookmark extends Action {
+      String href;
+
+      public NSBookmark(String line) {
+         Matcher titleMatcher = WebBrowserTab.this.bookmark_title.matcher(line);
+         Matcher hrefMatcher = WebBrowserTab.this.bookmark_href.matcher(line);
+         String title = "Unknown";
+         if (titleMatcher.find()) {
+            int start = titleMatcher.start(1);
+            int end = titleMatcher.end(1);
+            if (!titleMatcher.find()) {
+               title = line.substring(start, end);
+            }
+         }
+
+         if (hrefMatcher.find()) {
+            int start = hrefMatcher.start(1);
+            int end = hrefMatcher.end(1);
+            if (!hrefMatcher.find()) {
+               this.href = line.substring(start, end);
+            }
+         }
+
+         this.setText(WebBrowserTab.this.formatTitle(title));
+         this.setImageDescriptor(SResources.getImageDescriptor("web-link-m"));
+      }
+
+      public void run() {
+         if (this.href != null && !this.href.equals("")) {
+            WebBrowserTab.this.navigate(WebBrowserTab.this.getSelectedBrowser(), this.href);
+         }
+      }
+   }
+
+   // An Opera-style (.adr) favorite: an explicit name + URL pair.
+   public class ADRBookmark extends Action {
+      String URL;
+
+      public ADRBookmark(String name, String url) {
+         this.setText(WebBrowserTab.this.formatTitle(name));
+         this.setImageDescriptor(SResources.getImageDescriptor("web-link-o"));
+         this.URL = url;
+      }
+
+      public void run() {
+         if (this.URL != null && !this.URL.equals("")) {
+            WebBrowserTab.this.navigate(WebBrowserTab.this.getSelectedBrowser(), this.URL);
+         }
+      }
    }
 }

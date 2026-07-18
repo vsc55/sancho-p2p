@@ -10,6 +10,15 @@ authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 
 ## [Unreleased]
 
+### Changed
+
+- **Folded WebBrowserTab's decompiled inner classes back into one file** (20 split-out
+  `WebBrowserTab$*.java` → nested/anonymous classes inside `WebBrowserTab.java`). Purely
+  structural: the 15 anonymous listeners are inlined, the 5 named classes
+  (`WebBrowserViewFrame`, `WebBrowserViewListener`, the three favorite `Action`s) become
+  nested classes, and the decompiler's `this$0`/`access$NNN` artifacts are gone. No
+  behaviour change; a first, opportunistic step of the inner-class re-merge (see ToDo).
+
 ### Removed
 
 - **The IRC client.** Sancho's built-in IRC window (server/channel console, channel-user

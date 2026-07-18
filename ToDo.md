@@ -68,6 +68,37 @@ Backlog of improvements for the modernized `sancho-p2p` build. Done items live i
 
 ## Housekeeping
 
+- [ ] **(Evaluated) Re-merge decompiled inner classes into their parent files —
+  opportunistically, not en masse.** 448 of 861 source files (52%) are split-out inner
+  classes (`Foo$1.java` anonymous ×322, `Foo$Bar.java` named ×126) across 112 parents,
+  with 821 synthetic `access$NNN` accessors, 355 files carrying `this$0`, and 74 `val$`
+  captures. A bulk merge is weeks of work, purely cosmetic, and high-risk (inlining the
+  322 anonymous classes with correct capture / effectively-final semantics is exactly
+  where subtle bugs creep in); there is no safe automation (re-decompiling would wipe all
+  our fixes/comments/renames). **Do it opportunistically:** when already editing a class,
+  fold its small inner classes back inline and compile-check. Named nested classes are
+  more tractable than anonymous ones. (Trial done on WebBrowserTab / MenuBar — see
+  CHANGELOG.)
+- [ ] **(Evaluated, deferred) Migrate off Trove 2.1.0 — the last unmaintained dependency.**
+  Trove is the primitive-collections backbone of the model: `ACollection_Int` wraps a
+  `TIntObjectHashMap` (int id → model object) for the 8 core collections (File/Client/
+  Server/Result/Room/User/Network/SharedFile), plus `TIntArrayList` for row-index lists
+  in the viewers/stats and a few `TLongIntHashMap`/`TObjectIntHashMap`. ~35 files. No CVE,
+  stable, isolated, pinned — unlike pircbot there is no security reason to rush.
+  **fastutil mapping** (mostly mechanical): `TIntObjectHashMap`→`Int2ObjectOpenHashMap`,
+  `TIntArrayList`→`IntArrayList` (`toNativeArray`→`toIntArray`, `getQuick`→`getInt`,
+  `reset`→`clear`), `TLongIntHashMap`→`Long2IntOpenHashMap`, etc.
+  **Hard part:** fastutil has no `TObjectProcedure`/`TIntObjectProcedure` (boolean
+  `execute()` early-stop / retain). 14 classes implement them (`FileCollection$CommitAll`,
+  `ServerCollection$RemoveNetworkServers`, `SharedFileCollection$CalculateTotalSize`, …).
+  Strategy to minimise churn: define Sancho's own `ObjectProcedure`/`IntObjectProcedure`
+  interfaces and reimplement the loop/early-stop/retain once inside `ACollection_Int`/
+  `_Hash`; then the 14 classes only swap their `implements`/import, logic unchanged.
+  **Effort:** ~1 day + real-core hot-path testing; **risk: medium** (every core message
+  hits these maps). **Jar size caveat:** full fastutil is ~23 MB (uber-jar is 6.4 MB) —
+  use `fastutil-core`, shade `minimizeJar`, or prefer **HPPC** (~1.7 MB, maintained).
+  Recommendation: not worth it now; keep this plan for if/when it becomes necessary.
+
 - [ ] **Decide what `ClientTableView.updateDisplay` should do with the dead
   `downloadsAvailableColor` key.** It reads an unregistered preference (→ `null`), so the
   clients table currently falls back to the default foreground — harmless but the intended
