@@ -10,6 +10,13 @@ on:
       - '[0-9]*'            # bare version tags too, e.g. 0.9.4-65
   workflow_dispatch:        # manual run builds artifacts without publishing
 
+# Only one release run per ref at a time. If the tag is moved (re-release), the
+# in-flight run is cancelled before the new one starts, so two runs never delete/
+# recreate and upload to the same GitHub Release at once (which fails the uploads).
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write            # needed to create the GitHub Release
 
