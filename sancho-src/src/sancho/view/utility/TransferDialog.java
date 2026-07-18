@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import sancho.model.mldonkey.IPreview;
-import sancho.utility.SwissArmy;
 import sancho.utility.VersionInfo;
 import sancho.view.preferences.PreferenceLoader;
 
@@ -51,16 +50,11 @@ public class TransferDialog extends Dialog {
    }
 
    public boolean close() {
+      // Signal cancel and close immediately. The transfer thread checks `cancel` each
+      // read chunk and only touches widgets through updateLabel()/closeInThread(),
+      // both isDisposed-guarded, so there's no need to busy-wait for it here — the old
+      // loop slept up to 20 x 200ms = 4s on the UI thread, freezing the GUI on cancel.
       this.cancel = true;
-      int var1 = 0;
-
-      while (this.transferring && !this.cancelled) {
-         SwissArmy.threadSleep(200);
-         if (var1++ > 20) {
-            break;
-         }
-      }
-
       PreferenceStore var2 = PreferenceLoader.getPreferenceStore();
       PreferenceConverter.setValue(var2, "transferDialogWindowBounds", this.getShell().getBounds());
       return super.close();

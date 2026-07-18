@@ -240,6 +240,9 @@ public class EditMP3TagsDialog extends Dialog {
       var4.setLayoutData(new GridData(768));
       var4.setText(SResources.getString("b.cancel"));
       var4.addSelectionListener(new EditMP3TagsDialog$2(this));
+      // OK is the default button so Enter in the tag fields commits the edits (the
+      // hand-rolled button bar set no default, so Enter did nothing).
+      var2.getShell().setDefaultButton(var3);
       return var2;
    }
 

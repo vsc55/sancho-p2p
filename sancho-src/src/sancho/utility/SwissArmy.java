@@ -517,7 +517,8 @@ public class SwissArmy {
                Object[] var5 = new Object[]{Integer.valueOf(var2.getId()), var4, Integer.valueOf(var3.length + 2), Short.valueOf((short)0), var3};
                Sancho.send((short)63, var5);
                Sancho.pDebug("Sent Size: " + var3.length);
-               threadSleep(1000);
+               // (removed a threadSleep(1000) that ran on the UI thread after the
+               // send was already flushed, freezing the GUI ~1s per local torrent.)
             }
          }
       }

@@ -119,13 +119,13 @@ public class MessageEncoder {
    }
 
    private byte[] toBytes(Short var1, byte[] var2, int var3) {
+      // Bit-based, not the old % / / 256 division: for a short with the high bit set
+      // (a port 32768..65535 narrowed to a negative short) the signed division
+      // truncated toward zero and put the wrong high byte on the wire, so the core
+      // got a bogus port. Extracting the two low bytes preserves all 16 bits.
       short var4 = var1;
-
-      for (int var5 = 0; var5 < 2; var5++) {
-         var2[var5 + var3] = (byte)(var4 % 256);
-         var4 = (short)(var4 / 256);
-      }
-
+      var2[var3] = (byte)(var4 & 0xFF);
+      var2[var3 + 1] = (byte)(var4 >> 8 & 0xFF);
       return var2;
    }
 

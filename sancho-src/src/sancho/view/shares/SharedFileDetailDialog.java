@@ -33,7 +33,7 @@ public class SharedFileDetailDialog extends Dialog {
    }
 
    protected void createButtonsForButtonBar(Composite var1) {
-      this.createButton(var1, 0, IDialogConstants.OK_LABEL, false);
+      this.createButton(var1, 0, IDialogConstants.OK_LABEL, true);
    }
 
    protected Control createDialogArea(Composite var1) {

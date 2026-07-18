@@ -12,6 +12,17 @@ authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 
 ### Fixed
 
+- **Cancelling a preview transfer froze the GUI up to 4 s.** `TransferDialog.close()`
+  busy-waited on the UI thread for the download thread to acknowledge the cancel; it
+  now just signals cancel and closes (the download thread stops on its next chunk and
+  only touches widgets through disposed-guarded callbacks).
+- **Adding a local `.torrent` froze the GUI ~1 s per file.** `SwissArmy.sendLocalTorrent`
+  slept a second on the UI thread after the send was already flushed; removed.
+- **A server added on a high port (32768–65535) was sent the wrong port.**
+  `MessageEncoder.toBytes(Short)` used signed `/ 256` division, which mangled the high
+  byte for ports that narrow to a negative `short`; it now extracts the bytes bitwise.
+- **"Edit MP3 tags" and the shared-file detail dialog didn't respond to Enter** (no
+  default button); OK is now the default in both.
 - **The GUI froze for up to 3 s on an incoming friend message.** `FriendsTab`
   resolved the sender with a retry loop that `Thread.sleep`s up to 3× — and it ran
   inside the UI-thread runnable, freezing the whole GUI when the message came from a
