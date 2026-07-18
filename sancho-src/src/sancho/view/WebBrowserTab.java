@@ -156,6 +156,10 @@ public class WebBrowserTab extends AbstractTab {
       var1.setLayout(WidgetFactory.createGridLayout(1, 0, 0, 0, 0, false));
       this.inputCombo = new NoDuplicatesCombo(var1, 0);
       this.inputCombo.setLayoutData(new GridData(768));
+      // Bind this combo to its tab so every read/write targets the right one; the
+      // shared this.inputCombo field only ever points at the last-created tab, so with
+      // multiple tabs the URL used to land in the wrong (last) tab's address bar.
+      var2.setData("inputCombo", this.inputCombo);
 
       try {
          if (SWT.getPlatform().equals("win32") && PreferenceLoader.loadBoolean("dragAndDrop")) {
@@ -333,15 +337,17 @@ public class WebBrowserTab extends AbstractTab {
       }
    }
 
-   protected boolean ctrlDown() {
-      return false;
-   }
-
    public String getInputText() {
-      return this.inputCombo.getText();
+      NoDuplicatesCombo var1 = this.getSelectedInputCombo();
+      return var1 == null ? "" : var1.getText();
    }
 
-   protected void setupCtrlKey(Browser var1) {
+   public NoDuplicatesCombo getInputCombo(CTabItem var1) {
+      return var1 == null ? null : (NoDuplicatesCombo)var1.getData("inputCombo");
+   }
+
+   public NoDuplicatesCombo getSelectedInputCombo() {
+      return this.cTabFolder == null ? null : this.getInputCombo(this.cTabFolder.getSelection());
    }
 
    public String[] getCurrentLinks() {
@@ -380,7 +386,19 @@ public class WebBrowserTab extends AbstractTab {
             var4.setInputURL(var1.location);
          }
 
-         this.inputCombo.setText(var1.location);
+         NoDuplicatesCombo var5 = this.getInputCombo(var3);
+         if (var5 != null) {
+            var5.setText(var1.location);
+         }
+      }
+   }
+
+   protected void onChangingTop(LocationEvent var1) {
+      Browser var2 = (Browser)var1.widget;
+      CTabItem var3 = (CTabItem)var2.getData("cTabItem");
+      NoDuplicatesCombo var4 = this.getInputCombo(var3);
+      if (var4 != null) {
+         var4.setText(var1.location);
       }
    }
 

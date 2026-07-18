@@ -38,7 +38,10 @@ public class CPreferenceManager extends PreferenceManager {
    }
 
    protected void addWinRegistryPage(IPreferenceNode var1) {
-      if (VersionInfo.getOSPlatform().equals("Windows") || Sancho.debug) {
+      // Windows only. The old "|| Sancho.debug" made the page appear on Linux/macOS in
+      // debug builds, where its "Update Registry" button writes a .reg and shells out to
+      // regedit.exe — meaningless off Windows (it just fails and swallows the error).
+      if (VersionInfo.getOSPlatform().equals("Windows")) {
          this.addNode(var1, new WinRegPreferencePage(VersionInfo.getName() + ": " + SResources.getString("p.node.windowsRegistry")), "regedit");
       }
    }

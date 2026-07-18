@@ -12,20 +12,20 @@ Backlog of improvements for the modernized `sancho-p2p` build. Done items live i
   Windows/Linux/macOS matrix publishing Windows `.zip` + jar, Linux `.deb` +
   `.rpm`, and macOS `.dmg`. See CHANGELOG.
 
-- [ ] **WebBrowser: restore or retire the Ctrl+click "grab page as .torrent" feature.**
-  `WebBrowserTab.ctrlDown()` is hard-wired to `false` and `setupCtrlKey()` is an empty
-  method with no callers (a lost refactor/decompile artifact), so the Ctrl-modifier
-  branch in `WebBrowserTab$6` never runs. Either wire up Ctrl-state tracking or delete
-  the dead feature. Niche; needs a live browser to verify.
-- [ ] **WebBrowser: decode dropped-URL bytes with an explicit charset.**
-  `UniformResourceLocator.nativeToJava` uses the JVM default charset, which changed to
-  UTF-8 in JDK 18, so a dropped URL with non-ASCII bytes can be mojibake. Decode the
-  Windows ANSI `UniformResourceLocator` format as `windows-1252` (and the Gecko
-  `text/x-moz-url-data` as UTF-16) explicitly. Low; needs a non-ASCII URL drop.
-- [ ] **WebBrowser: per-tab address combo.** `WebBrowserTab.inputCombo` is a single
-  field reassigned on each new tab, so with multiple browser tabs the URL is written
-  to the last-created tab's combo instead of the selected tab's. Store the combo as
-  per-`CTabItem` data. Pre-existing (not a modernization regression); multi-tab only.
+- [x] ~~WebBrowser: restore or retire the Ctrl+click "grab page as .torrent"
+  feature~~ — done: **retired**. `ctrlDown()` was hard-wired to `false` and
+  `setupCtrlKey()` was an empty no-caller stub; SWT doesn't reliably deliver key events
+  over a native browser control, so the feature can't be resurrected as designed.
+  Removed the dead methods and the unreachable `WebBrowserTab$6` branch. See CHANGELOG.
+- [x] ~~WebBrowser: decode dropped-URL bytes with an explicit charset~~ — done:
+  `UniformResourceLocator.nativeToJava` now decodes the Windows shell
+  `UniformResourceLocator` format as `windows-1252` and the Gecko `text/x-moz-url-data`
+  format as UTF-16LE (the latter was also being truncated to one char by scan-to-NUL),
+  instead of the JDK-18+ default UTF-8. See CHANGELOG. Verify with a non-ASCII URL drop.
+- [x] ~~WebBrowser: per-tab address combo~~ — done: each tab's address combo is
+  bound to its `CTabItem` and every read/write resolves the selected/relevant tab's
+  combo, so with multiple tabs the URL no longer lands in the last-created tab's bar.
+  See CHANGELOG.
 - [ ] **Verify / fix chunk-bar blur on HiDPI (>100% display scaling).** The Downloads
   "chunks" column and the chunk detail dialogs round-trip through
   `ImageData.scaledTo()` (`ChunkImageData` / `ChunkCanvas`), which loses device
@@ -83,11 +83,10 @@ Backlog of improvements for the modernized `sancho-p2p` build. Done items live i
   `character == 1`/`== 6`; the ⌘ modifier now maps via `SWT.MOD1`, but Command doesn't
   emit control characters the way Ctrl does, so these still won't fire on macOS. Switch
   them to `keyCode`-based detection and verify on a Mac.
-- [ ] **Gate the WinReg preference page to win32 only.** `CPreferenceManager` adds
-  `WinRegPreferencePage` when `getOSPlatform()=="Windows" || Sancho.debug`, so with
-  `-debug` on Linux/macOS the page appears and its "Update Registry" button writes a
-  `.reg` and shells `regedit.exe` (fails, caught). Drop the `|| Sancho.debug` or add a
-  win32 check. Cosmetic (debug-only).
+- [x] ~~Gate the WinReg preference page to win32 only~~ — done: dropped the
+  `|| Sancho.debug` in `CPreferenceManager.addWinRegistryPage`, so the Windows-registry
+  page (and its `regedit.exe` shell-out) no longer appears in debug builds on Linux/
+  macOS. Unchanged for real Windows users. See CHANGELOG.
 - [ ] **Verify bundled icon filename casing on a Linux build.** Linux is case-sensitive;
   a mis-cased icon key that Windows silently resolves would fail. Spot-check `SResources`
   lookups against the asset filenames on Linux.

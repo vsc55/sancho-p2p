@@ -4,6 +4,7 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.CTabFolder2Adapter;
 import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
+import sancho.view.utility.NoDuplicatesCombo;
 import sancho.view.utility.SResources;
 
 class WebBrowserTab$8 extends CTabFolder2Adapter {
@@ -22,7 +23,11 @@ class WebBrowserTab$8 extends CTabFolder2Adapter {
             var3.setUrl("about:blank");
          }
 
-         this.this$0.inputCombo.setText("");
+         NoDuplicatesCombo var4 = this.this$0.getInputCombo(var2);
+         if (var4 != null) {
+            var4.setText("");
+         }
+
          this.this$0.viewFrame.updateCLabelText(SResources.getString("tab.webbrowser"));
          var2.setText("blank");
          var1.doit = false;

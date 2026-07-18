@@ -8,6 +8,33 @@ The upstream project's original changelog (2004–2006) is preserved at
 authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 (`git checkout 0.9.4-23`).
 
+## [Unreleased]
+
+### Fixed
+
+- **Windows Registry preference page no longer appears off Windows.** It was gated on
+  `"Windows" || Sancho.debug`, so debug builds on Linux/macOS showed it — and its
+  "Update Registry" button writes a `.reg` and shells `regedit.exe`, which just fails
+  there. Gated to win32 only (unchanged for real Windows users).
+- **Web browser: the address bar could show the wrong tab's URL.**
+  `WebBrowserTab.inputCombo` was a single field pointing at the last-created tab, so
+  with multiple browser tabs the URL was written to (and read from) that tab's combo
+  instead of the selected one. Each combo is now bound to its `CTabItem` and every
+  read/write resolves the right tab's combo.
+- **Web browser: dropped non-ASCII URLs were mangled.**
+  `UniformResourceLocator.nativeToJava` decoded the dropped bytes with the JVM default
+  charset (UTF-8 since JDK 18). It now decodes the Windows shell `UniformResourceLocator`
+  format as `windows-1252` and the Gecko `text/x-moz-url-data` format as UTF-16LE (the
+  latter was also being truncated to one character by a scan-to-first-NUL).
+
+### Removed
+
+- **Web browser: dead "grab page as .torrent" Ctrl+click path.** `ctrlDown()` was
+  hard-wired to `false` and `setupCtrlKey()` was an empty method with no callers, so the
+  Ctrl branch never ran; SWT doesn't reliably deliver key events over a native browser
+  control, so the feature can't be resurrected as designed. Removed the dead methods and
+  the unreachable branch.
+
 ## [0.9.4-72] — 2026-07-18
 
 ### Fixed

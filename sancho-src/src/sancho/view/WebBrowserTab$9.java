@@ -4,6 +4,7 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import sancho.view.utility.NoDuplicatesCombo;
 
 class WebBrowserTab$9 extends SelectionAdapter {
    // $VF: synthetic field
@@ -16,11 +17,15 @@ class WebBrowserTab$9 extends SelectionAdapter {
    public void widgetSelected(SelectionEvent var1) {
       CTabItem var2 = (CTabItem)var1.item;
       Browser var3 = (Browser)var2.getData("browser");
-      if (var3 != null && !var3.isDisposed()) {
-         this.this$0.inputCombo.setText(var3.getUrl());
+      NoDuplicatesCombo var4 = this.this$0.getInputCombo(var2);
+      if (var4 != null) {
+         if (var3 != null && !var3.isDisposed()) {
+            var4.setText(var3.getUrl());
+         }
+
+         var4.setFocus();
       }
 
-      this.this$0.inputCombo.setFocus();
       this.this$0.viewFrame.updateCLabelText(var2.getText());
    }
 }
