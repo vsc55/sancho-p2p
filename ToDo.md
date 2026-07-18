@@ -68,17 +68,28 @@ Backlog of improvements for the modernized `sancho-p2p` build. Done items live i
 
 ## Housekeeping
 
-- [ ] **(Evaluated) Re-merge decompiled inner classes into their parent files —
-  opportunistically, not en masse.** 448 of 861 source files (52%) are split-out inner
-  classes (`Foo$1.java` anonymous ×322, `Foo$Bar.java` named ×126) across 112 parents,
-  with 821 synthetic `access$NNN` accessors, 355 files carrying `this$0`, and 74 `val$`
-  captures. A bulk merge is weeks of work, purely cosmetic, and high-risk (inlining the
-  322 anonymous classes with correct capture / effectively-final semantics is exactly
+- [~] **(In progress) Re-merge decompiled inner classes into their parent files —
+  opportunistically, not en masse.** Started at 448 of 861 source files (52%) split-out
+  inner classes (`Foo$1.java` anonymous ×322, `Foo$Bar.java` named ×126) across 112
+  parents, with 821 synthetic `access$NNN` accessors, 355 files carrying `this$0`, and 74
+  `val$` captures. A bulk merge is weeks of work, purely cosmetic, and high-risk (inlining
+  the anonymous classes with correct capture / effectively-final semantics is exactly
   where subtle bugs creep in); there is no safe automation (re-decompiling would wipe all
   our fixes/comments/renames). **Do it opportunistically:** when already editing a class,
-  fold its small inner classes back inline and compile-check. Named nested classes are
-  more tractable than anonymous ones. (Trial done on WebBrowserTab / MenuBar — see
-  CHANGELOG.)
+  fold its small inner classes back inline, rename that file's `varN` to descriptive
+  names, and compile-check. The original `0.9.4-23` source is a structural template for
+  the ~87 pre-23 parents (`git show 0.9.4-23:<path>`). **Done so far: WebBrowserTab (20),
+  MenuBar (26), WinRegPreferencePage (6) — 448 → 390 `$` files. See CHANGELOG.** Good
+  next candidates with a -23 template: `ResultTableMenuListener` (18), `LinkRipper` (16),
+  `Console` (11), `FileDetailDialog` (10), `CoreFactory` (9). Note: WebBrowserTab/MenuBar
+  still have leftover `varN` in their un-rewritten methods (tidy if revisited).
+- [ ] **Validate the Windows association exe-path on an installed MSI build.** The
+  registry association (Preferences → Windows Registry) now creates the keys correctly and
+  takes the executable path from `jpackage.app-path` when installed. Running the dev jar
+  (`java -jar`) that property is unset, so the command falls back to a placeholder path —
+  install `0.9.4-75`'s MSI (or a local jpackage build) and confirm
+  `HKCU\Software\Classes\<proto>\shell\open\command` points at the real `sancho.exe`, and
+  that clicking a magnet/ed2k/sig2dat link actually launches Sancho.
 - [ ] **(Evaluated, deferred) Migrate off Trove 2.1.0 — the last unmaintained dependency.**
   Trove is the primitive-collections backbone of the model: `ACollection_Int` wraps a
   `TIntObjectHashMap` (int id → model object) for the 8 core collections (File/Client/

@@ -3,7 +3,11 @@ package sancho.core;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import org.eclipse.jface.dialogs.IInputValidator;
+import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import sancho.model.mldonkey.Option;
@@ -12,7 +16,10 @@ import sancho.utility.MyObserver;
 import sancho.utility.SwissArmy;
 import sancho.utility.VersionInfo;
 import sancho.view.preferences.PreferenceLoader;
+import sancho.view.utility.Splash;
 import sancho.view.utility.SResources;
+import sancho.view.utility.setupWizard.SetupWizard;
+import sancho.view.utility.setupWizard.SetupWizardDialog;
 
 public class CoreFactory extends MyObservable implements MyObserver, Runnable {
    public static final int CLOSE = 1;
@@ -38,42 +45,46 @@ public class CoreFactory extends MyObservable implements MyObserver, Runnable {
    private boolean wantToConnect;
    private String description;
 
-   public CoreFactory(Display var1) {
-      this.display = var1;
+   public CoreFactory(Display display) {
+      this.display = display;
       this.connectRC = -1;
       this.automated = false;
    }
 
    public int connect() {
-      int var1;
-      while ((var1 = this.startCore()) == 2) {
+      int result;
+      while ((result = this.startCore()) == 2) {
          this.numRetries++;
          this.updateSplash("splash.connecting");
-         int var2 = PreferenceLoader.loadInt("autoReconnectDelay");
+         int delay = PreferenceLoader.loadInt("autoReconnectDelay");
 
-         while (this.autoReconnecting && var2 > 0) {
+         while (this.autoReconnecting && delay > 0) {
             SwissArmy.threadSleep(1000);
-            this.notifyObject("[" + var2-- + "] " + SResources.getString("l.waitingToReconnect"));
+            this.notifyObject("[" + delay-- + "] " + SResources.getString("l.waitingToReconnect"));
          }
 
          if (!this.autoReconnecting) {
-            boolean var3 = false;
             this.setChanged();
             this.notifyObservers("");
          }
       }
 
-      return var1;
+      return result;
    }
 
-   protected boolean createYesNoBox(String var1, String var2) {
+   protected boolean createYesNoBox(final String title, final String message) {
       this.brc = false;
-      this.display.syncExec(new CoreFactory$1(this, var1, var2));
+      this.display.syncExec(new Runnable() {
+         public void run() {
+            Splash.setVisible(false);
+            CoreFactory.this.brc = CoreFactory.openQuestion(null, title, message);
+         }
+      });
       return this.brc;
    }
 
-   private boolean createResYesNoBox(String var1, String var2) {
-      return this.createYesNoBox(SResources.getString(var1), SResources.getString(var2));
+   private boolean createResYesNoBox(String titleKey, String messageKey) {
+      return this.createYesNoBox(SResources.getString(titleKey), SResources.getString(messageKey));
    }
 
    public void disconnect() {
@@ -87,12 +98,16 @@ public class CoreFactory extends MyObservable implements MyObserver, Runnable {
       }
    }
 
-   protected int errorHandling(String var1, String var2) {
-      if (!this.automated && !this.createYesNoBox(var1, var2)) {
+   protected int errorHandling(String title, String message) {
+      if (!this.automated && !this.createYesNoBox(title, message)) {
          return 1;
       } else {
          if (Sancho.getCoreConsole() != null) {
-            this.display.syncExec(new CoreFactory$2(this));
+            this.display.syncExec(new Runnable() {
+               public void run() {
+                  Sancho.getCoreConsole().getShell().close();
+               }
+            });
          }
 
          Sancho.killCoreConsole();
@@ -123,13 +138,13 @@ public class CoreFactory extends MyObservable implements MyObserver, Runnable {
    }
 
    public String getHTTPPort() {
-      String var1 = "";
-      Option var2 = (Option)this.core.getOptionCollection().get("http_port");
-      if (var2 != null) {
-         var1 = var2.getValue();
+      String value = "";
+      Option httpPort = (Option)this.core.getOptionCollection().get("http_port");
+      if (httpPort != null) {
+         value = httpPort.getValue();
       }
 
-      return var1;
+      return value;
    }
 
    public int getNumRetries() {
@@ -154,9 +169,9 @@ public class CoreFactory extends MyObservable implements MyObserver, Runnable {
 
    public void initialize() {
       this.readPreferences(0, false);
-      Thread var1 = new Thread(this);
-      var1.setDaemon(true);
-      var1.start();
+      Thread thread = new Thread(this);
+      thread.setDaemon(true);
+      thread.start();
    }
 
    public int initializeSocket() {
@@ -169,13 +184,17 @@ public class CoreFactory extends MyObservable implements MyObserver, Runnable {
 
          this.socket = new Socket(this.hostname, this.port);
          return 0;
-      } catch (UnknownHostException var4) {
+      } catch (UnknownHostException unknownHost) {
          return this.autoReconnecting
             ? 2
             : this.errorHandling(SResources.getString("core.invalidAddressTitle"), SResources.getString("core.invalidAddressText"));
-      } catch (IOException var5) {
+      } catch (IOException ioError) {
          if (Sancho.getCoreConsole() != null) {
-            this.display.syncExec(new CoreFactory$3(this));
+            this.display.syncExec(new Runnable() {
+               public void run() {
+                  Sancho.getCoreConsole().getShell().open();
+               }
+            });
          }
 
          return this.autoReconnecting
@@ -204,9 +223,9 @@ public class CoreFactory extends MyObservable implements MyObserver, Runnable {
       return this.core != null ? this.core.isConnected() : false;
    }
 
-   public void notifyObject(Object var1) {
+   public void notifyObject(Object message) {
       this.setChanged();
-      this.notifyObservers(var1);
+      this.notifyObservers(message);
    }
 
    private int onConnectionDenied() {
@@ -225,8 +244,8 @@ public class CoreFactory extends MyObservable implements MyObserver, Runnable {
       }
    }
 
-   public void readPreferences(int var1) {
-      this.readPreferences(var1, true);
+   public void readPreferences(int hostIndex) {
+      this.readPreferences(hostIndex, true);
    }
 
    public boolean checkIfInitialized() {
@@ -242,29 +261,29 @@ public class CoreFactory extends MyObservable implements MyObserver, Runnable {
       return true;
    }
 
-   public void readPreferences(int var1, boolean var2) {
-      if (var2 && !Sancho.automated && PreferenceLoader.loadBoolean("useLastFile")) {
-         SwissArmy.writeLastFile(var1);
+   public void readPreferences(int hostIndex, boolean reload) {
+      if (reload && !Sancho.automated && PreferenceLoader.loadBoolean("useLastFile")) {
+         SwissArmy.writeLastFile(hostIndex);
       }
 
-      if (!PreferenceLoader.contains("hm_" + var1 + "_hostname")) {
-         var1 = 0;
+      if (!PreferenceLoader.contains("hm_" + hostIndex + "_hostname")) {
+         hostIndex = 0;
       }
 
-      this.port = this.port != 0 && !var2 ? this.port : PreferenceLoader.loadInt("hm_" + var1 + "_port");
-      this.hostname = this.hostname != null && !var2 ? this.hostname : PreferenceLoader.loadString("hm_" + var1 + "_hostname");
-      this.username = this.username != null && !var2 ? this.username : PreferenceLoader.loadString("hm_" + var1 + "_username");
-      this.password = this.password != null && !var2 ? this.password : PreferenceLoader.loadString("hm_" + var1 + "_password");
-      this.description = this.description != null && !var2 ? this.description : PreferenceLoader.loadString("hm_" + var1 + "_description");
-      this.ask_pass = this.ask_pass && !var2 ? this.ask_pass : PreferenceLoader.loadBoolean("hm_" + var1 + "_ask_pass");
+      this.port = this.port != 0 && !reload ? this.port : PreferenceLoader.loadInt("hm_" + hostIndex + "_port");
+      this.hostname = this.hostname != null && !reload ? this.hostname : PreferenceLoader.loadString("hm_" + hostIndex + "_hostname");
+      this.username = this.username != null && !reload ? this.username : PreferenceLoader.loadString("hm_" + hostIndex + "_username");
+      this.password = this.password != null && !reload ? this.password : PreferenceLoader.loadString("hm_" + hostIndex + "_password");
+      this.description = this.description != null && !reload ? this.description : PreferenceLoader.loadString("hm_" + hostIndex + "_description");
+      this.ask_pass = this.ask_pass && !reload ? this.ask_pass : PreferenceLoader.loadBoolean("hm_" + hostIndex + "_ask_pass");
    }
 
    public synchronized void reconnect() {
       this.wantToConnect = true;
    }
 
-   public void reconnect(int var1) {
-      this.readPreferences(var1);
+   public void reconnect(int hostIndex) {
+      this.readPreferences(hostIndex);
       this.reconnect();
    }
 
@@ -285,8 +304,8 @@ public class CoreFactory extends MyObservable implements MyObserver, Runnable {
       }
    }
 
-   public synchronized void setAutomated(boolean var1) {
-      this.automated = var1;
+   public synchronized void setAutomated(boolean automated) {
+      this.automated = automated;
    }
 
    public synchronized void setAutoReconnect() {
@@ -294,8 +313,8 @@ public class CoreFactory extends MyObservable implements MyObserver, Runnable {
       this.autoReconnecting = true;
    }
 
-   public void setAutoReconnecting(boolean var1) {
-      this.autoReconnecting = var1;
+   public void setAutoReconnecting(boolean autoReconnecting) {
+      this.autoReconnecting = autoReconnecting;
    }
 
    public void setDisconnected() {
@@ -310,29 +329,38 @@ public class CoreFactory extends MyObservable implements MyObserver, Runnable {
       this.notifyObservers("");
    }
 
-   public void setHostPort(String var1, int var2) {
-      this.hostname = var1;
-      this.port = var2;
+   public void setHostPort(String hostname, int port) {
+      this.hostname = hostname;
+      this.port = port;
    }
 
-   public void setPassword(String var1) {
-      this.password = var1;
+   public void setPassword(String password) {
+      this.password = password;
    }
 
    private boolean setupWizard() {
       this.brc = false;
       this.irc = 0;
-      this.display.syncExec(new CoreFactory$4(this));
+      this.display.syncExec(new Runnable() {
+         public void run() {
+            Splash.setVisible(false);
+            SetupWizardDialog dialog = new SetupWizardDialog(null, new SetupWizard());
+            dialog.create();
+            CoreFactory.this.brc = 0 == dialog.open();
+            CoreFactory.this.irc = dialog.getNum();
+            Splash.setVisible(true);
+         }
+      });
       this.readPreferences(this.irc);
       return this.brc;
    }
 
-   public void setUsername(String var1) {
-      this.username = var1;
+   public void setUsername(String username) {
+      this.username = username;
    }
 
-   public synchronized void setWantToConnect(boolean var1) {
-      this.wantToConnect = var1;
+   public synchronized void setWantToConnect(boolean wantToConnect) {
+      this.wantToConnect = wantToConnect;
    }
 
    public String getStatusString() {
@@ -340,17 +368,17 @@ public class CoreFactory extends MyObservable implements MyObserver, Runnable {
    }
 
    public int startCore() {
-      int var1 = this.initializeSocket();
-      if (var1 != 2 && var1 != 1) {
+      int socketResult = this.initializeSocket();
+      if (socketResult != 2 && socketResult != 1) {
          if (this.core != null) {
             this.core.deleteObservers();
          }
 
          if (this.ask_pass) {
-            String var2 = this.askForPassword("/CORE", SResources.getString("hm.password"));
+            String entered = this.askForPassword("/CORE", SResources.getString("hm.password"));
             this.sResult = null;
-            if (var2 != null) {
-               this.password = var2;
+            if (entered != null) {
+               this.password = entered;
             }
          }
 
@@ -359,13 +387,13 @@ public class CoreFactory extends MyObservable implements MyObserver, Runnable {
             : new MLDonkeyCore(this.socket, this.username, this.password, this.automated));
          this.core.addObserver(this);
          this.core.connect();
-         Thread var5 = new Thread(this.core);
-         var5.setDaemon(true);
-         var5.start();
-         int var3 = PreferenceLoader.loadInt("connectionTimeout");
-         int var4 = var3 * 4;
+         Thread coreThread = new Thread(this.core);
+         coreThread.setDaemon(true);
+         coreThread.start();
+         int timeout = PreferenceLoader.loadInt("connectionTimeout");
+         int attempts = timeout * 4;
 
-         while (var4-- > 0 && this.core != null && !this.core.semaphore()) {
+         while (attempts-- > 0 && this.core != null && !this.core.semaphore()) {
             SwissArmy.threadSleep(250);
          }
 
@@ -393,18 +421,18 @@ public class CoreFactory extends MyObservable implements MyObserver, Runnable {
             return this.autoReconnecting ? 2 : this.onConnectionDenied();
          }
       } else {
-         return var1;
+         return socketResult;
       }
    }
 
    public String getCoreVersion() {
       if (this.core != null) {
-         String var1 = this.core.getCoreVersion();
-         if (var1.equals("")) {
-            return var1;
+         String version = this.core.getCoreVersion();
+         if (version.equals("")) {
+            return version;
          } else {
-            var1 = var1 + " | " + this.core.getProtocol();
-            return " | " + var1;
+            version = version + " | " + this.core.getProtocol();
+            return " | " + version;
          }
       } else {
          return "";
@@ -417,18 +445,18 @@ public class CoreFactory extends MyObservable implements MyObserver, Runnable {
 
    public int successfulConnect() {
       while (true) {
-         int var1 = this.getConnectRC();
+         int rc = this.getConnectRC();
          if (!this.display.readAndDispatch()) {
             SwissArmy.threadSleep(100);
-            if (var1 == 0 || var1 == 1) {
-               return var1;
+            if (rc == 0 || rc == 1) {
+               return rc;
             }
          }
       }
    }
 
-   public void update(MyObservable var1, Object var2, int var3) {
-      if (var2 instanceof IOException && var1 == this.core) {
+   public void update(MyObservable observable, Object arg, int flag) {
+      if (arg instanceof IOException && observable == this.core) {
          this.setDisconnected();
          if (this.hasConnected && PreferenceLoader.loadBoolean("autoReconnect")) {
             this.setAutoReconnect();
@@ -436,37 +464,62 @@ public class CoreFactory extends MyObservable implements MyObserver, Runnable {
       }
    }
 
-   public void updateSplash(String var1) {
-      this.display.syncExec(new CoreFactory$5(this, var1));
+   public void updateSplash(final String text) {
+      this.display.syncExec(new Runnable() {
+         public void run() {
+            Splash.updateText(text);
+         }
+      });
    }
 
-   public void updateSplash(String var1, String var2, int var3) {
-      this.display.syncExec(new CoreFactory$6(this, var1, var2, var3));
+   public void updateSplash(final String text, final String percent, final int index) {
+      this.display.syncExec(new Runnable() {
+         public void run() {
+            Splash.updateText(text, percent, index);
+         }
+      });
    }
 
-   public String askForPassword(String var1, String var2) {
-      this.display.syncExec(new CoreFactory$7(this, var1, var2));
+   public String askForPassword(final String title, final String message) {
+      this.display.syncExec(new Runnable() {
+         public void run() {
+            Splash.setVisible(false);
+            InputDialog dialog = new InputDialog(null, VersionInfo.getName() + title, message, "", (IInputValidator)null) {
+               protected Control createDialogArea(Composite parent) {
+                  Control area = super.createDialogArea(parent);
+                  this.getText().setEchoChar('*');
+                  return area;
+               }
+
+               protected void configureShell(Shell shell) {
+                  super.configureShell(shell);
+                  shell.setImage(VersionInfo.getProgramIcon());
+               }
+            };
+            if (dialog.open() == 0) {
+               CoreFactory.this.sResult = dialog.getValue();
+            } else {
+               CoreFactory.this.sResult = null;
+            }
+
+            Splash.setVisible(true);
+         }
+      });
       return this.sResult;
    }
 
-   public static boolean openQuestion(Shell var0, String var1, String var2) {
-      String[] var3 = new String[]{SResources.getString("b.yes"), SResources.getString("b.no")};
-      CoreFactory$9 var4 = new CoreFactory$9(var0, var1, VersionInfo.getProgramIcon(), var2, 3, var3, 0);
-      return var4.open() == 0;
+   public static boolean openQuestion(Shell parent, String title, String message) {
+      String[] buttons = new String[]{SResources.getString("b.yes"), SResources.getString("b.no")};
+      MessageDialog dialog = new MessageDialog(parent, title, VersionInfo.getProgramIcon(), message, 3, buttons, 0) {
+         protected void setShellStyle(int style) {
+            super.setShellStyle(style & -65537);
+         }
+      };
+      return dialog.open() == 0;
    }
 
-   public static void openInformation(Shell var0, String var1, String var2) {
-      MessageDialog var3 = new MessageDialog(var0, var1, VersionInfo.getProgramIcon(), var2, 2, new String[]{SResources.getString("b.ok")}, 0);
-      var3.open();
-   }
-
-   // $VF: synthetic method
-   static boolean access$002(CoreFactory var0, boolean var1) {
-      return var0.brc = var1;
-   }
-
-   // $VF: synthetic method
-   static int access$102(CoreFactory var0, int var1) {
-      return var0.irc = var1;
+   public static void openInformation(Shell parent, String title, String message) {
+      MessageDialog dialog = new MessageDialog(parent, title, VersionInfo.getProgramIcon(), message, 2, new String[]{SResources.getString("b.ok")}, 0);
+      dialog.open();
    }
 }
