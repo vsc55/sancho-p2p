@@ -8,6 +8,25 @@ The upstream project's original changelog (2004–2006) is preserved at
 authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 (`git checkout 0.9.4-23`).
 
+## [Unreleased]
+
+### Added
+
+- **IRC server field in the "Connect to IRC?" dialog.** You can now set the server
+  (pref `ircServer`) there alongside the nickname and channel, instead of only in
+  Preferences.
+
+### Fixed
+
+- **IRC rejected nicknames with accents/ñ** ("432 Erroneous Nickname"). The nickname
+  is now sanitized before connecting — accents are decomposed (ñ→n, á→a) and only
+  IRC-legal characters are kept — so a configured nick like `pruebañ…` connects as
+  `prueban…` instead of failing.
+- **"Connect to IRC?" dialog cancelled on Enter.** Cancel was the default button, so
+  pressing Enter after editing a field cancelled instead of accepting. OK is now the
+  default button, and the edited nick/channel are only saved on OK (Cancel discards
+  them).
+
 ## [0.9.4-70] — 2026-07-18
 
 ### Fixed

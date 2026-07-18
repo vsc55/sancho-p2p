@@ -14,6 +14,7 @@ import sancho.view.utility.SResources;
 import sancho.view.utility.WidgetFactory;
 
 public class IRCConnectDialog extends Dialog {
+   Text server;
    Text channel;
    Text nick;
 
@@ -30,6 +31,7 @@ public class IRCConnectDialog extends Dialog {
    protected Control createDialogArea(Composite var1) {
       Composite var2 = (Composite)super.createDialogArea(var1);
       var2.setLayout(WidgetFactory.createGridLayout(2, 5, 5, 10, 5, false));
+      this.server = this.createText(var2, "p.r.irc.ircServer", "ircServer");
       this.nick = this.createText(var2, "p.r.irc.ircNickname", "ircNickname");
       this.channel = this.createText(var2, "p.r.irc.ircChannel", "ircChannel");
       return var2;
@@ -46,22 +48,33 @@ public class IRCConnectDialog extends Dialog {
    }
 
    protected void createButtonsForButtonBar(Composite var1) {
-      this.createButton(var1, 0, IDialogConstants.OK_LABEL, false);
-      this.createButton(var1, 1, IDialogConstants.CANCEL_LABEL, true);
+      // OK is the default button so pressing Enter in the fields accepts (was
+      // Cancel, which made Enter cancel the connect).
+      this.createButton(var1, 0, IDialogConstants.OK_LABEL, true);
+      this.createButton(var1, 1, IDialogConstants.CANCEL_LABEL, false);
    }
 
    protected void buttonPressed(int var1) {
-      String var2 = this.channel.getText();
-      String var3 = this.nick.getText();
-      if (var2.startsWith("#") && var2.length() > 1) {
-         PreferenceLoader.getPreferenceStore().setValue("ircChannel", this.channel.getText());
+      // Only persist the edited nick/channel on OK; Cancel must discard them.
+      if (var1 == IDialogConstants.OK_ID) {
+         String var2 = this.channel.getText();
+         String var3 = this.nick.getText();
+         String var4 = this.server.getText().trim();
+         if (var4.length() > 0) {
+            PreferenceLoader.getPreferenceStore().setValue("ircServer", var4);
+         }
+
+         if (var2.startsWith("#") && var2.length() > 1) {
+            PreferenceLoader.getPreferenceStore().setValue("ircChannel", var2);
+         }
+
+         if (var3.length() > 1) {
+            PreferenceLoader.getPreferenceStore().setValue("ircNickname", var3);
+         }
+
+         PreferenceLoader.saveStore();
       }
 
-      if (var3.length() > 1) {
-         PreferenceLoader.getPreferenceStore().setValue("ircNickname", this.nick.getText());
-      }
-
-      PreferenceLoader.saveStore();
       super.buttonPressed(var1);
    }
 }

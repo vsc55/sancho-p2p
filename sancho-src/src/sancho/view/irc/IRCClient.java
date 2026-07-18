@@ -1,5 +1,6 @@
 package sancho.view.irc;
 
+import java.text.Normalizer;
 import org.jibble.pircbot.Colors;
 import org.jibble.pircbot.PircBot;
 import org.jibble.pircbot.User;
@@ -15,6 +16,29 @@ public class IRCClient extends PircBot {
    protected boolean connected;
    protected IIRCListener ircListener;
 
+   // Reduce a nickname to characters an IRC server accepts (RFC 2812): decompose
+   // accents first (ñ->n, á->a), then keep only letters / digits / -[]\`_^{|} with a
+   // letter-or-special first char. Falls back to a random nick if nothing is left.
+   private static String sanitizeNick(String var0) {
+      if (var0 == null) {
+         var0 = "";
+      }
+
+      var0 = Normalizer.normalize(var0, Normalizer.Form.NFD);
+      StringBuilder var1 = new StringBuilder(var0.length());
+
+      for (int var2 = 0; var2 < var0.length(); var2++) {
+         char var3 = var0.charAt(var2);
+         boolean var4 = var3 >= 'A' && var3 <= 'Z' || var3 >= 'a' && var3 <= 'z' || "[]\\`_^{|}".indexOf(var3) >= 0;
+         boolean var5 = var4 || var3 >= '0' && var3 <= '9' || var3 == '-';
+         if (var1.length() == 0 ? var4 : var5) {
+            var1.append(var3);
+         }
+      }
+
+      return var1.length() == 0 ? SwissArmy.getRandomString(7) : var1.toString();
+   }
+
    public IRCClient(IIRCListener var1) {
       this.ircListener = var1;
       this.server = PreferenceLoader.loadString("ircServer");
@@ -24,6 +48,9 @@ public class IRCClient extends PircBot {
          this.nickname = SwissArmy.getRandomString(7);
       }
 
+      // IRC servers only accept ASCII nicknames; a configured nick with accents/ñ
+      // is rejected with "432 Erroneous Nickname". Strip it to valid characters.
+      this.nickname = sanitizeNick(this.nickname);
       this.setName(this.nickname);
       this.setLogin(this.nickname);
       this.setVersion(VersionInfo.getName() + " " + VersionInfo.getVersion() + VersionInfo.getBrand() + ": " + VersionInfo.getShortHomePage());
