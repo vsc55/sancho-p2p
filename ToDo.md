@@ -31,10 +31,13 @@ Backlog of improvements for the modernized `sancho-p2p` build. Done items live i
 - [x] ~~Drop `gnu.regexp`~~ — done: the abandoned `gnu-regexp:1.1.4` dependency is
   gone; regexes run on `java.util.regex` behind a thin `sancho.utility.regex`
   adapter. See CHANGELOG.
-- [ ] **Pure `java.util.regex` migration (optional).** The above kept a thin
-  `RE`/`REMatch` adapter (~24 call sites unchanged) to minimize risk. A cleaner
-  follow-up is to rewrite those sites to use `Pattern`/`Matcher` directly and drop
-  the adapter — best done once functional tests back the link-parsing paths.
+- [x] ~~Pure `java.util.regex` migration~~ — done: the 13 call sites were rewritten
+  to use `Pattern`/`Matcher`/`PatternSyntaxException` directly and the
+  `sancho.utility.regex` adapter (`RE`/`REMatch`/`REException`) was deleted. Mapping
+  was 1:1 (`getMatch`→`find`, `getAllMatches`→`while(find())`, `toString(i)`→
+  `group(i)`, `getStartIndex/EndIndex(i)`→`start/end(i)`, `substituteAll`→
+  `replaceAll`, `REG_ICASE`→`CASE_INSENSITIVE`); exactly-one-match and null-input
+  semantics preserved. See CHANGELOG.
 
 - [x] ~~MSI installer~~ — done: releases ship `sancho-<ver>-win64.msi` (jpackage +
   WiX 3) with shortcuts, upgrade code, and an opt-out checkbox / `REGISTERASSOC`

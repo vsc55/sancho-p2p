@@ -1,8 +1,8 @@
 package sancho.view;
 
-import sancho.utility.regex.RE;
-import sancho.utility.regex.REException;
-import sancho.utility.regex.REMatch;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -36,10 +36,10 @@ import sancho.view.utility.WidgetFactory;
 public class WebBrowserTab extends AbstractTab {
    public CTabFolder cTabFolder;
    public NoDuplicatesCombo inputCombo;
-   public RE regex;
-   public RE bookmark_href;
-   public RE bookmark_title;
-   public RE bookmark_folder;
+   public Pattern regex;
+   public Pattern bookmark_href;
+   public Pattern bookmark_title;
+   public Pattern bookmark_folder;
    public WebBrowserTab$WebBrowserViewFrame viewFrame;
    protected boolean loaded;
    protected boolean loadedBookmarks;
@@ -49,14 +49,14 @@ public class WebBrowserTab extends AbstractTab {
       super(var1, var2);
 
       try {
-         this.regex = new RE(
+         this.regex = Pattern.compile(
             "(ed2k://\\|file\\|[^\\|]+\\|(\\d+)\\|([\\dabcdef]+)\\|)|(sig2dat:///?\\|File:[^\\|]+\\|Length:.+?\\|UUHash:\\=.+?\\=)|(\\\"magnet:\\?xt=.+?\\\")|(magnet:\\?xt=.+?\n)|(magnet:\\?xt=.+)|(http://.+?/.+?\\.torrent.+)|(\"http://.+?/.+?\\.torrent\\?[^>]+\")|(http://.+?/.+?\\.torrent)",
-            2
+            Pattern.CASE_INSENSITIVE
          );
-         this.bookmark_href = new RE("HREF=\"(.+?)\"");
-         this.bookmark_title = new RE("<A.+?>(.+?)</A>");
-         this.bookmark_folder = new RE("<H3.+?>(.+?)</H3>");
-      } catch (REException var4) {
+         this.bookmark_href = Pattern.compile("HREF=\"(.+?)\"");
+         this.bookmark_title = Pattern.compile("<A.+?>(.+?)</A>");
+         this.bookmark_folder = Pattern.compile("<H3.+?>(.+?)</H3>");
+      } catch (PatternSyntaxException var4) {
       }
 
       this.updateDisplay();
@@ -302,12 +302,14 @@ public class WebBrowserTab extends AbstractTab {
                      ((IMenuManager)var7).add(new WebBrowserTab$NSBookmark(this, var4));
                   } else {
                      var3.add(var7);
-                     REMatch[] var14 = this.bookmark_folder.getAllMatches(var4);
+                     Matcher var14 = this.bookmark_folder.matcher(var4);
                      String var15 = "Folder";
-                     if (var14.length == 1) {
-                        int var10 = var14[0].getStartIndex(1);
-                        int var11 = var14[0].getEndIndex(1);
-                        var15 = var4.substring(var10, var11);
+                     if (var14.find()) {
+                        int var10 = var14.start(1);
+                        int var11 = var14.end(1);
+                        if (!var14.find()) {
+                           var15 = var4.substring(var10, var11);
+                        }
                      }
 
                      var7 = new MenuManager(this.formatTitle(var15));

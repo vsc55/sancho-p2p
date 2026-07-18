@@ -25,7 +25,7 @@ class WebBrowserTab$6 implements LocationListener {
             this.this$0.getMainWindow().getStatusline().setText(SResources.getString("l.sending") + var3);
             var1.doit = false;
             Sancho.send((short)8, var3);
-         } else if (this.this$0.regex.getMatch(var2) != null) {
+         } else if (this.this$0.regex.matcher(var2).find()) {
             this.this$0.getMainWindow().getStatusline().setText(SResources.getString("l.sending") + var2);
             var1.doit = false;
             Sancho.send((short)8, var2);

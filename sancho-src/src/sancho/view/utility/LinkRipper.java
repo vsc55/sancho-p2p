@@ -1,7 +1,7 @@
 package sancho.view.utility;
 
-import sancho.utility.regex.RE;
-import sancho.utility.regex.REMatch;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,9 +42,9 @@ import sancho.view.preferences.PreferenceLoader;
 import sancho.view.transfer.UniformResourceLocator;
 
 public class LinkRipper extends Dialog implements Runnable, IMenuListener {
-   static RE endSlashRE;
-   static RE frameRE;
-   static RE snRE;
+   static Pattern endSlashRE;
+   static Pattern frameRE;
+   static Pattern snRE;
    MainWindow mainWindow;
    MenuManager popupMenu;
    boolean ripping;
@@ -237,15 +237,15 @@ public class LinkRipper extends Dialog implements Runnable, IMenuListener {
             this.URLtoRip = "http://" + this.URLtoRip;
          }
 
-         if (endSlashRE.getMatch(this.URLtoRip) == null) {
+         if (!endSlashRE.matcher(this.URLtoRip).find()) {
             this.URLtoRip = this.URLtoRip + "/";
          }
 
          String var11 = this.getRawPage(this.URLtoRip);
-         if (snRE.getMatch(this.URLtoRip) != null) {
-            REMatch var12 = frameRE.getMatch(var11);
-            if (var12 != null) {
-               String var14 = var11.substring(var12.getStartIndex(1), var12.getEndIndex(1));
+         if (snRE.matcher(this.URLtoRip).find()) {
+            Matcher var12 = var11 != null ? frameRE.matcher(var11) : null;
+            if (var12 != null && var12.find()) {
+               String var14 = var11.substring(var12.start(1), var12.end(1));
                var14 = var14 + "list_news.html";
                var11 = this.getRawPage(var14);
             }
@@ -338,9 +338,9 @@ public class LinkRipper extends Dialog implements Runnable, IMenuListener {
 
    static {
       try {
-         snRE = new RE("http://.+?suprnova.org");
-         frameRE = new RE("src='(.+?)'");
-         endSlashRE = new RE("http://.+/");
+         snRE = Pattern.compile("http://.+?suprnova.org");
+         frameRE = Pattern.compile("src='(.+?)'");
+         endSlashRE = Pattern.compile("http://.+/");
       } catch (Exception var1) {
       }
    }

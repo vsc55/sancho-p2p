@@ -1,7 +1,7 @@
 package sancho.view.console;
 
-import sancho.utility.regex.RE;
-import sancho.utility.regex.REException;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.io.File;
 import java.io.IOException;
 import org.eclipse.swt.custom.StyleRange;
@@ -25,7 +25,7 @@ public class ExecConsole implements MyObserver {
    private static final int STDOUT = 1;
    private static final int STDERR = 2;
    private boolean coreStarted;
-   private RE errorRE;
+   private Pattern errorRE;
    private Process execProcess;
    private Color highlightColor;
    private final int MAX_LINES = PreferenceLoader.loadInt("consoleMaxLines");
@@ -54,7 +54,7 @@ public class ExecConsole implements MyObserver {
       if (var1.getType() == 2) {
          this.outputConsole
             .setStyleRange(new StyleRange(var4, var2.length(), this.outputConsole.getDisplay().getSystemColor(3), this.outputConsole.getBackground()));
-      } else if (this.errorRE.getMatch(var2) != null) {
+      } else if (this.errorRE.matcher(var2).find()) {
          this.outputConsole.setStyleRange(new StyleRange(var4, var2.length(), this.highlightColor, this.outputConsole.getBackground()));
       }
 
@@ -118,8 +118,8 @@ public class ExecConsole implements MyObserver {
       this.outputConsole.setMenu(var1);
 
       try {
-         this.errorRE = new RE("error", 2);
-      } catch (REException var4) {
+         this.errorRE = Pattern.compile("error", Pattern.CASE_INSENSITIVE);
+      } catch (PatternSyntaxException var4) {
          this.errorRE = null;
       }
    }

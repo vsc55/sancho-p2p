@@ -1,7 +1,7 @@
 package sancho.view.viewer.filters;
 
-import sancho.utility.regex.RE;
-import sancho.utility.regex.REException;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import sancho.model.mldonkey.Client;
@@ -19,7 +19,7 @@ import sancho.view.viewer.GView;
 public class RefineFilter extends ViewerFilter {
    private static String SEPARATOR = " ";
    private GView gView;
-   private RE regex;
+   private Pattern regex;
    private boolean refine;
    private boolean returnValue;
    private boolean searchAlternates;
@@ -41,8 +41,8 @@ public class RefineFilter extends ViewerFilter {
                var1 = var1.substring(1);
             }
 
-            this.regex = new RE(var1, 2);
-         } catch (REException var2) {
+            this.regex = Pattern.compile(var1, Pattern.CASE_INSENSITIVE);
+         } catch (PatternSyntaxException var2) {
             this.refine = false;
          }
       }
@@ -117,7 +117,7 @@ public class RefineFilter extends ViewerFilter {
             var4 = var14.toString();
          }
 
-         return this.regex.getMatch(var4) != null ? this.returnValue : !this.returnValue;
+         return this.regex.matcher(var4).find() ? this.returnValue : !this.returnValue;
       }
    }
 

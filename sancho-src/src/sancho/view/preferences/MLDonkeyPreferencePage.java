@@ -1,7 +1,7 @@
 package sancho.view.preferences;
 
-import sancho.utility.regex.RE;
-import sancho.utility.regex.REException;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -56,7 +56,7 @@ public class MLDonkeyPreferencePage extends FieldEditorPreferencePage {
    private Composite myComp;
    private boolean wasEmpty = true;
    private boolean fChanged = false;
-   private RE regex = null;
+   private Pattern regex = null;
 
    protected MLDonkeyPreferencePage(String var1, int var2) {
       super(var1, var2);
@@ -83,10 +83,10 @@ public class MLDonkeyPreferencePage extends FieldEditorPreferencePage {
 
       for (Object var2o : this.options) { Option var2 = (Option)var2o;
          if (this.fChanged) {
-            if (!var2.getDefaultValue().equals(var2.getValue()) && (this.regex == null || this.regex.getMatch(var2.getName()) != null)) {
+            if (!var2.getDefaultValue().equals(var2.getValue()) && (this.regex == null || this.regex.matcher(var2.getName()).find())) {
                this.filteredOptions.add(var2);
             }
-         } else if (this.regex == null || this.regex.getMatch(var2.getName()) != null) {
+         } else if (this.regex == null || this.regex.matcher(var2.getName()).find()) {
             this.filteredOptions.add(var2);
          }
       }
@@ -105,8 +105,8 @@ public class MLDonkeyPreferencePage extends FieldEditorPreferencePage {
             this.wasEmpty = false;
 
             try {
-               this.regex = new RE(var2.getText(), 2);
-            } catch (REException var7) {
+               this.regex = Pattern.compile(var2.getText(), Pattern.CASE_INSENSITIVE);
+            } catch (PatternSyntaxException var7) {
             }
 
             if (this.regex == null) {

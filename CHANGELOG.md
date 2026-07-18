@@ -62,6 +62,11 @@ authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 
 ### Changed
 
+- **Regexes now use `java.util.regex` directly.** The thin `sancho.utility.regex`
+  adapter (`RE`/`REMatch`/`REException`) kept when `gnu-regexp` was dropped is gone;
+  its 13 call sites were rewritten to `Pattern`/`Matcher`/`PatternSyntaxException`
+  (a 1:1, behaviour-preserving mapping — exactly-one-match and null-input semantics
+  kept). Verified the link/bookmark/env-var parsing conversions and a full build.
 - **Table sort tolerance no longer needs a global JVM flag.** `GSorter` now sorts
   with its own stable merge sort, which tolerates the live model data being mutated
   by the core thread mid-sort (the reason a plain `Arrays.sort`/TimSort threw

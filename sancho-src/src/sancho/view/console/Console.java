@@ -1,8 +1,8 @@
 package sancho.view.console;
 
-import sancho.utility.regex.RE;
-import sancho.utility.regex.REException;
-import sancho.utility.regex.REMatch;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.swt.custom.StyleRange;
@@ -21,7 +21,7 @@ import sancho.view.utility.SResources;
 import sancho.view.utility.WidgetFactory;
 
 public class Console {
-   static RE regex;
+   static Pattern regex;
    protected List commandHistory = new ArrayList();
    protected Composite composite;
    protected Color highlightColor;
@@ -66,13 +66,12 @@ public class Console {
       if (this.underlineURLs) {
          int var3 = this.infoDisplay.getCharCount();
          var3 -= var1.length();
-         REMatch[] var4 = regex.getAllMatches(var1);
-         if (var4 != null) {
-            for (int var5 = 0; var5 < var4.length; var5++) {
-               String var6 = var4[var5].toString();
-               int var7 = var4[var5].getStartIndex();
-               int var8 = var4[var5].getEndIndex();
-               if (var6.startsWith("\"")) {
+         Matcher var4 = regex.matcher(var1);
+         while (var4.find()) {
+            String var6 = var4.group();
+            int var7 = var4.start();
+            int var8 = var4.end();
+            if (var6.startsWith("\"")) {
                   var7++;
                }
 
@@ -95,7 +94,6 @@ public class Console {
                   this.infoDisplay.setStyleRange(var10);
                }
             }
-         }
       }
 
       this.infoDisplay.setCaretOffset(this.infoDisplay.getCaretOffset() + var1.length() + 1);
@@ -228,11 +226,11 @@ public class Console {
 
    static {
       try {
-         regex = new RE(
+         regex = Pattern.compile(
             "(\"http://.+?\")|(http://[^\\s]+)|(www.[^\\s]+)|([\\d]{1,3}[.][\\d]{1,3}[.][\\d]{1,3}[.][\\d]{1,3}[:][\\d]{1,4})|([\\d]{1,3}[.][\\d]{1,3}[.][\\d]{1,3}[.][\\d]{1,3})",
-            2
+            Pattern.CASE_INSENSITIVE
          );
-      } catch (REException var1) {
+      } catch (PatternSyntaxException var1) {
       }
    }
 }

@@ -1,7 +1,7 @@
 package sancho.model.mldonkey;
 
-import sancho.utility.regex.RE;
-import sancho.utility.regex.REException;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.util.StringTokenizer;
 import org.eclipse.swt.graphics.Image;
 import sancho.core.ICore;
@@ -31,9 +31,9 @@ public class Result extends AObject implements IObject_UID {
    private static final String TAG_AVAILABILITY = "availability";
    private static final String TAG_COMPLETESOURCES = "completesources";
    private static final String S_NEWLINE = "\n";
-   protected static RE fakeRE;
-   protected static RE pornographyFilterRE;
-   protected static RE profanityFilterRE;
+   protected static Pattern fakeRE;
+   protected static Pattern pornographyFilterRE;
+   protected static Pattern profanityFilterRE;
    protected boolean downloaded;
    protected boolean containsFake;
    protected boolean containsPornography;
@@ -377,14 +377,14 @@ public class Result extends AObject implements IObject_UID {
    protected void regexFilters() {
       if (this.core.getResultCollection().filterPornography || this.core.getResultCollection().filterProfanity) {
          for (int var1 = 0; var1 < this.names.length; var1++) {
-            if (profanityFilterRE != null && profanityFilterRE.getMatch(this.names[var1]) != null) {
+            if (profanityFilterRE != null && profanityFilterRE.matcher(this.names[var1]).find()) {
                this.containsProfanity = true;
                if (this.containsPornography) {
                   break;
                }
             }
 
-            if (pornographyFilterRE != null && pornographyFilterRE.getMatch(this.names[var1]) != null) {
+            if (pornographyFilterRE != null && pornographyFilterRE.matcher(this.names[var1]).find()) {
                this.containsPornography = true;
                if (this.containsProfanity) {
                   break;
@@ -417,22 +417,22 @@ public class Result extends AObject implements IObject_UID {
 
    static {
       try {
-         profanityFilterRE = new RE("fuck|shit", 2);
-      } catch (REException var3) {
+         profanityFilterRE = Pattern.compile("fuck|shit", Pattern.CASE_INSENSITIVE);
+      } catch (PatternSyntaxException var3) {
          profanityFilterRE = null;
       }
 
       try {
-         pornographyFilterRE = new RE(
-            "fuck|shit|porn|pr0n|pussy|xxx|sex|erotic|anal|lolita|sluts|fetish|naked|incest|bondage|masturbat|blow.*job|barely.*legal", 2
+         pornographyFilterRE = Pattern.compile(
+            "fuck|shit|porn|pr0n|pussy|xxx|sex|erotic|anal|lolita|sluts|fetish|naked|incest|bondage|masturbat|blow.*job|barely.*legal", Pattern.CASE_INSENSITIVE
          );
-      } catch (REException var2) {
+      } catch (PatternSyntaxException var2) {
          pornographyFilterRE = null;
       }
 
       try {
-         fakeRE = new RE("fake", 2);
-      } catch (REException var1) {
+         fakeRE = Pattern.compile("fake", Pattern.CASE_INSENSITIVE);
+      } catch (PatternSyntaxException var1) {
          fakeRE = null;
       }
    }

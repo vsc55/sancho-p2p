@@ -1,8 +1,8 @@
 package sancho.view.statusline;
 
-import sancho.utility.regex.RE;
-import sancho.utility.regex.REException;
-import sancho.utility.regex.REMatch;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.FileTransfer;
@@ -70,7 +70,7 @@ public class LinkEntry {
 
    public void enterLinks(Text var1) {
       String var2 = var1.getText();
-      RE var3 = null;
+      Pattern var3 = null;
 
       try {
          String var4 = "(ed2k://\\|file\\|[^\\|]+\\|(\\d+)\\|([\\dabcdef]+)\\|)|(sfdl://\\|.+?\\|[^\\|]+\\|(\\d+)\\|([\\dabcdef]+)\\|)";
@@ -80,22 +80,25 @@ public class LinkEntry {
             var4 = var4 + "|(magnet:\\?xt=.+)|(http://.+?\\.torrent.+)|(.+?\\.torrent.*)|(.+?\\.torrent)";
          }
 
-         var3 = new RE(var4, 10);
-      } catch (REException var7) {
+         var3 = Pattern.compile(var4, Pattern.CASE_INSENSITIVE);
+      } catch (PatternSyntaxException var7) {
          var7.printStackTrace();
       }
 
-      REMatch[] var10 = var3.getAllMatches(var2);
+      Matcher var10 = var3.matcher(var2);
+      int var5 = 0;
 
-      for (int var5 = 0; var5 < var10.length; var5++) {
-         String var6 = SwissArmy.replaceAll(var10[var5].toString(), "\"", "");
+      while (var10.find()) {
+         String var6 = SwissArmy.replaceAll(var10.group(), "\"", "");
          var6 = SwissArmy.replaceAll(var6, "\n", "");
          if (Sancho.hasCollectionFactory()) {
             SwissArmy.sendLink(Sancho.getCore(), var6);
          }
+
+         var5++;
       }
 
-      this.statusLine.setText(SResources.getString("sl.linksSent") + var10.length);
+      this.statusLine.setText(SResources.getString("sl.linksSent") + var5);
       var1.setText("");
    }
 

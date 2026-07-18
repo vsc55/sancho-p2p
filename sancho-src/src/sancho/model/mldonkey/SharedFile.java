@@ -1,7 +1,8 @@
 package sancho.model.mldonkey;
 
-import sancho.utility.regex.RE;
-import sancho.utility.regex.REException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.util.StringTokenizer;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
@@ -16,7 +17,7 @@ import sancho.view.preferences.PreferenceLoader;
 import sancho.view.utility.SResources;
 
 public class SharedFile extends AObject implements IObject_UID, IPreview {
-   static RE pathRE;
+   static Pattern pathRE;
    protected long bytesUploaded;
    protected int id;
    protected byte[] md4;
@@ -183,7 +184,9 @@ public class SharedFile extends AObject implements IObject_UID, IPreview {
 
    public void parseName() {
       if (this.name.indexOf("/") != -1) {
-         this.name = pathRE.getMatch(this.name).toString();
+         Matcher var1 = pathRE.matcher(this.name);
+         var1.find();
+         this.name = var1.group();
       }
    }
 
@@ -258,8 +261,8 @@ public class SharedFile extends AObject implements IObject_UID, IPreview {
 
    static {
       try {
-         pathRE = new RE("[^/]*$");
-      } catch (REException var1) {
+         pathRE = Pattern.compile("[^/]*$");
+      } catch (PatternSyntaxException var1) {
          Sancho.pDebug("SharedFile: " + var1);
       }
    }

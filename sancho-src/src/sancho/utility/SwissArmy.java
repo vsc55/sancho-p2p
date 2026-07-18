@@ -1,8 +1,8 @@
 package sancho.utility;
 
-import sancho.utility.regex.RE;
-import sancho.utility.regex.REException;
-import sancho.utility.regex.REMatch;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -58,35 +58,37 @@ public class SwissArmy {
    private static boolean humanReadable;
    private static boolean maxMegabytes;
    public static boolean disableUTF8;
-   protected static RE fakeRE;
+   protected static Pattern fakeRE;
    private static long secondsInDay;
    private static long secondsInHour;
-   static RE linksRE1;
-   static RE linksRE2;
-   static RE hrefRE;
-   static RE envRE;
+   static Pattern linksRE1;
+   static Pattern linksRE2;
+   static Pattern hrefRE;
+   static Pattern envRE;
 
    public static boolean containsFake(String var0) {
-      return fakeRE != null && fakeRE.getMatch(var0) != null;
+      return fakeRE != null && var0 != null && fakeRE.matcher(var0).find();
    }
 
    public static String[] split(String var0, char var1) {
-      RE var2 = null;
+      Pattern var2 = null;
       String var3 = "([^" + var1 + "])*";
 
       try {
-         var2 = new RE(var3);
-      } catch (REException var8) {
+         var2 = Pattern.compile(var3);
+      } catch (PatternSyntaxException var8) {
          var8.printStackTrace();
       }
 
       ArrayList var4 = new ArrayList();
-      REMatch[] var5 = var2.getAllMatches(var0);
+      if (var0 != null) {
+         Matcher var5 = var2.matcher(var0);
 
-      for (int var6 = 0; var6 < var5.length; var6++) {
-         String var7 = var5[var6].toString();
-         if (!var7.equals("")) {
-            var4.add(var7);
+         while (var5.find()) {
+            String var7 = var5.group();
+            if (!var7.equals("")) {
+               var4.add(var7);
+            }
          }
       }
 
@@ -96,15 +98,15 @@ public class SwissArmy {
    }
 
    public static String replaceAll(String var0, String var1, String var2) {
-      RE var3 = null;
+      Pattern var3 = null;
 
       try {
-         var3 = new RE(var1);
-      } catch (REException var5) {
+         var3 = Pattern.compile(var1);
+      } catch (PatternSyntaxException var5) {
          var5.printStackTrace();
       }
 
-      return var3.substituteAll(var0, var2);
+      return var3.matcher(var0).replaceAll(var2);
    }
 
    public static String calcStringSizeGrouped(long var0) {
@@ -326,17 +328,21 @@ public class SwissArmy {
    }
 
    public static String replaceEnvVars(String var0) {
-      REMatch[] var1 = envRE.getAllMatches(var0);
-      if (var1.length <= 0) {
+      if (var0 == null) {
+         return var0;
+      }
+
+      Matcher var1 = envRE.matcher(var0);
+      if (!var1.find()) {
          return var0;
       } else {
          String var2 = "";
          int var3 = 0;
 
-         for (int var4 = 0; var4 < var1.length; var4++) {
-            int var5 = var1[var4].getStartIndex(1);
+         do {
+            int var5 = var1.start(1);
             var2 = var2 + var0.substring(var3, var5);
-            var3 = var1[var4].getEndIndex(1);
+            var3 = var1.end(1);
             String var6 = var0.substring(var5, var3);
             String var7 = replaceAll(var6, "%", "");
 
@@ -350,23 +356,25 @@ public class SwissArmy {
             }
 
             var2 = var2 + var6;
-         }
+         } while (var1.find());
 
          return var2 + var0.substring(var3);
       }
    }
 
    public static String[] parseLinks(String[] var0) {
-      RE var1 = PreferenceLoader.loadBoolean("linkRipperShowAll") ? linksRE2 : linksRE1;
+      Pattern var1 = PreferenceLoader.loadBoolean("linkRipperShowAll") ? linksRE2 : linksRE1;
       ArrayList var2 = new ArrayList();
       Object var3 = null;
 
       for (int var5 = 0; var5 < var0.length; var5++) {
-         REMatch[] var4 = var1.getAllMatches(var0[var5]);
-         if (var4.length > 0) {
-            var3 = var4[0].toString();
-            if (!var2.contains(var3)) {
-               var2.add(var3);
+         if (var0[var5] != null) {
+            Matcher var4 = var1.matcher(var0[var5]);
+            if (var4.find()) {
+               var3 = var4.group();
+               if (!var2.contains(var3)) {
+                  var2.add(var3);
+               }
             }
          }
       }
@@ -378,13 +386,21 @@ public class SwissArmy {
    }
 
    public static String[] parseLinks(String var0) {
-      REMatch[] var1 = hrefRE.getAllMatches(var0);
-      StringBuffer var3 = new StringBuffer();
-      String[] var4 = new String[var1.length];
+      ArrayList var1 = new ArrayList();
+      if (var0 != null) {
+         Matcher var6 = hrefRE.matcher(var0);
 
-      for (int var5 = 0; var5 < var1.length; var5++) {
+         while (var6.find()) {
+            var1.add(var6.group());
+         }
+      }
+
+      StringBuffer var3 = new StringBuffer();
+      String[] var4 = new String[var1.size()];
+
+      for (int var5 = 0; var5 < var4.length; var5++) {
          var3.setLength(0);
-         var3.append(var1[var5].toString());
+         var3.append((String)var1.get(var5));
          int var2 = var3.indexOf("=");
          if (var2 != -1 && var3.length() > var2 + 1) {
             var3.delete(0, var2 + 1);
@@ -681,8 +697,8 @@ public class SwissArmy {
       dfGrouped.setGroupingSize(3);
 
       try {
-         fakeRE = new RE("fake", 2);
-      } catch (REException var6) {
+         fakeRE = Pattern.compile("fake", Pattern.CASE_INSENSITIVE);
+      } catch (PatternSyntaxException var6) {
          fakeRE = null;
       }
 
@@ -694,11 +710,11 @@ public class SwissArmy {
       String var3 = "(%.+?%)";
 
       try {
-         linksRE1 = new RE(var0, 2);
-         linksRE2 = new RE(var0 + var1, 2);
-         hrefRE = new RE(var2, 2);
-         envRE = new RE(var3, 2);
-      } catch (REException var5) {
+         linksRE1 = Pattern.compile(var0, Pattern.CASE_INSENSITIVE);
+         linksRE2 = Pattern.compile(var0 + var1, Pattern.CASE_INSENSITIVE);
+         hrefRE = Pattern.compile(var2, Pattern.CASE_INSENSITIVE);
+         envRE = Pattern.compile(var3, Pattern.CASE_INSENSITIVE);
+      } catch (PatternSyntaxException var5) {
       }
    }
 }
