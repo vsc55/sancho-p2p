@@ -10,18 +10,33 @@ authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 
 ## [Unreleased]
 
+### Fixed
+
+- **Windows file/protocol association registration required administrator and gave no
+  feedback.** The page wrote to `HKEY_CLASSES_ROOT` (machine-wide → needs elevation) and
+  ran `regedit.exe /s` silently — and regedit's manifest forces elevation, so it failed
+  without admin even for a per-user write. It now imports via `reg.exe import` (which runs
+  at the caller's level) and defaults to a **per-user** registration
+  (`HKEY_CURRENT_USER\Software\Classes`, no administrator needed), with a "Register for
+  all users (requires administrator)" checkbox for the machine-wide behaviour, and reports
+  success or failure from the exit code. The generated `.reg` also had a broken
+  backslash-doubling (a gnu.regexp→java.util.regex regression: `SwissArmy.replaceAll(p,
+  "\\\\","\\\\")` was a no-op), so the executable path came out with single backslashes
+  that the import mangled — now doubled with `String.replace`. The executable path is
+  taken from jpackage's `jpackage.app-path` when installed, so the association points at
+  the real `sancho.exe`.
+
 ### Changed
 
-- **Folded WebBrowserTab's and MenuBar's decompiled inner classes back into their parent
-  files** (20 `WebBrowserTab$*.java` and 26 `MenuBar$*.java` fragments → nested/anonymous
-  classes; 46 files gone). Purely structural: anonymous listeners are inlined at their
-  call sites, named classes (`WebBrowserViewFrame`, the favorite `Action`s,
-  `AlphaInputDialog`, `URLListener`) become nested classes, and the decompiler's
-  `this$0`/`access$NNN` artifacts are removed. Loop-captured variables get an
-  effectively-final copy where a listener needed it. MenuBar's structure was restored
-  from the original `0.9.4-23` source as a template. No behaviour change; the first,
-  opportunistic steps of the inner-class re-merge (see ToDo). WebBrowserTab verified
-  against a live browser tab.
+- **Folded decompiled inner classes back into their parent files** for `WebBrowserTab`
+  (20 fragments), `MenuBar` (26) and `WinRegPreferencePage` (6) — 52 `*$*.java` files
+  gone. Purely structural: anonymous listeners are inlined at their call sites, named
+  classes (`WebBrowserViewFrame`, the favorite `Action`s, `AlphaInputDialog`,
+  `URLListener`, `RegisterLink`/`RegisterExtension`) become nested classes, and the
+  decompiler's `this$0`/`access$NNN` artifacts are removed. Loop-captured variables get
+  an effectively-final copy where a listener needed it. The `0.9.4-23` original was used
+  as a structural template where available. No behaviour change; the first, opportunistic
+  steps of the inner-class re-merge (see ToDo). Verified: browser tab and all menus work.
 
 ### Removed
 
