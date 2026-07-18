@@ -1,5 +1,8 @@
 package sancho.utility;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import sancho.view.preferences.PreferenceLoader;
@@ -119,23 +122,27 @@ public class VersionInfo {
       return "";
    }
 
-   static {
-      byte var0 = 0;
-      byte var1 = 9;
-      byte var2 = 4;
-      byte var3 = 59;
-      StringBuffer var4 = new StringBuffer(12);
-      var4.append((int)var0);
-      var4.append(".");
-      var4.append((int)var1);
-      var4.append(".");
-      var4.append((int)var2);
-      if (var3 > 0) {
-         var4.append("-");
-         var4.append((int)var3);
+   // Read the version filtered in from pom.xml (${project.version}) at build time,
+   // instead of the number that was baked into the decompiled 0.9.4-59 source.
+   private static String readBuildVersion() {
+      try (InputStream in = VersionInfo.class.getResourceAsStream("/sancho/version.properties")) {
+         if (in != null) {
+            Properties p = new Properties();
+            p.load(in);
+            String v = p.getProperty("version");
+            // Guard against the unfiltered placeholder (e.g. running unbuilt sources).
+            if (v != null && v.length() > 0 && !v.startsWith("${")) {
+               return v;
+            }
+         }
+      } catch (IOException var2) {
       }
 
-      VERSION = var4.toString();
+      return "0.9.4-dev";
+   }
+
+   static {
+      VERSION = readBuildVersion();
       String var5 = System.getProperty("os.name");
       isWin95 = var5.equals("Windows 95") || var5.equals("Windows 98") || var5.equals("Windows ME");
       oldWindows = isOldWindows();

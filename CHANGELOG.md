@@ -8,6 +8,29 @@ The upstream project's original changelog (2004–2006) is preserved at
 authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 (`git checkout 0.9.4-23`).
 
+## [0.9.4-69] — 2026-07-18
+
+### Fixed
+
+- **Navigation toolbar invisible at startup.** The main window laid out only the
+  inner CoolBar composite, so the outer `GridLayout` gave the toolbar row no height
+  until the first manual resize (the button bar under the menu was intermittently
+  missing on launch). It now forces a full `shell.layout(true, true)` once the
+  window is open at its restored size.
+- **Displayed version stuck at `0.9.4-59`.** `VersionInfo` had the number baked in
+  from the decompiled source; it now reads the real build version, filtered in from
+  `${project.version}` via a `version.properties` resource (falls back to
+  `0.9.4-dev` when run from unbuilt sources).
+
+### Changed
+
+- **Embedded web browser now uses Edge on Windows.** With the old Mozilla/XULRunner
+  backend gone, the browser defaulted to the legacy Internet Explorer engine
+  (`SWT.NONE`) on Windows. It now creates the modern Edge/Chromium (WebView2)
+  browser by default, falling back to the platform default if WebView2 is
+  unavailable. The obsolete **"Force mozilla"** preference and its wiring were
+  removed.
+
 ## [0.9.4-68] — 2026-07-18
 
 ### Changed

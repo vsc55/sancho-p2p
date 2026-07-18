@@ -297,15 +297,8 @@ public class RootPreferencePage extends CPreferencePage {
       var2.setLayoutData(new GridData(1808));
       TabFolder var3 = new TabFolder(var2, 1024);
       var3.setLayoutData(new GridData(1808));
-      this.createWebBrowserGeneralItems(var3);
       this.createWebBrowserFavorites(var3);
       this.createWebBrowserToolItems(var3);
-   }
-
-   protected void createWebBrowserGeneralItems(TabFolder var1) {
-      Composite var2 = this.createNewTab(var1, "l.general");
-      this.setupBooleanEditor("forceMozilla", "p.r.webbrowser.forceMozilla", var2);
-      this.setCompositeLayout(var2);
    }
 
    protected void createWebBrowserToolItems(TabFolder var1) {

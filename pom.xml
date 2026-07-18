@@ -11,7 +11,7 @@
          CHANGELOG.md. -59 already used Tree (not the deprecated TableTree), but it
          injects a few classes into org.eclipse.jface.viewers, so JFace is consumed
          unsigned from local-repo. -->
-    <version>0.9.4-68</version>
+    <version>0.9.4-69</version>
     <packaging>jar</packaging>
 
     <name>Sancho</name>
@@ -87,7 +87,18 @@
                 <directory>sancho-src/src</directory>
                 <excludes>
                     <exclude>**/*.java</exclude>
+                    <!-- filtered separately below so ${...} elsewhere is untouched -->
+                    <exclude>**/version.properties</exclude>
                 </excludes>
+            </resource>
+            <!-- Only version.properties is filtered, so its ${project.version} is
+                 substituted at build time and VersionInfo shows the real build. -->
+            <resource>
+                <directory>sancho-src/src</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/version.properties</include>
+                </includes>
             </resource>
         </resources>
 

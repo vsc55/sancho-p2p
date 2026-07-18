@@ -63,6 +63,7 @@ Sancho used a `0.9.4-NN` snapshot scheme.
 | `0.9.4-66` | macOS external-link fix, platform-code cleanup, Dependabot | [Release](../../releases/tag/0.9.4-66) |
 | `0.9.4-67` | Windows **`.msi` installer** (optional association prompt + silent-install support) | [Release](../../releases/tag/0.9.4-67) |
 | `0.9.4-68` | Cleaner build output (shade + checksum warnings), serialized release runs | [Release](../../releases/tag/0.9.4-68) |
+| `0.9.4-69` | Startup toolbar fix, real build version in the title, Edge web browser on Windows | [Release](../../releases/tag/0.9.4-69) |
 
 **`main`** always holds the newest modernized build; [CHANGELOG.md](CHANGELOG.md)
 and the [Releases](../../releases) page are the authoritative, up-to-date list.

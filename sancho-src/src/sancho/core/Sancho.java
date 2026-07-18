@@ -37,11 +37,6 @@ public class Sancho {
    public static boolean startMinimized;
    public static boolean startTray;
    private static boolean deleteLockFile;
-   private static boolean bForceMozilla;
-
-   public static boolean forceMozilla() {
-      return bForceMozilla;
-   }
 
    public static boolean hasLoaded() {
       return bHasLoaded;
@@ -225,7 +220,6 @@ public class Sancho {
          }
       }
 
-      bForceMozilla = PreferenceLoader.loadBoolean("forceMozilla");
       interactiveLaunch();
       exit(0);
    }

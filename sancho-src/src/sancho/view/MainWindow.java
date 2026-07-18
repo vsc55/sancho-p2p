@@ -121,6 +121,12 @@ public class MainWindow implements ShellListener, MyObserver, DisposeListener {
             this.minimizer.minimize(true);
          }
 
+         // Force a full recursive layout now that the shell has its restored bounds.
+         // Otherwise mainComposite's GridLayout may not allocate the CToolBar row
+         // until the first manual resize, leaving the navigation bar invisible at
+         // startup (layoutCoolBar() alone only re-lays-out the inner composite).
+         this.shell.layout(true, true);
+
          if (PreferenceLoader.loadBoolean("dndBox")) {
             this.toggleDNDBox();
          }

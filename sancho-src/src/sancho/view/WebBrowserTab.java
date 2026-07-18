@@ -113,12 +113,20 @@ public class WebBrowserTab extends AbstractTab {
    public Browser createBrowser(Composite var1) {
       Browser var2;
       try {
-         // SWT removed the Mozilla/XULRunner backend (the old SWT.MOZILLA style).
-         // When the legacy "forceMozilla" preference asks to force an engine, use
-         // Edge (Chromium) instead. SWT.EDGE is win32-only, so elsewhere fall back
-         // to the platform default browser.
-         int browserStyle = Sancho.forceMozilla() && "win32".equals(SWT.getPlatform()) ? SWT.EDGE : SWT.NONE;
-         var2 = new Browser(var1, browserStyle);
+         // SWT removed the old Mozilla/XULRunner backend (SWT.MOZILLA). On Windows
+         // the plain default (SWT.NONE) is still the legacy Internet Explorer engine,
+         // so prefer the modern Edge (Chromium/WebView2) backend there; if WebView2
+         // is unavailable it throws, and we fall back to the platform default.
+         if ("win32".equals(SWT.getPlatform())) {
+            try {
+               var2 = new Browser(var1, SWT.EDGE);
+            } catch (SWTError var4) {
+               Sancho.pDebug("SWT.EDGE unavailable, falling back to default browser: " + var4.toString());
+               var2 = new Browser(var1, SWT.NONE);
+            }
+         } else {
+            var2 = new Browser(var1, SWT.NONE);
+         }
       } catch (SWTError var5) {
          Sancho.pDebug(var5.toString());
          this.viewFrame.updateCLabelText("Browser failed (see FAQ): " + var5.toString());

@@ -378,7 +378,6 @@ public class PreferenceLoader {
       setDColor(var0, var1, "ircPartColor", 4);
       setDColor(var0, var1, "ircModeColor", 8);
       var0.setDefault("defaultWebBrowser", "");
-      var0.setDefault("forceMozilla", false);
       var0.setDefault("consoleToolItems", 5);
       var0.setDefault("consoleToolItem1", "cs");
       var0.setDefault("consoleToolItem2", "version");
