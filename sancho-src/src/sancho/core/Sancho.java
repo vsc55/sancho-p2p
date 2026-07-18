@@ -5,9 +5,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import sancho.utility.SwissArmy;
@@ -17,6 +21,7 @@ import sancho.view.console.ExecConsole;
 import sancho.view.preferences.PreferenceLoader;
 import sancho.view.utility.SResources;
 import sancho.view.utility.Splash;
+import sancho.view.utility.dialogs.BugDialog;
 
 public class Sancho {
    private static CoreFactory coreFactory;
@@ -113,7 +118,11 @@ public class Sancho {
    public static void killCoreConsole() {
       if (execConsole != null) {
          execConsole.forceKill();
-         display.syncExec(new Sancho$1());
+         display.syncExec(new Runnable() {
+            public void run() {
+               execConsole.dispose();
+            }
+         });
       }
 
       execConsole = null;
@@ -181,7 +190,13 @@ public class Sancho {
       // -Djava.util.Arrays.useLegacyMergeSort flag is no longer needed.
       Display.setAppName("sancho");
       display = new Display();
-      display.addListener(12, new Sancho$2());
+      display.addListener(12, new Listener() {
+         public void handleEvent(Event event) {
+            if (deleteLockFile && ourLockFile != null) {
+               ourLockFile.delete();
+            }
+         }
+      });
       if (VersionInfo.isGNU() && Prov.x == 2) {
          System.out.println("");
       }
@@ -399,31 +414,23 @@ public class Sancho {
       send(var0, null);
    }
 
-   public static void threadException(String var0, Exception var1) {
+   public static void threadException(final String message, final Exception exception) {
       if (debug) {
-         var1.printStackTrace();
+         exception.printStackTrace();
       } else if (display != null && !display.isDisposed()) {
-         display.asyncExec(new Sancho$3(var0, var1));
+         display.asyncExec(new Runnable() {
+            public void run() {
+               StringWriter writer = new StringWriter();
+               writer.write("From Thread: " + message + "\n\n");
+               if (exception != null) {
+                  exception.printStackTrace(new PrintWriter(writer, true));
+               } else {
+                  writer.write("NULL EXCEPTION");
+               }
+
+               new BugDialog(new Shell(display), writer.toString()).open();
+            }
+         });
       }
-   }
-
-   // $VF: synthetic method
-   static ExecConsole access$000() {
-      return execConsole;
-   }
-
-   // $VF: synthetic method
-   static boolean access$100() {
-      return deleteLockFile;
-   }
-
-   // $VF: synthetic method
-   static File access$200() {
-      return ourLockFile;
-   }
-
-   // $VF: synthetic method
-   static Display access$300() {
-      return display;
    }
 }

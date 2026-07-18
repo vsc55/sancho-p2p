@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Timer;
+import java.util.TimerTask;
 import sancho.model.mldonkey.ClientCollection;
 import sancho.model.mldonkey.ClientStats;
 import sancho.model.mldonkey.CollectionFactory;
@@ -491,7 +492,36 @@ public class MLDonkeyCore extends MyObservable implements ICore {
       }
 
       this.timer = new Timer();
-      this.timer.scheduleAtFixedRate(new MLDonkeyCore$1(this), 0L, 777L);
+      this.timer.scheduleAtFixedRate(new TimerTask() {
+         public void run() {
+            if (!MLDonkeyCore.this.isConnected()) {
+               this.cancel();
+            } else {
+               long now = System.currentTimeMillis();
+               if (now > MLDonkeyCore.this.lastPollForStats + (long)(MLDonkeyCore.this.pollDelay * 1000)) {
+                  MLDonkeyCore.this.pollForStats();
+                  MLDonkeyCore.this.lastPollForStats = now;
+               }
+
+               if (now > MLDonkeyCore.this.lastStats + (long)(MLDonkeyCore.this.statsDelay * 1000)) {
+                  MLDonkeyCore.this.pollStats();
+                  MLDonkeyCore.this.lastStats = now;
+               }
+
+               if (MLDonkeyCore.this.requestFileInfoDelay > 0
+                  && now > MLDonkeyCore.this.lastRequestFileInfos + (long)(MLDonkeyCore.this.requestFileInfoDelay * 1000)) {
+                  MLDonkeyCore.this.getFileCollection().requestAllFileInfos();
+                  MLDonkeyCore.this.lastRequestFileInfos = now;
+               }
+
+               if (MLDonkeyCore.this.timerCounter++ == 5) {
+                  MLDonkeyCore.this.getClientCollection().cleanDeadClients();
+               }
+
+               MLDonkeyCore.this.getFileCollection().sendUpdate();
+            }
+         }
+      }, 0L, 777L);
    }
 
    private void stopTimer() {
@@ -525,13 +555,4 @@ public class MLDonkeyCore extends MyObservable implements ICore {
       }
    }
 
-   // $VF: synthetic method
-   static void access$000(MLDonkeyCore var0) {
-      var0.pollForStats();
-   }
-
-   // $VF: synthetic method
-   static void access$100(MLDonkeyCore var0) {
-      var0.pollStats();
-   }
 }

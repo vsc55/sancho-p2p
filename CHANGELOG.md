@@ -29,8 +29,9 @@ authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 ### Changed
 
 - **Folded decompiled inner classes back into their parent files** for `WebBrowserTab`
-  (20 fragments), `MenuBar` (26), `WinRegPreferencePage` (6) and `CoreFactory` (9) — 61
-  `*$*.java` files gone. Purely structural: anonymous listeners are inlined at their call sites, named
+  (20 fragments), `MenuBar` (26), `WinRegPreferencePage` (6), and the whole `sancho.core`
+  package — `CoreFactory` (9), `MLDonkeyCore` (1), `SSHCoreFactory` (2), `Sancho` (3), so
+  `sancho.core` now has no split-out inner-class files. Purely structural: anonymous listeners are inlined at their call sites, named
   classes (`WebBrowserViewFrame`, the favorite `Action`s, `AlphaInputDialog`,
   `URLListener`, `RegisterLink`/`RegisterExtension`) become nested classes, and the
   decompiler's `this$0`/`access$NNN` artifacts are removed. Loop-captured variables get

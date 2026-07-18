@@ -6,6 +6,7 @@ import com.jcraft.jsch.ProxyHTTP;
 import com.jcraft.jsch.ProxySOCKS4;
 import com.jcraft.jsch.ProxySOCKS5;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.UserInfo;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -14,6 +15,7 @@ import sancho.utility.SwissArmy;
 import sancho.utility.VersionInfo;
 import sancho.view.preferences.PreferenceLoader;
 import sancho.view.utility.SResources;
+import sancho.view.utility.Splash;
 
 public class SSHCoreFactory extends CoreFactory {
    private JSch jsch;
@@ -81,7 +83,7 @@ public class SSHCoreFactory extends CoreFactory {
             this.session = this.jsch.getSession(this.ssh_user, this.ssh_host, this.ssh_port);
             this.addProxy(this.session);
             this.session.setPassword(this.ssh_pass);
-            this.session.setUserInfo(new SSHCoreFactory$SSHUserInfo(this));
+            this.session.setUserInfo(new SSHUserInfo());
             this.session.connect();
             this.session.setPortForwardingL(this.ssh_lport, this.ssh_rhost, this.ssh_rport);
             if (this.ssh_fwd_p) {
@@ -189,5 +191,55 @@ public class SSHCoreFactory extends CoreFactory {
    public int startCore() {
       int var1 = this.initializeSSH();
       return var1 != 2 && var1 != 1 ? super.startCore() : var1;
+   }
+
+   // JSch callback: routes SSH password / passphrase / yes-no / message prompts to the
+   // CoreFactory dialogs (was SSHCoreFactory$SSHUserInfo, with its showMessage Runnable).
+   private class SSHUserInfo implements UserInfo {
+      String passwd;
+
+      public String getPassphrase() {
+         return this.passwd;
+      }
+
+      public String getPassword() {
+         return this.passwd;
+      }
+
+      public boolean promptPassphrase(String message) {
+         String entered = SSHCoreFactory.this.askForPassword("/SSH", message);
+         SSHCoreFactory.this.sResult = null;
+         if (entered == null) {
+            return false;
+         } else {
+            this.passwd = entered;
+            return true;
+         }
+      }
+
+      public boolean promptPassword(String message) {
+         String entered = SSHCoreFactory.this.askForPassword("/SSH", message);
+         SSHCoreFactory.this.sResult = null;
+         if (entered == null) {
+            return false;
+         } else {
+            this.passwd = entered;
+            return true;
+         }
+      }
+
+      public boolean promptYesNo(String message) {
+         return SSHCoreFactory.this.createYesNoBox(VersionInfo.getName() + "/SSH", message);
+      }
+
+      public void showMessage(final String message) {
+         SSHCoreFactory.this.display.syncExec(new Runnable() {
+            public void run() {
+               Splash.setVisible(false);
+               CoreFactory.openInformation(null, VersionInfo.getName() + "/SSH", message);
+               Splash.setVisible(true);
+            }
+         });
+      }
    }
 }
