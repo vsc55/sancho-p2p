@@ -2,8 +2,8 @@ package sancho.model.mldonkey.utility;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
+import java.nio.charset.StandardCharsets;
 import sancho.core.ICore;
 
 public class MessageBuffer {
@@ -118,17 +118,10 @@ public class MessageBuffer {
       }
 
       if (var2 > 0) {
-         String var3;
-         if (var1) {
-            try {
-               var3 = new String(this.byteArray, this.iterator, var2, "UTF8");
-            } catch (UnsupportedEncodingException var5) {
-               var3 = new String(this.byteArray, this.iterator, var2);
-            }
-         } else {
-            var3 = new String(this.byteArray, this.iterator, var2);
-         }
-
+         // Decode with an explicit charset so the result never depends on the JVM
+         // default (which flipped to UTF-8 in JDK 18, so the same bytes rendered
+         // differently on JDK 17 vs 18+). Modern mldonkey sends UTF-8.
+         String var3 = new String(this.byteArray, this.iterator, var2, StandardCharsets.UTF_8);
          this.iterator += var2;
          return var3.intern();
       } else {

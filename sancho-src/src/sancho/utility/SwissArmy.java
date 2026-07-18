@@ -278,25 +278,27 @@ public class SwissArmy {
    }
 
    public static long stringSizeToLong(String var0, String var1) {
-      int var2 = 1;
+      // multiplier must be long: 2^40 (TB) overflows int, so the old code left it 0
+      // and every "TB" size converted to 0 bytes. double keeps precision at GB/TB.
+      long var2 = 1L;
       if (var1.equalsIgnoreCase(S_KB)) {
-         var2 = 1024;
+         var2 = 1024L;
       } else if (var1.equalsIgnoreCase(S_MB)) {
-         var2 = 1048576;
+         var2 = 1048576L;
       } else if (var1.equalsIgnoreCase(S_GB)) {
-         var2 = 1073741824;
+         var2 = 1073741824L;
       } else if (var1.equalsIgnoreCase(S_TB)) {
-         var2 = 0;
+         var2 = 1099511627776L;
       }
 
-      float var3;
+      double var3;
       try {
-         var3 = Float.parseFloat(var0);
+         var3 = Double.parseDouble(var0);
       } catch (NumberFormatException var5) {
-         var3 = 1.0F;
+         var3 = 1.0;
       }
 
-      return (long)(var3 * (float)var2);
+      return (long)(var3 * (double)var2);
    }
 
    public static int log2(int var0) {

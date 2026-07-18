@@ -12,10 +12,16 @@ class VersionChecker$2 implements Runnable {
    }
 
    public void run() {
-      if (VersionChecker$1.access$000(this.this$1).shell != null && !VersionChecker$1.access$000(this.this$1).shell.isDisposed()) {
-         if (VersionChecker$1.access$000(this.this$1).statusLine != null) {
-            VersionChecker$1.access$000(this.this$1)
-               .statusLine
+      VersionChecker var2 = VersionChecker$1.access$000(this.this$1);
+      String var1 = var2.newVersion;
+      // A dead/parked update host can answer with HTML (or an empty body -> null)
+      // instead of a version string. Only act when it actually looks like a version,
+      // so we don't show a bogus "latest version" text or a false new-version popup
+      // (and don't NPE on a null line).
+      boolean var3 = var1 != null && var1.matches("\\d+(\\.\\d+)*(-\\d+)?");
+      if (var2.shell != null && !var2.shell.isDisposed()) {
+         if (var2.statusLine != null && var3) {
+            var2.statusLine
                .setText(
                   "["
                      + VersionInfo.getName()
@@ -24,12 +30,12 @@ class VersionChecker$2 implements Runnable {
                      + VersionInfo.getVersion()
                      + " / "
                      + SResources.getString("l.latest")
-                     + VersionChecker$1.access$000(this.this$1).newVersion
+                     + var1
                );
          }
 
-         if (!VersionChecker$1.access$000(this.this$1).newVersion.equals(VersionInfo.getVersion()) && PreferenceLoader.loadBoolean("versionCheckPopup")) {
-            new VersionChecker$VersionDialog(VersionChecker$1.access$000(this.this$1).shell, VersionChecker$1.access$000(this.this$1).newVersion).open();
+         if (var3 && !var1.equals(VersionInfo.getVersion()) && PreferenceLoader.loadBoolean("versionCheckPopup")) {
+            new VersionChecker$VersionDialog(var2.shell, var1).open();
          }
       }
    }

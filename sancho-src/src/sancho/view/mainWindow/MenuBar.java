@@ -48,16 +48,23 @@ public class MenuBar implements Runnable {
       }
 
       Image var14 = new Image(var5, var1, var2);
-      GC var7 = new GC(var5);
-      var7.copyArea(var14, var3, var4);
-      var7.dispose();
-      FileDialog var8 = new FileDialog(this.shell, 8192);
-      var8.setFilterExtensions(new String[]{"*.png"});
-      String var9 = var8.open();
-      if (var9 != null) {
-         ImageLoader var10 = new ImageLoader();
-         var10.data = new ImageData[]{var14.getImageData()};
-         var10.save(var9, 5);
+
+      try {
+         GC var7 = new GC(var5);
+         var7.copyArea(var14, var3, var4);
+         var7.dispose();
+         FileDialog var8 = new FileDialog(this.shell, 8192);
+         var8.setFilterExtensions(new String[]{"*.png"});
+         String var9 = var8.open();
+         if (var9 != null) {
+            ImageLoader var10 = new ImageLoader();
+            var10.data = new ImageData[]{var14.getImageData()};
+            var10.save(var9, 5);
+         }
+      } finally {
+         // The window-sized Image was never disposed (neither on save nor on
+         // cancel), leaking a large native bitmap on every screenshot.
+         var14.dispose();
       }
    }
 

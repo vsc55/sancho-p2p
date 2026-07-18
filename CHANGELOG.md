@@ -30,6 +30,20 @@ authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 - **A malformed chunk-age token from the core broke the read loop.**
   `File.readChunkAges` now guards `Integer.parseInt` (like its sibling `readAge`)
   and defaults to 0 instead of throwing out of the socket message stream.
+- **Size filters in "TB" evaluated to 0 bytes.** `SwissArmy.stringSizeToLong` used
+  an `int` multiplier, so 2^40 overflowed to 0; it now uses a `long` (and `double`
+  arithmetic for precision).
+- **Core strings decoded with the JVM default charset** rendered differently across
+  JDK 17 vs 18+ (mojibake on non-ASCII filenames/nicknames). `MessageBuffer` now
+  decodes them as explicit UTF-8.
+- **GDI handle leak browsing search results.** The result tooltip allocated a new
+  `Region` on every hover without disposing the previous one; it is now disposed on
+  each reposition and on teardown.
+- **Native bitmap leak on every screenshot.** Tools → Screenshot never disposed the
+  window-sized `Image` (on save or cancel); it is now disposed in a `finally`.
+- **False "new version" popup from the dead update host.** The version check now
+  validates that the fetched string looks like a version before showing the
+  "latest version" text / popup, avoiding a bogus prompt (and a null-line NPE).
 
 ### Changed
 

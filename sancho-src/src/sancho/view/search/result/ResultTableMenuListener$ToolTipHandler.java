@@ -51,6 +51,7 @@ class ResultTableMenuListener$ToolTipHandler implements IMenuListener {
    private ResultTableMenuListener$ToolTipTimerTask timerTask;
    private int[] roundRect;
    private int[] roundRectR;
+   private Region tipRegion;
    // $VF: synthetic field
    private final ResultTableMenuListener this$0;
 
@@ -203,6 +204,11 @@ class ResultTableMenuListener$ToolTipHandler implements IMenuListener {
          this.tipShell = null;
       }
 
+      if (this.tipRegion != null && !this.tipRegion.isDisposed()) {
+         this.tipRegion.dispose();
+         this.tipRegion = null;
+      }
+
       this.stopTimer();
    }
 
@@ -234,9 +240,17 @@ class ResultTableMenuListener$ToolTipHandler implements IMenuListener {
       Point var6 = var1.computeSize(-1, -1);
       this.roundRect = this.roundRect(0, 0, var6.x - 1, var6.y - 1);
       this.roundRectR = this.roundRect(0, 0, var6.x, var6.y);
+      // setRegion() does not dispose the previously installed region, and this runs
+      // on every hover/reposition, so dispose the old one to avoid leaking GDI
+      // region handles over a long browsing session.
+      if (this.tipRegion != null && !this.tipRegion.isDisposed()) {
+         this.tipRegion.dispose();
+      }
+
       Region var7 = new Region();
       var7.add(this.roundRectR);
       var1.setRegion(var7);
+      this.tipRegion = var7;
    }
 
    public void menuAboutToShow(IMenuManager var1) {

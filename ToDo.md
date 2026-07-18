@@ -12,6 +12,11 @@ Backlog of improvements for the modernized `sancho-p2p` build. Done items live i
   Windows/Linux/macOS matrix publishing Windows `.zip` + jar, Linux `.deb` +
   `.rpm`, and macOS `.dmg`. See CHANGELOG.
 
+- [ ] **Verify UTF-8 decoding of core strings (charset fix).** `MessageBuffer.getString`
+  now decodes core strings as explicit UTF-8 (was the JVM default charset). Confirm
+  against a real MLDonkey core that non-ASCII filenames/nicknames (accents, ñ, …)
+  still render correctly on Windows; revert to a different charset if they don't.
+
 - [~] **Functional end-to-end verification.** ✅ Verified working on **Windows**
   against a real MLDonkey core. Remaining: validate on **Linux** and **macOS**, and
   spot-check the ported edge flows (sorting live tables, IRC, web browser, cell
