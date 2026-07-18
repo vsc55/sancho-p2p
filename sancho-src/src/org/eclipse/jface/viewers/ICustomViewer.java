@@ -3,23 +3,23 @@ package org.eclipse.jface.viewers;
 public interface ICustomViewer extends IInputProvider {
    int[] getColumnIDs();
 
-   void setColumnIDs(String var1);
+   void setColumnIDs(String columns);
 
-   void setContentProvider(IContentProvider var1);
+   void setContentProvider(IContentProvider contentProvider);
 
-   void setLabelProvider(IBaseLabelProvider var1);
+   void setLabelProvider(IBaseLabelProvider labelProvider);
 
-   void setSorter(ViewerSorter var1);
+   void setSorter(ViewerSorter sorter);
 
-   void setInput(Object var1);
+   void setInput(Object input);
 
-   void setEditors(boolean var1);
+   void setEditors(boolean enabled);
 
    boolean getEditors();
 
    void updateDisplay();
 
-   void updateSelection(ISelection var1);
+   void updateSelection(ISelection selection);
 
    void clearAll();
 }

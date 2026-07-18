@@ -4,11 +4,20 @@ import gnu.trove.TIntArrayList;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import org.eclipse.jface.util.IOpenEventListener;
 import org.eclipse.jface.util.OpenStrategy;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Item;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import sancho.view.preferences.PreferenceLoader;
@@ -20,101 +29,138 @@ public class CustomTableViewer extends TableViewer implements ICustomViewer {
    private Hashtable parentToItemMap = new Hashtable();
    private boolean followSelection;
 
-   protected void initializeVirtualManager(int var1) {
+   protected void initializeVirtualManager(int style) {
    }
 
-   protected Object[] getRawChildren(Object var1) {
-      Object[] var2 = null;
-      if (var1 != null) {
-         IStructuredContentProvider var3 = (IStructuredContentProvider)this.getContentProvider();
-         if (var3 != null) {
-            var2 = var3.getElements(var1);
+   protected Object[] getRawChildren(Object input) {
+      Object[] elements = null;
+      if (input != null) {
+         IStructuredContentProvider contentProvider = (IStructuredContentProvider)this.getContentProvider();
+         if (contentProvider != null) {
+            elements = contentProvider.getElements(input);
          }
       }
 
-      return var2 != null ? var2 : new Object[0];
+      return elements != null ? elements : new Object[0];
    }
 
-   public void updateSelection(ISelection var1) {
-      super.updateSelection(var1);
+   public void updateSelection(ISelection selection) {
+      super.updateSelection(selection);
    }
 
    public void updateDisplay() {
       this.followSelection = PreferenceLoader.loadBoolean("followSelection");
    }
 
-   public void replace(Object var1, TableItem var2) {
+   public void replace(Object element, TableItem item) {
       // If this element is still associated with a DIFFERENT TableItem (e.g. after a
       // re-sort/re-filter moved it to another row), disassociate that stale item and
       // invalidate its row so SWT re-renders it with its correct element. Without
       // this the element shows in two rows (duplicate) and the stale row "sticks"
       // and ignores sorting. The sibling CustomTreeViewer.replace has this guard;
       // the decompiled/ported table version had lost it.
-      TableItem var3 = (TableItem)this.parentToItemMap.get(var1);
-      if (var3 != null && var3 != var2 && !var3.isDisposed()) {
-         var3.setData(null);
-         Table var4 = this.getTable();
-         int var5 = var4.indexOf(var3);
-         if (var5 != -1) {
-            var4.clear(var5);
+      TableItem staleItem = (TableItem)this.parentToItemMap.get(element);
+      if (staleItem != null && staleItem != item && !staleItem.isDisposed()) {
+         staleItem.setData(null);
+         Table table = this.getTable();
+         int staleIndex = table.indexOf(staleItem);
+         if (staleIndex != -1) {
+            table.clear(staleIndex);
          }
       }
 
-      this.parentToItemMap.put(var1, var2);
-      var2.setData(var1);
-      this.doUpdateItem(var2, var1);
+      this.parentToItemMap.put(element, item);
+      item.setData(element);
+      this.doUpdateItem(item, element);
    }
 
-   protected void myHandleOpen(SelectionEvent var1) {
-      super.handleOpen(var1);
+   protected void myHandleOpen(SelectionEvent event) {
+      super.handleOpen(event);
    }
 
-   protected void hookControl(Control var1) {
-      var1.addDisposeListener(new CustomTableViewer$1(this));
-      OpenStrategy var2 = new OpenStrategy(var1);
-      var2.addSelectionListener(new CustomTableViewer$2(this));
-      var2.addPostSelectionListener(new CustomTableViewer$3(this));
-      var2.addOpenListener(new CustomTableViewer$4(this));
-      Table var3 = (Table)var1;
-      var3.addMouseListener(new CustomTableViewer$5(this));
-      var3.addListener(36, new CustomTableViewer$6(this));
+   protected void hookControl(Control control) {
+      control.addDisposeListener(new DisposeListener() {
+         public void widgetDisposed(DisposeEvent event) {
+            handleDispose(event);
+         }
+      });
+      OpenStrategy openStrategy = new OpenStrategy(control);
+      openStrategy.addSelectionListener(new SelectionListener() {
+         public void widgetSelected(SelectionEvent event) {
+            handleSelect(event);
+         }
+
+         public void widgetDefaultSelected(SelectionEvent event) {
+            handleDoubleSelect(event);
+         }
+      });
+      openStrategy.addPostSelectionListener(new SelectionAdapter() {
+         public void widgetSelected(SelectionEvent event) {
+            handlePostSelect(event);
+         }
+      });
+      openStrategy.addOpenListener(new IOpenEventListener() {
+         public void handleOpen(SelectionEvent event) {
+            myHandleOpen(event);
+         }
+      });
+      Table table = (Table)control;
+      table.addMouseListener(new MouseAdapter() {
+         public void mouseDown(MouseEvent event) {
+            /* No-op: modern JFace TableViewer/TreeViewer create a default ColumnViewerEditor
+            // whose activation strategy starts cell editing on click, so the 2008-era
+            // tableViewerImpl.handleMouseDown() forwarding is no longer needed. */
+         }
+      });
+      table.addListener(36, new Listener() {
+         public void handleEvent(Event event) {
+            GTableContentProvider contentProvider = (GTableContentProvider)getContentProvider();
+            int index = event.index;
+            TableItem item = (TableItem)event.item;
+            contentProvider.updateElement(item, index);
+         }
+      });
    }
 
    public void clearAll() {
-      this.preservingSelection(new CustomTableViewer$7(this));
+      this.preservingSelection(new Runnable() {
+         public void run() {
+            myInternalVirtualRefreshAll();
+         }
+      });
    }
 
-   public void myClear(int var1, int[] var2, Object[] var3) {
-      Table var4 = this.getTable();
-      int var5 = var4.getItemCount();
-      if (var1 < 0) {
-         var1 = var5;
+   public void myClear(int newItemCount, int[] indices, Object[] elements) {
+      Table table = this.getTable();
+      int currentItemCount = table.getItemCount();
+      if (newItemCount < 0) {
+         newItemCount = currentItemCount;
       }
 
-      TIntArrayList var6 = new TIntArrayList();
+      TIntArrayList clearedIndices = new TIntArrayList();
 
-      for (int var7 = 0; var7 < var3.length; var7++) {
-         Object var8 = var3[var7];
-         TableItem var9 = (TableItem)this.parentToItemMap.remove(var8);
-         if (var9 != null) {
-            var6.add(var2[var7]);
-            var9.setData(null);
+      for (int i = 0; i < elements.length; i++) {
+         Object element = elements[i];
+         TableItem item = (TableItem)this.parentToItemMap.remove(element);
+         if (item != null) {
+            clearedIndices.add(indices[i]);
+            item.setData(null);
          }
       }
 
-      if (var1 >= 0 && var5 != var1) {
-         var4.setItemCount(var1);
+      if (newItemCount >= 0 && currentItemCount != newItemCount) {
+         table.setItemCount(newItemCount);
       }
 
-      int[] var11 = var6.toNativeArray();
+      int[] clearedArray = clearedIndices.toNativeArray();
 
-      for (int var12 = 0; var12 < var11.length; var12++) {
-         int var10 = var11[var12];
-         if (var10 >= var1) {
+      for (int i = 0; i < clearedArray.length; i++) {
+         int index = clearedArray[i];
+         if (index >= newItemCount) {
             break;
          }
 
-         var4.clear(var10);
+         table.clear(index);
       }
 
       // SWT's lazy SetData isn't effectively wired in this custom viewer, and a row
@@ -122,32 +168,44 @@ public class CustomTableViewer extends TableViewer implements ICustomViewer {
       // can never re-render it (it stays stale — the "stuck" top rows). Explicitly
       // render the currently visible rows from the freshly-sorted content provider,
       // which is bounded by the screen height regardless of the table size.
-      IContentProvider var14 = this.getContentProvider();
-      if (var14 instanceof GTableContentProvider) {
-         GTableContentProvider var15 = (GTableContentProvider)var14;
-         int var16 = var4.getItemHeight();
-         int var17 = var4.getTopIndex();
-         int var18 = var16 > 0 ? var4.getClientArea().height / var16 + 2 : var1;
-         for (int var19 = var17; var19 < var1 && var19 < var17 + var18; var19++) {
-            var15.updateElement(var4.getItem(var19), var19);
+      IContentProvider contentProvider = this.getContentProvider();
+      if (contentProvider instanceof GTableContentProvider) {
+         GTableContentProvider tableContentProvider = (GTableContentProvider)contentProvider;
+         int itemHeight = table.getItemHeight();
+         int topIndex = table.getTopIndex();
+         int visibleCount = itemHeight > 0 ? table.getClientArea().height / itemHeight + 2 : newItemCount;
+         for (int row = topIndex; row < newItemCount && row < topIndex + visibleCount; row++) {
+            tableContentProvider.updateElement(table.getItem(row), row);
          }
       }
    }
 
-   protected void setSelectionToWidget(ISelection var1, boolean var2) {
-      this.virtualSetSelectionToWidget(((IStructuredSelection)var1).toList(), var2);
+   protected void setSelectionToWidget(ISelection selection, boolean reveal) {
+      this.virtualSetSelectionToWidget(((IStructuredSelection)selection).toList(), reveal);
    }
 
-   public void add(Object[] var1) {
-      this.preservingSelection(new CustomTableViewer$8(this));
+   public void add(Object[] elements) {
+      this.preservingSelection(new Runnable() {
+         public void run() {
+            myInternalVirtualRefreshSome();
+         }
+      });
    }
 
-   public void remove(Object[] var1) {
-      this.preservingSelection(new CustomTableViewer$9(this));
+   public void remove(Object[] elements) {
+      this.preservingSelection(new Runnable() {
+         public void run() {
+            myInternalVirtualRefreshSome();
+         }
+      });
    }
 
-   public void refresh(Object var1) {
-      this.preservingSelection(new CustomTableViewer$10(this));
+   public void refresh(Object element) {
+      this.preservingSelection(new Runnable() {
+         public void run() {
+            myInternalVirtualRefreshSome();
+         }
+      });
    }
 
    protected void myInternalVirtualRefreshSome() {
@@ -158,90 +216,98 @@ public class CustomTableViewer extends TableViewer implements ICustomViewer {
       ((GTableContentProvider)this.getContentProvider()).updateSorted(true);
    }
 
-   public boolean updateOrRefresh(Object[] var1, String[] var2) {
-      boolean var3 = false;
+   public boolean updateOrRefresh(Object[] elements, String[] properties) {
+      boolean changed = false;
 
-      for (int var4 = 0; var4 < var1.length; var4++) {
-         if (this.myUpdate(var1[var4], var2)) {
-            var3 = true;
+      for (int i = 0; i < elements.length; i++) {
+         if (this.myUpdate(elements[i], properties)) {
+            changed = true;
          }
       }
 
-      if (var3) {
-         this.preservingSelection(new CustomTableViewer$11(this));
+      if (changed) {
+         this.preservingSelection(new Runnable() {
+            public void run() {
+               myInternalVirtualRefreshSome();
+            }
+         });
       }
 
-      return var3;
+      return changed;
    }
 
-   public void update(Object[] var1, String[] var2) {
-      boolean var3 = false;
+   public void update(Object[] elements, String[] properties) {
+      boolean changed = false;
 
-      for (int var4 = 0; var4 < var1.length; var4++) {
-         if (this.myUpdate(var1[var4], var2)) {
-            var3 = true;
+      for (int i = 0; i < elements.length; i++) {
+         if (this.myUpdate(elements[i], properties)) {
+            changed = true;
          }
       }
 
-      if (var3) {
-         this.preservingSelection(new CustomTableViewer$12(this));
+      if (changed) {
+         this.preservingSelection(new Runnable() {
+            public void run() {
+               myInternalVirtualRefreshSome();
+            }
+         });
       }
    }
 
-   public void update(Object var1, String[] var2) {
+   public void update(Object element, String[] properties) {
    }
 
-   public boolean myUpdate(Object var1, String[] var2) {
-      TableItem var3 = (TableItem)this.parentToItemMap.get(var1);
-      if (var3 == null) {
-         return this.passesFilters(var1);
+   public boolean myUpdate(Object element, String[] properties) {
+      TableItem item = (TableItem)this.parentToItemMap.get(element);
+      if (item == null) {
+         return this.passesFilters(element);
       } else {
-         return this.failsFilters(var1) ? true : this.internalUpdate(var3, var1, var2);
+         return this.failsFilters(element) ? true : this.internalUpdate(item, element, properties);
       }
    }
 
-   protected boolean internalUpdate(Item var1, Object var2, String[] var3) {
-      boolean var4 = false;
-      if (var3 != null) {
-         for (int var5 = 0; var5 < var3.length; var5++) {
-            var4 = this.needsRefilter(var2, var3[var5]);
-            if (var4) {
+   protected boolean internalUpdate(Item item, Object element, String[] properties) {
+      boolean refilter = false;
+      if (properties != null) {
+         for (int i = 0; i < properties.length; i++) {
+            refilter = this.needsRefilter(element, properties[i]);
+            if (refilter) {
                break;
             }
          }
       }
 
-      boolean var8;
-      if (var3 == null) {
-         var8 = true;
+      boolean isLabelProperty;
+      if (properties == null) {
+         isLabelProperty = true;
       } else {
-         var8 = false;
-         IBaseLabelProvider var6 = this.getLabelProvider();
+         isLabelProperty = false;
+         IBaseLabelProvider labelProvider = this.getLabelProvider();
 
-         for (int var7 = 0; var7 < var3.length; var7++) {
-            var8 = var6.isLabelProperty(var2, var3[var7]);
-            if (var8) {
+         for (int i = 0; i < properties.length; i++) {
+            isLabelProperty = labelProvider.isLabelProperty(element, properties[i]);
+            if (isLabelProperty) {
                break;
             }
          }
       }
 
-      if (var8) {
-         this.doUpdateItem(var1, var2);
+      if (isLabelProperty) {
+         this.doUpdateItem(item, element);
       }
 
-      return var4;
+      return refilter;
    }
 
-   protected boolean passesFilters(Object var1) {
-      ViewerFilter[] var2 = this.getFilters();
-      if (var2.length == 0) {
+   protected boolean passesFilters(Object element) {
+      ViewerFilter[] filters = this.getFilters();
+      if (filters.length == 0) {
          return true;
       } else {
-         Object var3 = this.getRoot();
+         Object root = this.getRoot();
 
-         for (int var4 = 0; var4 < var2.length; var4++) {
-            if (var2[var4].select(this, var3, var1)) {
+         for (int i = 0; i < filters.length; i++) {
+            if (filters[i].select(this, root, element)) {
                return true;
             }
          }
@@ -250,11 +316,11 @@ public class CustomTableViewer extends TableViewer implements ICustomViewer {
       }
    }
 
-   protected boolean failsFilters(Object var1) {
-      ViewerFilter[] var2 = this.getFilters();
+   protected boolean failsFilters(Object element) {
+      ViewerFilter[] filters = this.getFilters();
 
-      for (int var3 = 0; var3 < var2.length; var3++) {
-         if (!var2[var3].select(this, this.getRoot(), var1)) {
+      for (int i = 0; i < filters.length; i++) {
+         if (!filters[i].select(this, this.getRoot(), element)) {
             return true;
          }
       }
@@ -262,90 +328,90 @@ public class CustomTableViewer extends TableViewer implements ICustomViewer {
       return false;
    }
 
-   protected void preservingSelection(Runnable var1) {
+   protected void preservingSelection(Runnable updateCode) {
       // Original re-implemented the base logic via the now-private inChange /
       // restoreSelection fields; modern JFace preservingSelection() is equivalent.
-      super.preservingSelection(var1);
+      super.preservingSelection(updateCode);
    }
 
    protected List getSelectionFromWidget() {
-      int[] var1 = this.getTable().getSelectionIndices();
-      GTableContentProvider var2 = (GTableContentProvider)this.getContentProvider();
-      ArrayList var3 = new ArrayList(var1.length);
+      int[] selectionIndices = this.getTable().getSelectionIndices();
+      GTableContentProvider contentProvider = (GTableContentProvider)this.getContentProvider();
+      ArrayList selection = new ArrayList(selectionIndices.length);
 
-      for (int var4 = 0; var4 < var1.length; var4++) {
-         Object var5 = var2.getSFElement(var1[var4]);
-         if (var5 != null) {
-            var3.add(var5);
+      for (int i = 0; i < selectionIndices.length; i++) {
+         Object element = contentProvider.getSFElement(selectionIndices[i]);
+         if (element != null) {
+            selection.add(element);
          }
       }
 
-      return var3;
+      return selection;
    }
 
-   protected void virtualSetSelectionToWidget(List var1, boolean var2) {
-      int var3 = var1.size();
-      if (var3 != 0) {
-         Table var4 = this.getTable();
-         TableItem var5 = null;
-         GTableContentProvider var6 = (GTableContentProvider)this.getContentProvider();
-         TIntArrayList var7 = new TIntArrayList(var3);
+   protected void virtualSetSelectionToWidget(List selection, boolean reveal) {
+      int size = selection.size();
+      if (size != 0) {
+         Table table = this.getTable();
+         TableItem itemToShow = null;
+         GTableContentProvider contentProvider = (GTableContentProvider)this.getContentProvider();
+         TIntArrayList indices = new TIntArrayList(size);
 
-         for (Object var9 : var1) {
-            TableItem var10 = (TableItem)this.parentToItemMap.get(var9);
-            int var11 = var6.getSFIndex(var9);
-            if (var11 >= 0) {
-               var7.add(var11);
+         for (Object element : selection) {
+            TableItem item = (TableItem)this.parentToItemMap.get(element);
+            int index = contentProvider.getSFIndex(element);
+            if (index >= 0) {
+               indices.add(index);
             }
 
-            if (var10 == null && var11 >= 0) {
-               var10 = var4.getItem(var11);
-               if (var10.getData() == null) {
-                  var6.updateElement(var10, var11);
+            if (item == null && index >= 0) {
+               item = table.getItem(index);
+               if (item.getData() == null) {
+                  contentProvider.updateElement(item, index);
                }
             }
 
-            if (var5 == null && var10 != null) {
-               var5 = var10;
+            if (itemToShow == null && item != null) {
+               itemToShow = item;
             }
          }
 
          if (this.followSelection) {
-            var4.setSelection(var7.toNativeArray());
+            table.setSelection(indices.toNativeArray());
          } else {
-            var4.deselectAll();
-            var4.select(var7.toNativeArray());
+            table.deselectAll();
+            table.select(indices.toNativeArray());
          }
 
-         if (var2 && var5 != null) {
-            var4.showItem(var5);
+         if (reveal && itemToShow != null) {
+            table.showItem(itemToShow);
          }
       }
    }
 
-   public Object[] getSortedChildren(Object var1) {
-      return super.getSortedChildren(var1);
+   public Object[] getSortedChildren(Object parentElement) {
+      return super.getSortedChildren(parentElement);
    }
 
-   public CustomTableViewer(Composite var1, int var2) {
-      super(var1, var2);
+   public CustomTableViewer(Composite parent, int style) {
+      super(parent, style);
    }
 
    public void closeAllTTE() {
    }
 
-   public void setEditors(boolean var1) {
+   public void setEditors(boolean enabled) {
    }
 
    public boolean getEditors() {
       return false;
    }
 
-   public void setColumnIDs(String var1) {
-      this.columnIDs = new int[var1.length()];
+   public void setColumnIDs(String columns) {
+      this.columnIDs = new int[columns.length()];
 
-      for (int var2 = 0; var2 < var1.length(); var2++) {
-         this.columnIDs[var2] = var1.charAt(var2) - 'A';
+      for (int i = 0; i < columns.length(); i++) {
+         this.columnIDs[i] = columns.charAt(i) - 'A';
       }
    }
 
@@ -353,21 +419,21 @@ public class CustomTableViewer extends TableViewer implements ICustomViewer {
       return this.columnIDs;
    }
 
-   protected void doUpdateItem(Item var1, Object var2) {
-      TableItem var3 = (TableItem)var1;
-      GTableLabelProvider var4 = (GTableLabelProvider)this.getLabelProvider();
-      int var5 = this.getTable().getColumnCount();
-      boolean var6 = var4 instanceof ITableFontProvider;
+   protected void doUpdateItem(Item item, Object element) {
+      TableItem tableItem = (TableItem)item;
+      GTableLabelProvider labelProvider = (GTableLabelProvider)this.getLabelProvider();
+      int columnCount = this.getTable().getColumnCount();
+      boolean hasFontProvider = labelProvider instanceof ITableFontProvider;
 
-      for (int var7 = 0; var7 < var5; var7++) {
-         var3.setBackground(var7, var4.getBackground(var2, var7));
-         var3.setForeground(var7, var4.getForeground(var2, var7));
-         if (var6) {
-            var3.setFont(var7, ((ITableFontProvider)var4).getFont(var2, var7));
+      for (int column = 0; column < columnCount; column++) {
+         tableItem.setBackground(column, labelProvider.getBackground(element, column));
+         tableItem.setForeground(column, labelProvider.getForeground(element, column));
+         if (hasFontProvider) {
+            tableItem.setFont(column, ((ITableFontProvider)labelProvider).getFont(element, column));
          }
 
-         var3.setText(var7, var4.getColumnText(var2, var7));
-         var3.setImage(var7, var4.getColumnImage(var2, var7));
+         tableItem.setText(column, labelProvider.getColumnText(element, column));
+         tableItem.setImage(column, labelProvider.getColumnImage(element, column));
       }
    }
 }

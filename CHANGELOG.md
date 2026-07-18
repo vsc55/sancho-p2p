@@ -33,8 +33,10 @@ authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
   package — `CoreFactory` (9), `MLDonkeyCore` (1), `SSHCoreFactory` (2), `Sancho` (3) —
   plus `SwissArmy` (2) in `sancho.utility` and the 19 Trove-procedure classes across the
   `sancho.model.mldonkey` collections (`ACollection_Int`, `File`/`Client`/`Server`/
-  `Network`/`Result`/`Room`/`Option`/`SharedFileCollection`) — so `sancho.core`,
-  `sancho.utility` and the `sancho.model.mldonkey` collections now have no split-out
+  `Network`/`Result`/`Room`/`Option`/`SharedFileCollection`), and the two custom JFace
+  viewers in `org.eclipse.jface.viewers` — `CustomTableViewer` (12 anonymous listeners)
+  and `CustomTreeViewer` (14) — so `sancho.core`, `sancho.utility`, the
+  `sancho.model.mldonkey` collections and `org.eclipse.jface.viewers` now have no split-out
   inner-class files. Purely structural: anonymous listeners are inlined at their call sites, named
   classes (`WebBrowserViewFrame`, the favorite `Action`s, `AlphaInputDialog`,
   `URLListener`, `RegisterLink`/`RegisterExtension`) become nested classes, and the
