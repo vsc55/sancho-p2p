@@ -88,7 +88,6 @@ $jpArgs = @(
     "--icon", $icon, "--dest", $dest,
     "--vendor", "Sancho preservation", "--description", "Sancho MLDonkey GUI",
     "--java-options", "--enable-native-access=ALL-UNNAMED",
-    "--java-options", "-Djava.util.Arrays.useLegacyMergeSort=true",
     "--java-options", "-Duser.dir=`$ROOTDIR"
 )
 

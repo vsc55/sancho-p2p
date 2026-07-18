@@ -8,8 +8,7 @@
             "mainClass": "sancho.core.Sancho",
             "projectName": "sancho",
             "vmArgs": [
-                "--enable-native-access=ALL-UNNAMED",
-                "-Djava.util.Arrays.useLegacyMergeSort=true"
+                "--enable-native-access=ALL-UNNAMED"
             ]
         }
     ]

@@ -41,6 +41,49 @@ public abstract class GSorter extends ViewerSorter implements DisposeListener {
       return var4;
    }
 
+   // The comparators read live model data (rate, %, downloaded, scores, …) that the
+   // core thread mutates while a sort runs, so a comparator can be momentarily
+   // inconsistent (an element's value changes between comparisons). Arrays.sort /
+   // TimSort rejects that with "Comparison method violates its general contract"; a
+   // stable merge sort tolerates it. Doing it here keeps that tolerance local to our
+   // tables instead of needing the global -Djava.util.Arrays.useLegacyMergeSort flag.
+   @Override
+   public void sort(Viewer var1, Object[] var2) {
+      if (var2 != null && var2.length > 1) {
+         this.mergeSort(var1, (Object[])var2.clone(), var2, 0, var2.length);
+      }
+   }
+
+   private void mergeSort(Viewer var1, Object[] var2, Object[] var3, int var4, int var5) {
+      int var6 = var5 - var4;
+      if (var6 < 7) {
+         for (int var11 = var4; var11 < var5; var11++) {
+            for (int var12 = var11; var12 > var4 && this.compare(var1, var3[var12 - 1], var3[var12]) > 0; var12--) {
+               Object var13 = var3[var12];
+               var3[var12] = var3[var12 - 1];
+               var3[var12 - 1] = var13;
+            }
+         }
+      } else {
+         int var7 = var4 + var5 >>> 1;
+         this.mergeSort(var1, var3, var2, var4, var7);
+         this.mergeSort(var1, var3, var2, var7, var5);
+         if (this.compare(var1, var2[var7 - 1], var2[var7]) <= 0) {
+            System.arraycopy(var2, var4, var3, var4, var6);
+         } else {
+            int var8 = var4;
+            int var9 = var4;
+            for (int var10 = var7; var8 < var5; var8++) {
+               if (var10 >= var5 || var9 < var7 && this.compare(var1, var2[var9], var2[var10]) <= 0) {
+                  var3[var8] = var2[var9++];
+               } else {
+                  var3[var8] = var2[var10++];
+               }
+            }
+         }
+      }
+   }
+
    protected int _compare(Viewer var1, Object var2, Object var3, int var4) {
       return 0;
    }

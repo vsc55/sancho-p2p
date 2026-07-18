@@ -58,7 +58,8 @@ Backlog of improvements for the modernized `sancho-p2p` build. Done items live i
   `asyncExec` (fire-and-forget UI updates, nothing reads the result), matching the
   table content providers. Other `syncExec` sites (CoreFactory dialogs, IRC, link
   ripper) were left as-is — not on the core reader path / need a blocking result.
-- [ ] **Comparator hardening (optional).** The legacy merge sort is requested to
-  tolerate table data that mutates mid-sort. A "proper" fix would snapshot the
-  sort keys before sorting — larger and riskier; only worth it if the VM-level
-  mitigation ever proves insufficient.
+- [x] ~~Comparator hardening~~ — done: `GSorter` sorts with its own stable merge
+  sort that tolerates table data mutating mid-sort, so the global
+  `-Djava.util.Arrays.useLegacyMergeSort` JVM flag was removed (launcher, build,
+  IDE config). The static comparator-contract bugs it used to mask were also fixed
+  (see the sort-crash entry). Merge sort validated for order/stability/tolerance.

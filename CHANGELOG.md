@@ -62,6 +62,14 @@ authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 
 ### Changed
 
+- **Table sort tolerance no longer needs a global JVM flag.** `GSorter` now sorts
+  with its own stable merge sort, which tolerates the live model data being mutated
+  by the core thread mid-sort (the reason a plain `Arrays.sort`/TimSort threw
+  "Comparison method violates its general contract"). The
+  `-Djava.util.Arrays.useLegacyMergeSort=true` flag was therefore removed from the
+  launcher, `build-app.ps1` and the VS Code launch config. Validated the merge sort
+  against `Arrays.sort` (order + stability) and confirmed it tolerates an
+  inconsistent comparator without throwing.
 - **Dropped the deprecated-for-removal boxing constructors.** Replaced all 77
   `new Integer(…)` / `new Short(…)` / `new Byte(…)` calls (inherited from the
   decompiled source) with the `valueOf(…)` factory methods, which are the

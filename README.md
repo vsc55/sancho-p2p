@@ -104,12 +104,10 @@ mvn clean package        # compiles sancho-src/src, produces target/sancho-<vers
 mvn compile              # just compile
 ```
 
-**Recommended VM args** (silence JDK native-access warnings; the legacy merge sort
-is also requested in code, so a plain `java -jar` works without it):
+**Recommended VM args** (silence JDK native-access warnings):
 
 ```text
 --enable-native-access=ALL-UNNAMED
--Djava.util.Arrays.useLegacyMergeSort=true
 ```
 
 #### In VS Code

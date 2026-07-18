@@ -176,12 +176,9 @@ public class Sancho {
    }
 
    public static void main(String[] var0) {
-      // The table sorters compare live model data (scores, user/file counts, ...)
-      // that the core mutates while a sort runs, so the comparators aren't a stable
-      // total order. Modern Java's TimSort rejects that with "Comparison method
-      // violates its general contract"; the legacy merge sort tolerates it. Request
-      // it here so a plain `java -jar` works without the -D VM flag too.
-      System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
+      // Note: tolerance for live model data mutating mid-sort now lives in
+      // GSorter.sort() (a local stable merge sort), so the global
+      // -Djava.util.Arrays.useLegacyMergeSort flag is no longer needed.
       Display.setAppName("sancho");
       display = new Display();
       display.addListener(12, new Sancho$2());
