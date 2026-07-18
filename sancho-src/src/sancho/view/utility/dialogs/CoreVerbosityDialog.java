@@ -177,7 +177,7 @@ public class CoreVerbosityDialog extends Dialog {
       Button var2 = this.createButton(var1, 666, SResources.getString("b.deselectAll"), false);
       var2.addSelectionListener(new CoreVerbosityDialog$1(this));
       // OK is the default button so Enter accepts instead of cancelling (which
-      // discarded the verbosity changes) — same fix as IRCConnectDialog.
+      // discarded the verbosity changes).
       this.createButton(var1, 0, SResources.getString("b.ok"), true);
       this.createButton(var1, 1, SResources.getString("b.cancel"), false);
    }

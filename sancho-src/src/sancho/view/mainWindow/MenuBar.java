@@ -86,7 +86,6 @@ public class MenuBar implements Runnable {
       this.subMenu = new Menu(this.shell, 4);
       this.menuItem.setMenu(this.subMenu);
       this.createMenuItem(this.subMenu, "&" + SResources.getString("menu.tools.downloadHistory"), "tab.transfers.buttonSmall", new MenuBar$13(this));
-      this.createMenuItem(this.subMenu, "&" + SResources.getString("menu.tools.irc"), "irc", new MenuBar$14(this));
       this.createMenuItem(this.subMenu, "&" + SResources.getString("menu.tools.debug"), "info", new MenuBar$15(this));
       this.createMenuItem(this.subMenu, "&" + SResources.getString("menu.tools.coreVerbosity"), "info", new MenuBar$16(this));
       this.menuItem = new MenuItem(this.subMenu, 64);

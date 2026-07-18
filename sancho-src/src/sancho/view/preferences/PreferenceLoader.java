@@ -280,10 +280,6 @@ public class PreferenceLoader {
       var0.setDefault("dlPercentDecimals", 0);
       var0.setDefault("dlRateDecimals", 1);
       var0.setDefault("dndBox", false);
-      var0.setDefault("ircAutoConnect", false);
-      var0.setDefault("ircServer", "irc.freenode.net");
-      var0.setDefault("ircNickname", SwissArmy.getRandomString(7));
-      var0.setDefault("ircChannel", "#mldonkey");
       var0.setDefault("consoleMaxLines", 300);
       var0.setDefault("consoleUnderlineURLs", false);
       var0.setDefault("maxMenuItems", 10);
@@ -300,7 +296,6 @@ public class PreferenceLoader {
       PreferenceConverter.setDefault(var0, "windowBounds", new Rectangle(40, 40, 580, 420));
       PreferenceConverter.setDefault(var0, "graphHistoryWindowBounds", new Rectangle(40, 40, 580, 420));
       PreferenceConverter.setDefault(var0, "dndBoxWindowBounds", new Rectangle(-1, 0, 0, 0));
-      PreferenceConverter.setDefault(var0, "ircWindowBounds", new Rectangle(40, 40, 580, 420));
       setDColor(var0, var1, "dndBackgroundColor", 22);
       setDColor(var0, var1, "dndForegroundColor", 2);
       PreferenceConverter.setDefault(var0, "dndFontData", var2);
@@ -311,12 +306,6 @@ public class PreferenceLoader {
       setDColor(var0, var1, "consoleInputBackground", 2);
       setDColor(var0, var1, "consoleInputForeground", 15);
       PreferenceConverter.setDefault(var0, "consoleFontData", JFaceResources.getTextFont().getFontData());
-      setDColor(var0, var1, "ircConsoleBackground", 25);
-      setDColor(var0, var1, "ircConsoleForeground", 24);
-      setDColor(var0, var1, "ircConsoleHighlight", 26);
-      setDColor(var0, var1, "ircConsoleInputBackground", 25);
-      setDColor(var0, var1, "ircConsoleInputForeground", 24);
-      PreferenceConverter.setDefault(var0, "ircConsoleFontData", JFaceResources.getTextFont().getFontData());
       setDColor(var0, var1, "clientsDisconnectedColor", 2);
       setDColor(var0, var1, "clientsHasFilesColor", 6);
       setDColor(var0, var1, "clientsConnectedColor", 8);
@@ -371,11 +360,6 @@ public class PreferenceLoader {
       setDColor(var0, var1, "resultDefaultColor", 2);
       setDColor(var0, var1, "resultAlreadyDownloadedColor", 6);
       setDColor(var0, var1, "resultFakeColor", 4);
-      setDColor(var0, var1, "ircInNickColor", 10);
-      setDColor(var0, var1, "ircOutNickColor", 12);
-      setDColor(var0, var1, "ircJoinColor", 6);
-      setDColor(var0, var1, "ircPartColor", 4);
-      setDColor(var0, var1, "ircModeColor", 8);
       var0.setDefault("defaultWebBrowser", "");
       var0.setDefault("consoleToolItems", 5);
       var0.setDefault("consoleToolItem1", "cs");
@@ -552,10 +536,6 @@ public class PreferenceLoader {
       var0.setDefault("messagesSashMaximized", -1);
       PreferenceConverter.setDefault(var0, "messagesSashChild0", new Rectangle(0, 0, 2, 0));
       PreferenceConverter.setDefault(var0, "messagesSashChild1", new Rectangle(0, 0, 5, 0));
-      var0.setDefault("ircSashOrientation", 256);
-      var0.setDefault("ircSashMaximized", -1);
-      PreferenceConverter.setDefault(var0, "ircSashChild0", new Rectangle(0, 0, 5, 0));
-      PreferenceConverter.setDefault(var0, "ircSashChild1", new Rectangle(0, 0, 1, 0));
       var0.setDefault("roomsSashOrientation", 256);
       var0.setDefault("roomsSashMaximized", -1);
       PreferenceConverter.setDefault(var0, "roomsSashChild0", new Rectangle(0, 0, 2, 0));

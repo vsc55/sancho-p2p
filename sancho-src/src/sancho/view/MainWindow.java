@@ -34,7 +34,6 @@ import sancho.utility.MyObservable;
 import sancho.utility.MyObserver;
 import sancho.utility.SwissArmy;
 import sancho.utility.VersionInfo;
-import sancho.view.irc.IRCShell;
 import sancho.view.mainWindow.CToolBar;
 import sancho.view.mainWindow.MenuBar;
 import sancho.view.mainWindow.Minimizer;
@@ -78,7 +77,6 @@ public class MainWindow implements ShellListener, MyObserver, DisposeListener {
    private AbstractTab activeTab;
    private LinkRipper linkRipper = null;
    private static Clipboard clipboard;
-   private static List ircShellList;
    private DownloadCompleteDialog downloadCompleteDialog;
    private DNDBox dndBox;
    private boolean closing;
@@ -433,14 +431,6 @@ public class MainWindow implements ShellListener, MyObserver, DisposeListener {
       this.downloadCompleteDialog = null;
    }
 
-   public void addIRCShell(IRCShell var1) {
-      if (ircShellList == null) {
-         ircShellList = new ArrayList();
-      }
-
-      ircShellList.add(var1);
-   }
-
    public Composite getMainComposite() {
       return this.mainComposite;
    }
@@ -559,15 +549,6 @@ public class MainWindow implements ShellListener, MyObserver, DisposeListener {
 
       if (this.dndBox != null) {
          this.dndBox.close();
-      }
-
-      if (ircShellList != null) {
-         for (int var2 = 0; var2 < ircShellList.size(); var2++) {
-            IRCShell var3 = (IRCShell)ircShellList.get(var2);
-            if (var3 != null) {
-               var3.close();
-            }
-         }
       }
 
       Iterator var4 = this.registeredTabs.iterator();

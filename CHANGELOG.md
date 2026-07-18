@@ -8,6 +8,19 @@ The upstream project's original changelog (2004–2006) is preserved at
 authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 (`git checkout 0.9.4-23`).
 
+## [Unreleased]
+
+### Removed
+
+- **The IRC client.** Sancho's built-in IRC window (server/channel console, channel-user
+  list, connect dialog) was dropped, which removes the last unmaintained dependency:
+  `pircbot:pircbot:1.5.0` (abandoned since ~2011, a parser for untrusted IRC server text).
+  Deleted the `sancho.view.irc` package, the `IRCConsole` classes, the Tools → "IRC
+  client" menu item, the IRC preference tabs (display colors + server/nick/channel), all
+  `irc*` preference defaults, the IRC i18n keys across all 14 locales, and the `pircbot`
+  Maven dependency. The uber-jar no longer bundles any pircbot/jibble classes. (The only
+  remaining old dependency is Trove 2.1.0, which is stable, isolated, and pinned.)
+
 ## [0.9.4-74] — 2026-07-18
 
 ### Fixed

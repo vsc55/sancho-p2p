@@ -40,7 +40,6 @@ public class RootPreferencePage extends CPreferencePage {
       this.createConsoleTab(var3);
       this.createGraphTab(var3);
       this.createRoomsTab(var3);
-      this.createIRCTab(var3);
       this.createWebBrowserTab(var3);
       return var2;
    }
@@ -286,15 +285,6 @@ public class RootPreferencePage extends CPreferencePage {
       Composite var2 = this.createNewTab(var1, "tab.rooms", "tab.rooms.buttonSmall");
       this.setupBooleanEditor("autoCloseRooms", "p.r.rooms.autoClose", var2);
       this.setupBooleanEditor("autoOpenRooms", "p.r.rooms.autoOpen", var2);
-      this.setCompositeLayout(var2);
-   }
-
-   protected void createIRCTab(TabFolder var1) {
-      Composite var2 = this.createNewTab(var1, "l.IRC", "irc");
-      this.setupStringEditor("ircServer", "p.r.irc.ircServer", '0', var2);
-      this.setupStringEditor("ircChannel", "p.r.irc.ircChannel", '0', var2);
-      this.setupStringEditor("ircNickname", "p.r.irc.ircNickname", '0', var2);
-      this.setupBooleanEditor("ircAutoConnect", "p.r.irc.autoConnect", var2);
       this.setCompositeLayout(var2);
    }
 

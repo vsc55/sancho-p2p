@@ -23,7 +23,6 @@ public class DisplayPreferencePage extends CPreferencePage {
       this.createSearchTab(var3);
       this.createGraphsTab(var3);
       this.createClientsTab(var3);
-      this.createIRCTab(var3);
       return var2;
    }
 
@@ -163,20 +162,4 @@ public class DisplayPreferencePage extends CPreferencePage {
       this.setCompositeLayout(var2);
    }
 
-   protected void createIRCTab(TabFolder var1) {
-      Composite var2 = this.createNewTab(var1, "l.IRC", "irc");
-      this.setupFontEditor("ircConsoleFontData", "p.d.console.font", var2);
-      this.createSeparator(var2);
-      this.setupColorEditor("ircConsoleBackground", "p.d.console.background", var2);
-      this.setupColorEditor("ircConsoleForeground", "p.d.console.foreground", var2);
-      this.setupColorEditor("ircConsoleHighlight", "p.d.console.highlight", var2);
-      this.setupColorEditor("ircConsoleInputBackground", "p.d.console.inputBackground", var2);
-      this.setupColorEditor("ircConsoleInputForeground", "p.d.console.inputForeground", var2);
-      this.setupColorEditor("ircInNickColor", "p.d.irc.inNickColor", var2);
-      this.setupColorEditor("ircOutNickColor", "p.d.irc.outNickColor", var2);
-      this.setupColorEditor("ircJoinColor", "p.d.irc.joinColor", var2);
-      this.setupColorEditor("ircPartColor", "p.d.irc.partColor", var2);
-      this.setupColorEditor("ircModeColor", "p.d.irc.modeColor", var2);
-      this.setCompositeLayout(var2);
-   }
 }
