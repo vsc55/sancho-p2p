@@ -12,6 +12,14 @@ authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 
 ### Fixed
 
+- **Statistics graph-history window hung the UI.** `GraphHistory` drew the vertical
+  grid with a `byte` loop counter that overflowed past 127 (120 + 20 → −116), so the
+  loop never ended once the window was ≥128 px wide — an infinite loop in the paint
+  handler that froze Sancho. Counter is now an `int`.
+- **First paint of a statistics graph could throw.** `GraphCanvas.paintControl`
+  assumed `controlResized` always ran before the first paint (only that set
+  `needNewBuffer`); on modern SWT it may not, leaving `imageBuffer` null and
+  `new GC(null)` throwing. It now also builds the buffer when it's null.
 - **Downloads/Transfers tree could show stale rows after sorting/filtering** — the
   same virtual-viewer gap fixed for tables in 0.9.4-71, found by auditing the
   sibling `CustomTreeViewer`. Its `myClear` relied on SWT lazy `SetData` re-firing

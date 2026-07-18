@@ -12,6 +12,14 @@ Backlog of improvements for the modernized `sancho-p2p` build. Done items live i
   Windows/Linux/macOS matrix publishing Windows `.zip` + jar, Linux `.deb` +
   `.rpm`, and macOS `.dmg`. See CHANGELOG.
 
+- [ ] **Verify / fix chunk-bar blur on HiDPI (>100% display scaling).** The Downloads
+  "chunks" column and the chunk detail dialogs round-trip through
+  `ImageData.scaledTo()` (`ChunkImageData` / `ChunkCanvas`), which loses device
+  resolution on a scaled monitor (125/150/200%) → soft/blurry bars. Not visible at
+  100%. Fix candidates: blit the composed bar with the 8-arg scaled `drawImage`
+  instead of pre-scaling via `ImageData`, or at least `gc.setInterpolation(SWT.HIGH)`
+  + `setAntialias(SWT.ON)` before the blit. Needs a >100% Windows display to observe.
+
 - [ ] **Verify UTF-8 decoding of core strings (charset fix).** `MessageBuffer.getString`
   now decodes core strings as explicit UTF-8 (was the JVM default charset). Confirm
   against a real MLDonkey core that non-ASCII filenames/nicknames (accents, ñ, …)

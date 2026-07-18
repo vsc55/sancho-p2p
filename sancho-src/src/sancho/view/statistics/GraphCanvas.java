@@ -46,7 +46,11 @@ public class GraphCanvas extends Composite implements PaintListener, Runnable, D
    }
 
    public void paintControl(PaintEvent var1) {
-      if (this.needNewBuffer) {
+      // Also build the buffer when it's still null: the code assumed controlResized
+      // (the only place setting needNewBuffer) always fires before the first paint,
+      // which modern SWT doesn't guarantee -> paint() would get a null Image and
+      // new GC(null) would throw.
+      if (this.needNewBuffer || this.imageBuffer == null) {
          Rectangle var2 = this.composite.getBounds();
          if (var2.height <= 0 || var2.width <= 0) {
             return;

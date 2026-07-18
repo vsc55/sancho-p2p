@@ -81,7 +81,10 @@ public class GraphHistory implements PaintListener {
          var5.fillRectangle(0, 0, this.shell.getClientArea().width, this.shell.getClientArea().height);
          var5.setForeground(this.gridColor);
 
-         for (byte var6 = 0; var6 < var3; var6 += 20) {
+         for (int var6 = 0; var6 < var3; var6 += 20) {
+            // var6 must be int: as a byte it overflowed past 127 (120 + 20 -> -116)
+            // and the loop never terminated once the width was >= 128px, hanging the
+            // UI when the graph-history window opened.
             var5.drawLine(var6, 0, var6, var2 + 1);
          }
 
