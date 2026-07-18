@@ -8,7 +8,7 @@ The upstream project's original changelog (2004–2006) is preserved at
 authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 (`git checkout 0.9.4-23`).
 
-## [Unreleased]
+## [0.9.4-71] — 2026-07-18
 
 ### Added
 
@@ -18,6 +18,18 @@ authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 
 ### Fixed
 
+- **Tables showed stale/duplicated rows and some rows ignored sorting.** The custom
+  virtual-table viewer never rendered rows that SWT asked for lazily — its
+  `ILazyContentProvider.updateElement(int)` was empty and a never-rendered row had no
+  item mapping, so the positional-diff refresh could never repaint it. Rows (often
+  the top ones) kept stale content and "stuck" when sorting/filtering; the same
+  element could appear in two rows. The Servers "Connected" view was the most
+  visible case (it showed wrong servers). Fixed by implementing the lazy
+  `updateElement(int)`, explicitly rendering the visible rows from the freshly
+  sorted content in `myClear`, and restoring the stale-item disassociation guard in
+  `replace` (which the sibling `CustomTreeViewer` still had). Affects every virtual
+  table (transfers, servers, uploads, search results, …). Diagnosed with runtime
+  logging against a live core.
 - **IRC rejected nicknames with accents/ñ** ("432 Erroneous Nickname"). The nickname
   is now sanitized before connecting — accents are decomposed (ñ→n, á→a) and only
   IRC-legal characters are kept — so a configured nick like `pruebañ…` connects as

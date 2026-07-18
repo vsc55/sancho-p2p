@@ -50,7 +50,14 @@ public abstract class GTableContentProvider implements IGContentProvider, IStruc
       return var2;
    }
 
-   public void updateElement(int var1) {
+   public synchronized void updateElement(int var1) {
+      // ILazyContentProvider hook: SWT calls this when it needs to render a virtual
+      // row (scrolled into view, or after Table.clear()). It was EMPTY, so those
+      // rows never got their element and showed stale/blank data (the top rows that
+      // "stuck" and ignored sorting). Render the current sfList element for the row.
+      if (var1 >= 0 && var1 < this.sfList.size() && this.tableViewer != null) {
+         this.updateElement(this.tableViewer.getTable().getItem(var1), var1);
+      }
    }
 
    public synchronized void updateElement(TableItem var1, int var2) {

@@ -44,6 +44,22 @@ public class CustomTableViewer extends TableViewer implements ICustomViewer {
    }
 
    public void replace(Object var1, TableItem var2) {
+      // If this element is still associated with a DIFFERENT TableItem (e.g. after a
+      // re-sort/re-filter moved it to another row), disassociate that stale item and
+      // invalidate its row so SWT re-renders it with its correct element. Without
+      // this the element shows in two rows (duplicate) and the stale row "sticks"
+      // and ignores sorting. The sibling CustomTreeViewer.replace has this guard;
+      // the decompiled/ported table version had lost it.
+      TableItem var3 = (TableItem)this.parentToItemMap.get(var1);
+      if (var3 != null && var3 != var2 && !var3.isDisposed()) {
+         var3.setData(null);
+         Table var4 = this.getTable();
+         int var5 = var4.indexOf(var3);
+         if (var5 != -1) {
+            var4.clear(var5);
+         }
+      }
+
       this.parentToItemMap.put(var1, var2);
       var2.setData(var1);
       this.doUpdateItem(var2, var1);
@@ -99,6 +115,22 @@ public class CustomTableViewer extends TableViewer implements ICustomViewer {
          }
 
          var4.clear(var10);
+      }
+
+      // SWT's lazy SetData isn't effectively wired in this custom viewer, and a row
+      // that never rendered has no item mapping, so the positional-diff clear above
+      // can never re-render it (it stays stale — the "stuck" top rows). Explicitly
+      // render the currently visible rows from the freshly-sorted content provider,
+      // which is bounded by the screen height regardless of the table size.
+      IContentProvider var14 = this.getContentProvider();
+      if (var14 instanceof GTableContentProvider) {
+         GTableContentProvider var15 = (GTableContentProvider)var14;
+         int var16 = var4.getItemHeight();
+         int var17 = var4.getTopIndex();
+         int var18 = var16 > 0 ? var4.getClientArea().height / var16 + 2 : var1;
+         for (int var19 = var17; var19 < var1 && var19 < var17 + var18; var19++) {
+            var15.updateElement(var4.getItem(var19), var19);
+         }
       }
    }
 
