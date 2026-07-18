@@ -13,7 +13,7 @@ public class RoomConsole extends Console {
 
    public void sendMessage() {
       if (Sancho.hasCollectionFactory()) {
-         Object[] var1 = new Object[]{new Integer(this.roomNumber), new Byte((byte)1), new Integer(0), this.input.getText()};
+         Object[] var1 = new Object[]{Integer.valueOf(this.roomNumber), Byte.valueOf((byte)1), Integer.valueOf(0), this.input.getText()};
          Sancho.send((short)39, var1);
       }
    }

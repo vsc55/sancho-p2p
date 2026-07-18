@@ -53,7 +53,7 @@ public class MessageEncoder {
             var3 = var2.getBytes();
          }
 
-         this.appendNumber(new Short((short)var3.length));
+         this.appendNumber(Short.valueOf((short)var3.length));
          this.baOutputStream.write(var3, 0, var3.length);
       }
    }
@@ -65,7 +65,7 @@ public class MessageEncoder {
             this.baOutputStream.write(var5, 0, var5.length);
          } else if (var1[var2].getClass().isArray()) {
             Object[] var3 = (Object[])var1[var2];
-            this.appendNumber(new Short((short)var3.length));
+            this.appendNumber(Short.valueOf((short)var3.length));
 
             for (int var4 = 0; var4 < var3.length; var4++) {
                this.appendObject(var3[var4]);
@@ -79,8 +79,8 @@ public class MessageEncoder {
    }
 
    private void createHeader() {
-      this.header = this.toBytes(new Integer(this.length), this.header, 0);
-      this.header = this.toBytes(new Short(this.opCode), this.header, 4);
+      this.header = this.toBytes(Integer.valueOf(this.length), this.header, 0);
+      this.header = this.toBytes(Short.valueOf(this.opCode), this.header, 4);
    }
 
    public void send(short var1, Object[] var2) throws IOException {

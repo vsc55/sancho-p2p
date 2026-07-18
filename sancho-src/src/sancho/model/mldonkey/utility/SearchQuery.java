@@ -155,16 +155,16 @@ public class SearchQuery {
       }
 
       ArrayList var6 = new ArrayList();
-      var6.add(new Integer(searchId));
+      var6.add(Integer.valueOf(searchId));
       Object[] var7 = var1.toObjectArray();
 
       for (int var5 = 0; var5 < var7.length; var5++) {
          var6.add(var7[var5]);
       }
 
-      var6.add(new Integer(this.maxSearchResults));
-      var6.add(new Byte(this.searchType));
-      var6.add(new Integer(this.networkId));
+      var6.add(Integer.valueOf(this.maxSearchResults));
+      var6.add(Byte.valueOf(this.searchType));
+      var6.add(Integer.valueOf(this.networkId));
       this.core.send((short)42, var6.toArray());
    }
 

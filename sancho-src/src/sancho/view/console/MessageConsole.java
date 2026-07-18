@@ -24,7 +24,7 @@ public class MessageConsole extends Console {
 
    public void sendMessage() {
       if (Sancho.hasCollectionFactory()) {
-         Object[] var1 = new Object[]{new Integer(this.clientId), this.input.getText()};
+         Object[] var1 = new Object[]{Integer.valueOf(this.clientId), this.input.getText()};
          Sancho.send((short)43, var1);
       }
    }

@@ -8,6 +8,6 @@ public class File20 extends File18 {
    }
 
    public void rename(String var1) {
-      this.core.send((short)56, new Object[]{new Integer(this.getId()), var1});
+      this.core.send((short)56, new Object[]{Integer.valueOf(this.getId()), var1});
    }
 }

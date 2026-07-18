@@ -14,14 +14,14 @@ class EditMP3TagsDialog$1 extends SelectionAdapter {
 
    public void widgetSelected(SelectionEvent var1) {
       Object[] var2 = new Object[]{
-         new Integer(EditMP3TagsDialog.access$000(this.this$0).getId()),
+         Integer.valueOf(EditMP3TagsDialog.access$000(this.this$0).getId()),
          EditMP3TagsDialog.access$100(this.this$0).getText(),
          EditMP3TagsDialog.access$200(this.this$0).getText(),
          EditMP3TagsDialog.access$300(this.this$0).getText(),
          EditMP3TagsDialog.access$400(this.this$0).getText(),
          EditMP3TagsDialog.access$500(this.this$0).getText(),
-         new Integer(EditMP3TagsDialog.access$600(this.this$0).getSelection()),
-         new Integer(EditMP3TagsDialog.access$700(this.this$0).getSelectionIndex())
+         Integer.valueOf(EditMP3TagsDialog.access$600(this.this$0).getSelection()),
+         Integer.valueOf(EditMP3TagsDialog.access$700(this.this$0).getSelectionIndex())
       };
       Sancho.send((short)26, var2);
       this.this$0.close();

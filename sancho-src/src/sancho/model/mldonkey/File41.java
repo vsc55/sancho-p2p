@@ -21,13 +21,13 @@ public class File41 extends File36 {
    public void chown(String var1) {
       String var2 = "chown \"" + var1 + "\" " + this.getId();
       this.core.send((short)29, var2);
-      this.core.send((short)37, new Integer(this.getId()));
+      this.core.send((short)37, Integer.valueOf(this.getId()));
    }
 
    public void chgrp(String var1) {
       String var2 = "chgrp \"" + var1 + "\" " + this.getId();
       this.core.send((short)29, var2);
-      this.core.send((short)37, new Integer(this.getId()));
+      this.core.send((short)37, Integer.valueOf(this.getId()));
    }
 
    public synchronized String getUser() {

@@ -38,7 +38,7 @@ public class ResultCollection extends ACollection_Int {
          this.closedList.add(var1);
          this.searchResultChart.remove(var1);
          this.remove(var1);
-         Object[] var2 = new Object[]{new Integer(var1), new Byte((byte)1)};
+         Object[] var2 = new Object[]{Integer.valueOf(var1), Byte.valueOf((byte)1)};
          this.core.send((short)53, var2);
       }
    }
@@ -48,7 +48,7 @@ public class ResultCollection extends ACollection_Int {
       if (var3 < 0) {
          this.core.send((short)8, var1.getED2K());
       } else {
-         Object[] var4 = new Object[]{var1.getNames(), new Integer(var3), new Byte((byte)(var2 ? 1 : 0))};
+         Object[] var4 = new Object[]{var1.getNames(), Integer.valueOf(var3), Byte.valueOf((byte)(var2 ? 1 : 0))};
          this.core.send((short)50, var4);
       }
    }

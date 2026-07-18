@@ -85,7 +85,7 @@ public class ClientCollection extends ACollection_Int {
       int[] var3 = var2.getInt32List();
 
       for (int var4 = 0; var4 < var3.length; var4++) {
-         this.core.send((short)36, new Integer(var3[var4]));
+         this.core.send((short)36, Integer.valueOf(var3[var4]));
          if (this.containsKey(var3[var4])) {
             var1.addOrUpdate(this.get(var3[var4]));
          }
@@ -149,7 +149,7 @@ public class ClientCollection extends ACollection_Int {
 
          for (int var4 = 0; var4 < var3.length; var4++) {
             Client var5 = (Client)var3[var4];
-            var1.send((short)36, new Integer(var5.getId()));
+            var1.send((short)36, Integer.valueOf(var5.getId()));
          }
       }
    }

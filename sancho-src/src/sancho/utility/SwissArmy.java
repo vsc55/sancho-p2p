@@ -496,7 +496,7 @@ public class SwissArmy {
             byte[] var3 = fileToByteArray(replaceAll(var0, "\"", ""));
             if (var3 != null) {
                byte[] var4 = new byte[]{-1, -1};
-               Object[] var5 = new Object[]{new Integer(var2.getId()), var4, new Integer(var3.length + 2), new Short((short)0), var3};
+               Object[] var5 = new Object[]{Integer.valueOf(var2.getId()), var4, Integer.valueOf(var3.length + 2), Short.valueOf((short)0), var3};
                Sancho.send((short)63, var5);
                Sancho.pDebug("Sent Size: " + var3.length);
                threadSleep(1000);

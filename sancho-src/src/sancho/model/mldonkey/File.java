@@ -247,7 +247,7 @@ public class File extends AObjectO implements MyObserver, IObject_UID, IPreview 
    }
 
    public void connectAll() {
-      this.core.send((short)20, new Integer(this.getId()));
+      this.core.send((short)20, Integer.valueOf(this.getId()));
    }
 
    public synchronized boolean containsFake() {
@@ -393,7 +393,7 @@ public class File extends AObjectO implements MyObserver, IObject_UID, IPreview 
    }
 
    public void getFileLocations() {
-      this.core.send((short)34, new Integer(this.getId()));
+      this.core.send((short)34, Integer.valueOf(this.getId()));
    }
 
    public synchronized EnumFileState getFileStateEnum() {
@@ -776,7 +776,7 @@ public class File extends AObjectO implements MyObserver, IObject_UID, IPreview 
 
       String var19 = "";
       if (var3.equals("")) {
-         this.core.send((short)30, new Integer(this.getId()));
+         this.core.send((short)30, Integer.valueOf(this.getId()));
       } else {
          String[] var21 = new String[]{var3, var5 ? var12 : var14};
          if (!var5) {
@@ -992,17 +992,17 @@ public class File extends AObjectO implements MyObserver, IObject_UID, IPreview 
    }
 
    public void saveFileAs(String var1) {
-      Object[] var2 = new Object[]{new Integer(this.getId()), var1};
+      Object[] var2 = new Object[]{Integer.valueOf(this.getId()), var1};
       this.core.send((short)13, var2);
    }
 
    public void sendPriority(boolean var1, int var2) {
-      Object[] var3 = new Object[]{new Integer(this.getId()), null};
+      Object[] var3 = new Object[]{Integer.valueOf(this.getId()), null};
       if (var1) {
          var2 += this.getPriority();
       }
 
-      var3[1] = new Integer(var2);
+      var3[1] = Integer.valueOf(var2);
       this.core.send((short)51, var3);
    }
 
@@ -1054,11 +1054,11 @@ public class File extends AObjectO implements MyObserver, IObject_UID, IPreview 
    public void setComment(String var1) {
       String var2 = "comment " + this.getMD4() + " \"" + var1 + "\"";
       this.core.send((short)29, var2);
-      this.core.send((short)37, new Integer(this.getId()));
+      this.core.send((short)37, Integer.valueOf(this.getId()));
    }
 
    public void requestFileInfo() {
-      this.core.send((short)37, new Integer(this.getId()));
+      this.core.send((short)37, Integer.valueOf(this.getId()));
    }
 
    public void chown(String var1) {
@@ -1085,7 +1085,7 @@ public class File extends AObjectO implements MyObserver, IObject_UID, IPreview 
    public void rename(String var1) {
       var1 = "rename " + this.getId() + " \"" + var1 + "\"";
       this.core.send((short)29, var1);
-      this.core.send((short)37, new Integer(this.id));
+      this.core.send((short)37, Integer.valueOf(this.id));
    }
 
    protected EnumNetwork readNetwork(int var1) {
@@ -1131,18 +1131,18 @@ public class File extends AObjectO implements MyObserver, IObject_UID, IPreview 
       EnumFileState var2 = this.getFileStateEnum();
       Object[] var3 = new Object[2];
       byte var4 = 23;
-      var3[0] = new Integer(this.id);
+      var3[0] = Integer.valueOf(this.id);
       if (var2 == EnumFileState.PAUSED && var1 == EnumFileState.DOWNLOADING) {
-         var3[1] = new Byte((byte)1);
+         var3[1] = Byte.valueOf((byte)1);
       } else if ((var2 == EnumFileState.DOWNLOADING || var2 == EnumFileState.QUEUED) && var1 == EnumFileState.PAUSED) {
-         var3[1] = new Byte((byte)0);
+         var3[1] = Byte.valueOf((byte)0);
       } else {
          if (var1 != EnumFileState.CANCELLED) {
             return;
          }
 
          var4 = 11;
-         var3 = new Object[]{new Integer(this.id)};
+         var3 = new Object[]{Integer.valueOf(this.id)};
       }
 
       this.core.send(var4, var3);
@@ -1189,6 +1189,6 @@ public class File extends AObjectO implements MyObserver, IObject_UID, IPreview 
    }
 
    public void verifyChunks() {
-      this.core.send((short)24, new Integer(this.getId()));
+      this.core.send((short)24, Integer.valueOf(this.getId()));
    }
 }

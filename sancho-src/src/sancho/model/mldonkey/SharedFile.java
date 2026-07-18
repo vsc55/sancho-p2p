@@ -244,11 +244,11 @@ public class SharedFile extends AObject implements IObject_UID, IPreview {
       if (var3 != null) {
          byte[] var4 = new byte[]{-1, -1};
          Object[] var5 = new Object[]{
-            new Integer(var3.getId()),
+            Integer.valueOf(var3.getId()),
             var4,
-            new Integer(SwissArmy.UTF8Length(var2) + 2 + SwissArmy.UTF8Length(var1) + 2 + 6),
-            new Short((short)1),
-            new Integer(this.getId()),
+            Integer.valueOf(SwissArmy.UTF8Length(var2) + 2 + SwissArmy.UTF8Length(var1) + 2 + 6),
+            Short.valueOf((short)1),
+            Integer.valueOf(this.getId()),
             var1,
             var2
          };

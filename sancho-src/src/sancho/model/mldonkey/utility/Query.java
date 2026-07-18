@@ -97,7 +97,7 @@ public class Query {
 
    public Object[] toObjectArray() {
       ArrayList var1 = new ArrayList();
-      var1.add(new Byte(this.enumQuery.getByteValue()));
+      var1.add(Byte.valueOf(this.enumQuery.getByteValue()));
       if (this.enumQuery != EnumQuery.AND && this.enumQuery != EnumQuery.OR && this.enumQuery != EnumQuery.HIDDEN) {
          if (this.enumQuery == EnumQuery.ANDNOT) {
             this.addQueryToList(var1, this.query1);
@@ -110,7 +110,7 @@ public class Query {
             var1.add(this.string2);
          }
       } else {
-         var1.add(new Short((short)this.queryList.size()));
+         var1.add(Short.valueOf((short)this.queryList.size()));
 
          for (int var2 = 0; var2 < this.queryList.size(); var2++) {
             this.addQueryToList(var1, (Query)this.queryList.get(var2));

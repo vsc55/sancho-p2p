@@ -91,7 +91,7 @@ public class MLDonkeyCore extends MyObservable implements ICore {
    }
 
    protected void enablePollMode() {
-      Object[] var1 = new Object[]{new Short((short)1), new Integer(1), new Byte((byte)1)};
+      Object[] var1 = new Object[]{Short.valueOf((short)1), Integer.valueOf(1), Byte.valueOf((byte)1)};
       this.send((short)47, var1);
    }
 
@@ -461,7 +461,7 @@ public class MLDonkeyCore extends MyObservable implements ICore {
 
    protected void sendInterestedInSources(boolean var1) {
       if (this.getProtocol() >= 27) {
-         this.send((short)64, new Byte((byte)(var1 ? 1 : 0)));
+         this.send((short)64, Byte.valueOf((byte)(var1 ? 1 : 0)));
       }
    }
 
@@ -476,7 +476,7 @@ public class MLDonkeyCore extends MyObservable implements ICore {
    }
 
    protected void sendProtocolVersion() {
-      this.send((short)0, new Integer(41));
+      this.send((short)0, Integer.valueOf(41));
    }
 
    public void setActiveTab(AbstractTab var1) {

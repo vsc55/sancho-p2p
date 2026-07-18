@@ -13,7 +13,7 @@ public class Network41 extends Network18 {
    }
 
    public void getStats() {
-      Object[] var1 = new Object[]{new Integer(this.getId())};
+      Object[] var1 = new Object[]{Integer.valueOf(this.getId())};
       this.core.send((short)68, var1);
    }
 

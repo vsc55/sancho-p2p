@@ -20,7 +20,7 @@ public class ClientMessage {
    }
 
    public static void sendMessage(ICore var0, int var1, String var2) {
-      Object[] var3 = new Object[]{new Integer(var1), var2};
+      Object[] var3 = new Object[]{Integer.valueOf(var1), var2};
       var0.send((short)43, var3);
    }
 }

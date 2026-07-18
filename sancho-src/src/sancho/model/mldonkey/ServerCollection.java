@@ -45,7 +45,7 @@ public class ServerCollection extends ACollection_Int2 {
 
    public void addServer(Network var1, InetAddress var2, short var3) {
       if (var2 != null && var1 != null) {
-         Object[] var4 = new Object[]{new Integer(var1.getId()), var2.getAddress(), new Short(var3)};
+         Object[] var4 = new Object[]{Integer.valueOf(var1.getId()), var2.getAddress(), Short.valueOf(var3)};
          this.core.send((short)54, var4);
       }
    }

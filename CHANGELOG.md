@@ -8,6 +8,16 @@ The upstream project's original changelog (2004–2006) is preserved at
 authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 (`git checkout 0.9.4-23`).
 
+## [Unreleased]
+
+### Changed
+
+- **Dropped the deprecated-for-removal boxing constructors.** Replaced all 77
+  `new Integer(…)` / `new Short(…)` / `new Byte(…)` calls (inherited from the
+  decompiled source) with the `valueOf(…)` factory methods, which are the
+  non-deprecated, allocation-free form. No behavioural change — these values are
+  used as core message payloads and `HashMap` keys, both compared by `equals`.
+
 ## [0.9.4-69] — 2026-07-18
 
 ### Fixed

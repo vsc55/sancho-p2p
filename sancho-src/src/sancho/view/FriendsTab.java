@@ -140,7 +140,7 @@ public class FriendsTab extends AbstractTab implements MyObserver {
    }
 
    public void sendTabMessage(int var1, String var2) {
-      CTabItem var3 = (CTabItem)this.openTabs.get(new Integer(var1));
+      CTabItem var3 = (CTabItem)this.openTabs.get(Integer.valueOf(var1));
       MessageConsole var4 = (MessageConsole)var3.getData("messageConsole");
       var4.append(var2 + var4.getLineDelimiter());
    }
@@ -150,7 +150,7 @@ public class FriendsTab extends AbstractTab implements MyObserver {
          StatusLine var2 = this.getMainWindow().getStatusline();
          var2.setText(SResources.getString("l.newMessage"));
          var2.setImage(SResources.getImage("new-message"));
-         if (this.openTabs.containsKey(new Integer(var1.getId()))) {
+         if (this.openTabs.containsKey(Integer.valueOf(var1.getId()))) {
             Client var4 = (Client)this.getCore().getClientCollection().get(var1.getId());
             String var3;
             if (var4 == null) {
@@ -194,18 +194,18 @@ public class FriendsTab extends AbstractTab implements MyObserver {
       var3.setText(var2);
       MessageConsole var4 = new MessageConsole(this.cTabFolder, 64, var1);
       var3.setControl(var4.getComposite());
-      var3.setData("id", new Integer(var1));
+      var3.setData("id", Integer.valueOf(var1));
       var3.setData("messageConsole", var4);
-      this.openTabs.put(new Integer(var1), var3);
+      this.openTabs.put(Integer.valueOf(var1), var3);
       return var3;
    }
 
    public void openTab(Client var1) {
-      if (!this.openTabs.containsKey(new Integer(var1.getId()))) {
+      if (!this.openTabs.containsKey(Integer.valueOf(var1.getId()))) {
          String var2 = "  " + var1.getId() + ": " + var1.getName();
          this.setItemFocus(this.addCTabItem(var1.getId(), var2));
       } else {
-         this.cTabFolder.setSelection((CTabItem)this.openTabs.get(new Integer(var1.getId())));
+         this.cTabFolder.setSelection((CTabItem)this.openTabs.get(Integer.valueOf(var1.getId())));
       }
 
       this.setTabsLabel();

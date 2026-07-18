@@ -24,7 +24,7 @@ public class User extends AObject {
    }
 
    public void addAsFriend() {
-      this.core.send((short)15, new Integer(this.getId()));
+      this.core.send((short)15, Integer.valueOf(this.getId()));
    }
 
    public Addr getAddr() {

@@ -143,7 +143,7 @@ public class Server extends AObject {
    }
 
    public void getServerUsers() {
-      this.core.send((short)32, new Integer(this.getId()));
+      this.core.send((short)32, Integer.valueOf(this.getId()));
    }
 
    public HostState getState() {
@@ -357,7 +357,7 @@ public class Server extends AObject {
       }
 
       if (var2 != 0) {
-         this.core.send(var2, new Integer(this.getId()));
+         this.core.send(var2, Integer.valueOf(this.getId()));
       }
    }
 }

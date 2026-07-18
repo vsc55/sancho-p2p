@@ -8,10 +8,10 @@ public class Client23 extends Client21 {
    }
 
    public void connect() {
-      this.core.send((short)61, new Integer(this.getId()));
+      this.core.send((short)61, Integer.valueOf(this.getId()));
    }
 
    public void disconnect() {
-      this.core.send((short)62, new Integer(this.getId()));
+      this.core.send((short)62, Integer.valueOf(this.getId()));
    }
 }

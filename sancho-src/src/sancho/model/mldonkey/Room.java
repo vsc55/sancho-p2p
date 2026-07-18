@@ -88,7 +88,7 @@ public class Room extends AObject {
    }
 
    public void setRoomState(EnumRoomState var1) {
-      Object[] var2 = new Object[]{new Integer(this.getId()), new Byte(var1.getByteValue())};
+      Object[] var2 = new Object[]{Integer.valueOf(this.getId()), Byte.valueOf(var1.getByteValue())};
       this.core.send((short)48, var2);
    }
 }

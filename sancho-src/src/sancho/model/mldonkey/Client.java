@@ -54,7 +54,7 @@ public class Client extends AObjectO {
    }
 
    public void addAsFriend() {
-      this.core.send((short)14, new Integer(this.getId()));
+      this.core.send((short)14, Integer.valueOf(this.getId()));
    }
 
    public void connect() {
@@ -452,10 +452,10 @@ public class Client extends AObjectO {
    }
 
    public void removeAsFriend() {
-      this.core.send((short)16, new Integer(this.getId()));
+      this.core.send((short)16, Integer.valueOf(this.getId()));
    }
 
    public void requestClientFiles() {
-      this.core.send((short)33, new Integer(this.getId()));
+      this.core.send((short)33, Integer.valueOf(this.getId()));
    }
 }

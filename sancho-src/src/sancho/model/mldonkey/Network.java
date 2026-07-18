@@ -195,7 +195,7 @@ public class Network extends AObject {
    }
 
    public void toggleEnabled() {
-      Object[] var1 = new Object[]{new Integer(this.getId()), new Byte((byte)(this.isEnabled() ? 0 : 1))};
+      Object[] var1 = new Object[]{Integer.valueOf(this.getId()), Byte.valueOf((byte)(this.isEnabled() ? 0 : 1))};
       this.core.send((short)40, var1);
    }
 
