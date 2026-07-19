@@ -10,6 +10,17 @@ authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 
 ## [Unreleased]
 
+### Added
+
+- **The Advanced-search "Format" dropdown is now configurable.** Its options were hardcoded
+  in `SearchTab_Advanced` (`exe`/`bin`/`img`/`gif`/`jpg`); they now come from a new
+  `searchFormats` preference (default `exe;bin;img;gif;jpg;mkv;mp4` — `mkv`/`mp4` added)
+  editable under **Preferences → Display → Search** as a `;`-separated list. The advanced
+  search tab rebuilds the dropdown from the preference and refreshes live when preferences
+  are applied (no restart needed), preserving whatever the user currently has selected; a
+  leading "" (no-format) entry is always kept. New i18n key `p.d.search.formats` (English
+  base + `es_ES`).
+
 ### Changed
 
 - **Renamed the decompiler's `var1`/`var2`/… locals to descriptive names across the rest

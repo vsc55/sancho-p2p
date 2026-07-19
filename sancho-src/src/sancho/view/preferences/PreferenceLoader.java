@@ -395,6 +395,7 @@ public class PreferenceLoader {
       store.setDefault("searchTooltipsOffset", true);
       store.setDefault("searchFilterPornography", false);
       store.setDefault("searchFilterProfanity", false);
+      store.setDefault("searchFormats", "exe;bin;img;gif;jpg;mkv;mp4");
       store.setDefault("maintainSortOrder", false);
       store.setDefault("updateDelay", 2);
       store.setDefault("graphUpdateDelay", 1);

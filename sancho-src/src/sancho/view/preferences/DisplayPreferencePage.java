@@ -135,6 +135,8 @@ public class DisplayPreferencePage extends CPreferencePage {
       this.setupColorEditor("resultAlreadyDownloadedColor", "p.d.search.alreadyDownloaded", composite);
       this.setupColorEditor("resultFakeColor", "p.d.search.fake", composite);
       this.setupColorEditor("resultDefaultColor", "p.d.search.default", composite);
+      this.createSeparator(composite);
+      this.setupStringEditor("searchFormats", "p.d.search.formats", '0', composite);
       this.setCompositeLayout(composite);
    }
 

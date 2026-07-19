@@ -188,6 +188,11 @@ public abstract class ASearchTab implements MyObserver {
 
    public abstract String getText();
 
+   // Called when preferences are applied; subclasses that show preference-driven
+   // widgets (e.g. the advanced tab's format list) refresh them here. Default: no-op.
+   public void updateDisplay() {
+   }
+
    public void onConnect() {
       if (Sancho.hasCollectionFactory()) {
          this.viewFrame.getCore().getNetworkCollection().addObserver(this);

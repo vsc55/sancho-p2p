@@ -59,6 +59,15 @@ public class SearchTab extends AbstractTab {
       }
    }
 
+   public void updateDisplay() {
+      super.updateDisplay();
+      if (this.searchTabs != null) {
+         for (int i = 0; i < this.searchTabs.length; i++) {
+            this.searchTabs[i].updateDisplay();
+         }
+      }
+   }
+
    public void dispose() {
       if (this.searchTabs != null) {
          for (int i = 0; i < this.searchTabs.length; i++) {

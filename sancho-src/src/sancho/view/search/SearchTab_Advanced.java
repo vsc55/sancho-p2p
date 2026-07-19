@@ -7,6 +7,7 @@ import org.eclipse.swt.widgets.Control;
 import sancho.core.Sancho;
 import sancho.model.mldonkey.utility.SearchQuery;
 import sancho.view.SearchTab;
+import sancho.view.preferences.PreferenceLoader;
 import sancho.view.search.result.ResultTab;
 import sancho.view.search.result.ResultViewFrame;
 import sancho.view.utility.SResources;
@@ -24,7 +25,7 @@ public class SearchTab_Advanced extends ASearchTab2 {
       this.createNetworkCombo(composite);
       this.fileType = this.createFileType(composite);
       this.searchTypeCombo = this.createSearchTypeCombo(composite);
-      String[] values = new String[]{"", "exe", "bin", "img", "gif", "jpg"};
+      String[] values = this.buildFormatValues();
       this.formatCombo = this.createCombo(composite, 0, "s.format", values);
       this.createSeparator(composite);
       values = new String[]{"", "3", "5", "10", "25", "50"};
@@ -39,6 +40,26 @@ public class SearchTab_Advanced extends ASearchTab2 {
 
    public String getText() {
       return SResources.getString("s.tab.advanced");
+   }
+
+   // Build the format dropdown contents from the (editable) "searchFormats" preference,
+   // with a leading "" so the combo always has a "no format" entry.
+   private String[] buildFormatValues() {
+      String[] formats = PreferenceLoader.loadStringArray("searchFormats");
+      String[] values = new String[formats.length + 1];
+      values[0] = "";
+      System.arraycopy(formats, 0, values, 1, formats.length);
+      return values;
+   }
+
+   // Re-read the format list when preferences are applied, so edits show up without a
+   // restart. Keep whatever the user currently has typed/selected in the combo.
+   public void updateDisplay() {
+      if (this.formatCombo != null && !this.formatCombo.isDisposed()) {
+         String current = this.formatCombo.getText();
+         this.formatCombo.setItems(this.buildFormatValues());
+         this.formatCombo.setText(current);
+      }
    }
 
    public void performSearch() {
