@@ -6,7 +6,11 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -15,6 +19,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import sancho.core.Sancho;
 import sancho.utility.VersionInfo;
@@ -26,10 +31,15 @@ public class VersionChecker implements Runnable {
    Shell shell;
    String newVersion;
    StatusLine statusLine;
+   // Interactive = triggered by the Help menu: show an explicit message box for every outcome
+   // (up to date / new version / error). The automatic startup check is non-interactive: it
+   // only updates the status line, and pops up only when a newer version exists.
+   boolean interactive;
 
-   public VersionChecker(Shell shell, StatusLine statusLine, int delay) {
+   public VersionChecker(Shell shell, StatusLine statusLine, int delay, boolean interactive) {
       this.shell = shell;
       this.statusLine = statusLine;
+      this.interactive = interactive;
       shell.getDisplay().timerExec(delay, this);
    }
 
@@ -38,7 +48,7 @@ public class VersionChecker implements Runnable {
       Thread thread = new Thread(new Runnable() {
          public void run() {
             try {
-               VersionChecker.this.url = new URL(VersionInfo.getHomePage2() + "/version.php");
+               VersionChecker.this.url = new URL(VersionInfo.getReleasesApiURL());
             } catch (MalformedURLException malformedURLException) {
                Sancho.pDebug("VersionChecker: " + malformedURLException);
                return;
@@ -46,6 +56,8 @@ public class VersionChecker implements Runnable {
 
             try {
                URLConnection connection = VersionChecker.this.url.openConnection();
+               connection.setConnectTimeout(10000);
+               connection.setReadTimeout(10000);
                StringBuffer buffer = new StringBuffer(64);
                buffer.append(VersionInfo.getName());
                buffer.append("/");
@@ -65,9 +77,17 @@ public class VersionChecker implements Runnable {
                buffer.append(System.getProperty("java.vm.version"));
                buffer.append(")");
                connection.setRequestProperty("User-Agent", buffer.toString());
-               BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-               VersionChecker.this.newVersion = reader.readLine();
+               // GitHub's REST API requires a User-Agent (set above) and recommends this Accept.
+               connection.setRequestProperty("Accept", "application/vnd.github+json");
+               BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+               StringBuffer body = new StringBuffer(256);
+               String line;
+               while ((line = reader.readLine()) != null) {
+                  body.append(line);
+               }
+
                reader.close();
+               VersionChecker.this.newVersion = parseTagName(body.toString());
                if (!VersionChecker.this.shell.isDisposed() && !VersionChecker.this.shell.getDisplay().isDisposed()) {
                   // Success: report the fetched version back on the UI thread.
                   VersionChecker.this.shell.getDisplay().asyncExec(new Runnable() {
@@ -94,8 +114,26 @@ public class VersionChecker implements Runnable {
                                  );
                            }
 
-                           if (isVersion && !version.equals(VersionInfo.getVersion()) && PreferenceLoader.loadBoolean("versionCheckPopup")) {
-                              new VersionDialog(checker.shell, version).open();
+                           if (isVersion) {
+                              if (!version.equals(VersionInfo.getVersion())) {
+                                 // A newer release exists: show it — always for a manual check,
+                                 // for the automatic one only if the pop-up preference is on.
+                                 if (checker.interactive || PreferenceLoader.loadBoolean("versionCheckPopup")) {
+                                    new VersionDialog(checker.shell, version).open();
+                                 }
+                              } else if (checker.interactive) {
+                                 // Manual check, already up to date: say so explicitly.
+                                 MessageBox box = new MessageBox(checker.shell, SWT.ICON_INFORMATION | SWT.OK);
+                                 box.setText(SResources.getString("menu.help.checkVersion"));
+                                 box.setMessage(SResources.getString("l.upToDate") + " (" + VersionInfo.getVersion() + ")");
+                                 box.open();
+                              }
+                           } else if (checker.interactive) {
+                              // Manual check but the server returned no usable version string.
+                              MessageBox box = new MessageBox(checker.shell, SWT.ICON_WARNING | SWT.OK);
+                              box.setText(SResources.getString("menu.help.checkVersion"));
+                              box.setMessage(SResources.getString("l.versionCheckUnavailable"));
+                              box.open();
                            }
                         }
                      }
@@ -103,11 +141,25 @@ public class VersionChecker implements Runnable {
                }
             } catch (IOException ioException) {
                Sancho.pDebug("VersionChecker: " + ioException);
-               String text = ioException.toString();
                // Failure: note that the version check could not reach the server.
                VersionChecker.this.shell.getDisplay().asyncExec(new Runnable() {
                   public void run() {
-                     VersionChecker.this.statusLine.setText(SResources.getString("l.versionCheckUnavailable"));
+                     VersionChecker checker = VersionChecker.this;
+                     if (checker.shell == null || checker.shell.isDisposed()) {
+                        return;
+                     }
+
+                     if (checker.statusLine != null) {
+                        checker.statusLine.setText(SResources.getString("l.versionCheckUnavailable"));
+                     }
+
+                     if (checker.interactive) {
+                        // Manual check: surface the failure explicitly instead of only the status line.
+                        MessageBox box = new MessageBox(checker.shell, SWT.ICON_ERROR | SWT.OK);
+                        box.setText(SResources.getString("menu.help.checkVersion"));
+                        box.setMessage(SResources.getString("l.versionCheckUnavailable"));
+                        box.open();
+                     }
                   }
                });
             }
@@ -115,6 +167,23 @@ public class VersionChecker implements Runnable {
       });
       thread.setDaemon(true);
       thread.start();
+   }
+
+   // Extract the release tag (e.g. "tag_name":"0.9.4-76") from the GitHub API JSON, stripping
+   // a leading "v" if present. Returns null when no tag is found (e.g. a rate-limit/error body),
+   // which the caller treats the same as "no update info".
+   private static String parseTagName(String json) {
+      Matcher matcher = Pattern.compile("\"tag_name\"\\s*:\\s*\"([^\"]+)\"").matcher(json);
+      if (matcher.find()) {
+         String tag = matcher.group(1);
+         if (tag.startsWith("v") || tag.startsWith("V")) {
+            tag = tag.substring(1);
+         }
+
+         return tag;
+      }
+
+      return null;
    }
 
    // Modal dialog shown when a newer release is available.
@@ -167,7 +236,7 @@ public class VersionChecker implements Runnable {
             SResources.getString("l.visit") + " " + SResources.getString("ti.web.sancho"),
             new SelectionAdapter() {
                public void widgetSelected(SelectionEvent event) {
-                  WebLauncher.openLink(VersionInfo.getHomePage2());
+                  WebLauncher.openLink(VersionInfo.getReleasesPage());
                   VersionDialog.this.close();
                }
             }

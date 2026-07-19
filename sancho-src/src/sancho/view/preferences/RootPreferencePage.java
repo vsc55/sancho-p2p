@@ -10,6 +10,10 @@ import java.util.StringTokenizer;
 import java.util.TreeSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.FieldEditor;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -29,8 +33,22 @@ import sancho.view.utility.SResources;
 import sancho.view.utility.WidgetFactory;
 
 public class RootPreferencePage extends CPreferencePage {
+   // The "popup on new version" editor + its tab, kept so its enabled state can track the
+   // "notify me..." checkbox (including after Restore Defaults).
+   private BooleanFieldEditor versionCheckPopupEditor;
+   private Composite generalTabComposite;
+
    public RootPreferencePage(String title) {
       super(title);
+   }
+
+   protected void performDefaults() {
+      super.performDefaults();
+      // Restore Defaults reloads the checkboxes but fires no value event, so re-sync the
+      // dependent "popup on new version" editor from the default of the "notify me..." option.
+      if (this.versionCheckPopupEditor != null && this.generalTabComposite != null) {
+         this.versionCheckPopupEditor.setEnabled(this.getPreferenceStore().getDefaultBoolean("versionCheck"), this.generalTabComposite);
+      }
    }
 
    protected Control createContents(Composite parent) {
@@ -104,8 +122,20 @@ public class RootPreferencePage extends CPreferencePage {
       this.setupBooleanEditor("hostManagerOnStart", "p.r.general.hostManagerOnStart", composite);
       this.setupBooleanEditor("useLastFile", "p.r.general.useLastFile", composite);
       this.setupBooleanEditor("killCoreOnExit", "p.r.general.killCoreOnExit", composite);
-      this.setupBooleanEditor("versionCheck", "p.r.general.versionCheck", composite);
-      this.setupBooleanEditor("versionCheckPopup", "p.r.general.versionCheckPopup", composite);
+      BooleanFieldEditor versionCheckEditor = this.setupBooleanEditor("versionCheck", "p.r.general.versionCheck", composite);
+      this.versionCheckPopupEditor = this.setupBooleanEditor("versionCheckPopup", "p.r.general.versionCheckPopup", composite);
+      this.generalTabComposite = composite;
+      // "Popup on new version" only has an effect when the automatic check is enabled, so grey
+      // it out while "Notify me..." is off, and toggle it live when that checkbox changes.
+      this.versionCheckPopupEditor.setEnabled(this.getPreferenceStore().getBoolean("versionCheck"), composite);
+      versionCheckEditor.setPropertyChangeListener(new IPropertyChangeListener() {
+         public void propertyChange(PropertyChangeEvent event) {
+            if (FieldEditor.VALUE.equals(event.getProperty())) {
+               RootPreferencePage.this.versionCheckPopupEditor
+                  .setEnabled(((Boolean)event.getNewValue()).booleanValue(), RootPreferencePage.this.generalTabComposite);
+            }
+         }
+      });
       this.setCompositeLayout(composite);
    }
 

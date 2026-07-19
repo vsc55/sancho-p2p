@@ -171,7 +171,7 @@ public class MainWindow implements ShellListener, MyObserver, DisposeListener {
       }
 
       if (PreferenceLoader.loadBoolean("versionCheck")) {
-         new VersionChecker(this.shell, this.statusLine, 4444);
+         new VersionChecker(this.shell, this.statusLine, 4444, false);
       }
 
       try {

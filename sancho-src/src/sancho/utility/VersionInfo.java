@@ -72,6 +72,16 @@ public class VersionInfo {
       return "http://sancho.awardspace.com";
    }
 
+   // Update check targets this fork's GitHub releases over HTTPS. The original
+   // http://sancho.awardspace.com/version.php host is long dead.
+   public static String getReleasesApiURL() {
+      return "https://api.github.com/repos/vsc55/sancho-p2p/releases/latest";
+   }
+
+   public static String getReleasesPage() {
+      return "https://github.com/vsc55/sancho-p2p/releases";
+   }
+
    public static String getName() {
       return "sancho";
    }

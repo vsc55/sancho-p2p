@@ -55,6 +55,14 @@ public class MLDonkeyPreferencePage extends FieldEditorPreferencePage {
       }
    }
 
+   // Localize the shared Restore-Defaults / Apply buttons on the core-option pages too.
+   // This is a FieldEditorPreferencePage, so it doesn't inherit CPreferencePage's relabel;
+   // without this, only the "sancho:" pages showed translated buttons.
+   public void createControl(Composite parent) {
+      super.createControl(parent);
+      CPreferencePage.localizeDialogButtons(this.getDefaultsButton(), this.getApplyButton());
+   }
+
    private static int extentX = -1;
    private boolean empty;
    private boolean allOptions;

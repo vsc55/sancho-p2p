@@ -70,7 +70,7 @@ public class CPreferenceManager extends PreferenceManager {
       HashMap sectionMap = new HashMap();
       HashMap pluginMap = new HashMap();
       MLDonkeyPreferencePage advancedPage = null;
-      MLDonkeyPreferencePage allPage = new MLDonkeyPreferencePage(SResources.getString("l.all"), 1);
+      MLDonkeyPreferencePage allPage = new MLDonkeyPreferencePage(this.corePrefix() + SResources.getString("l.all"), 1);
       allPage.setPreferenceStore(store);
       allPage.setAllOptions();
       Iterator iterator = optionCollection.keySet().iterator();
@@ -95,7 +95,7 @@ public class CPreferenceManager extends PreferenceManager {
       if (pluginMap.size() != 0) {
          Object networksNode = this.find("Networks");
          if (networksNode == null) {
-            MLDonkeyPreferencePage networksPage = new MLDonkeyPreferencePage("Networks", 0);
+            MLDonkeyPreferencePage networksPage = new MLDonkeyPreferencePage(this.sectionLabel("Networks"), 0);
             networksNode = new ImagePreferenceNode("Networks", networksPage, SResources.getImageDescriptor("globe"));
             networksPage.setEmpty(true);
             this.addToRoot((IPreferenceNode)networksNode);
@@ -147,9 +147,25 @@ public class CPreferenceManager extends PreferenceManager {
       }
    }
 
+   // Core option sections (Bandwidth, Debug, Networks, ...) come from the MLDonkey core in
+   // English. Show them as "<Core>: <section>" — mirroring the "sancho:" pages — where both
+   // the "Core" prefix and the section name are localizable, falling back to the core's raw
+   // section name when we have no translation (plugins / networks / future core sections).
+   private String sectionLabel(String coreSection) {
+      String key = "p.node.section." + coreSection.toLowerCase().replace(' ', '_');
+      String translated = SResources.getString(key);
+      String name = translated.equals(key) ? coreSection : translated;
+      return this.corePrefix() + name;
+   }
+
+   // The localizable "Core: " / "Nucleo: " prefix that groups every core-settings page.
+   private String corePrefix() {
+      return SResources.getString("p.node.section.prefix") + ": ";
+   }
+
    private void addToMap(Map pageMap, String key, MLDonkeyPreferenceStore store, Option option) {
       if (!pageMap.containsKey(key)) {
-         MLDonkeyPreferencePage page = new MLDonkeyPreferencePage(key, 1);
+         MLDonkeyPreferencePage page = new MLDonkeyPreferencePage(this.sectionLabel(key), 1);
          pageMap.put(key, page);
          page.setPreferenceStore(store);
       }
@@ -159,7 +175,7 @@ public class CPreferenceManager extends PreferenceManager {
 
    private MLDonkeyPreferencePage addAdvancedOption(MLDonkeyPreferencePage advancedPage, Option option, MLDonkeyPreferenceStore store) {
       if (advancedPage == null) {
-         advancedPage = new MLDonkeyPreferencePage(SResources.getString("l.advanced") + "*", 1);
+         advancedPage = new MLDonkeyPreferencePage(this.corePrefix() + SResources.getString("l.advanced") + "*", 1);
          advancedPage.setPreferenceStore(store);
       }
 

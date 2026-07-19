@@ -343,7 +343,7 @@ public class MenuBar implements Runnable {
       this.menuItem = new MenuItem(this.subMenu, 2);
       this.createMenuItem(this.subMenu, "&" + SResources.getString("menu.help.checkVersion"), "ProgramIcon", new Listener() {
          public void handleEvent(Event event) {
-            new VersionChecker(MenuBar.this.shell, MenuBar.this.mainWindow.getStatusline(), 0);
+            new VersionChecker(MenuBar.this.shell, MenuBar.this.mainWindow.getStatusline(), 0, true);
          }
       });
       this.createMenuItem(this.subMenu, "&" + SResources.getString("menu.help.about"), "commit_question", new Listener() {

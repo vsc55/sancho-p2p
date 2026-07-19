@@ -40,16 +40,40 @@ public class CPreferencePage extends PreferencePage {
 
    public void createControl(Composite parent) {
       super.createControl(parent);
-      // JFace labels the Restore-Defaults / Apply buttons from its own English bundle;
-      // relabel them from Sancho's translations so the whole dialog follows the locale.
-      Button defaultsButton = this.getDefaultsButton();
+      localizeDialogButtons(this.getDefaultsButton(), this.getApplyButton());
+   }
+
+   // Relabel the shared Restore-Defaults / Apply buttons from Sancho's translations and
+   // widen them to fit. JFace sizes these buttons for its English bundle text, so the
+   // longer translated labels (e.g. Spanish "Restaurar valores predeterminados") would
+   // otherwise be clipped. Called from every preference-page type — CPreferencePage AND
+   // MLDonkeyPreferencePage (a FieldEditorPreferencePage) — so all pages get localized
+   // buttons, not just the "sancho:" ones.
+   static void localizeDialogButtons(Button defaultsButton, Button applyButton) {
       if (defaultsButton != null) {
          defaultsButton.setText(SResources.getString("b.defaults"));
+         fitButtonWidth(defaultsButton);
       }
 
-      Button applyButton = this.getApplyButton();
       if (applyButton != null) {
          applyButton.setText(SResources.getString("b.apply"));
+         fitButtonWidth(applyButton);
+      }
+
+      Button anyButton = defaultsButton != null ? defaultsButton : applyButton;
+      if (anyButton != null) {
+         anyButton.getParent().layout(true, true);
+      }
+   }
+
+   // Grow a button's grid width hint to fit its (possibly longer, translated) label.
+   private static void fitButtonWidth(Button button) {
+      if (button.getLayoutData() instanceof GridData) {
+         GridData gridData = (GridData)button.getLayoutData();
+         int preferred = button.computeSize(-1, -1, true).x;
+         if (gridData.widthHint < preferred) {
+            gridData.widthHint = preferred;
+         }
       }
    }
 
@@ -80,8 +104,10 @@ public class CPreferencePage extends PreferencePage {
       this.setupEditor(new FontFieldEditor(name, SResources.getString(labelKey), parent), parent);
    }
 
-   protected void setupBooleanEditor(String name, String labelKey, Composite parent) {
-      this.setupEditor(new BooleanFieldEditor(name, SResources.getString(labelKey), parent), parent);
+   protected BooleanFieldEditor setupBooleanEditor(String name, String labelKey, Composite parent) {
+      BooleanFieldEditor editor = new BooleanFieldEditor(name, SResources.getString(labelKey), parent);
+      this.setupEditor(editor, parent);
+      return editor;
    }
 
    protected void setupIntegerEditor(String name, String labelKey, int min, int max, Composite parent) {

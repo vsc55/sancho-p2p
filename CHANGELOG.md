@@ -8,7 +8,7 @@ The upstream project's original changelog (2004–2006) is preserved at
 authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 (`git checkout 0.9.4-23`).
 
-## [Unreleased]
+## [0.9.4-76] — 2026-07-19
 
 ### Added
 
@@ -20,6 +20,16 @@ authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
   are applied (no restart needed), preserving whatever the user currently has selected; a
   leading "" (no-format) entry is always kept. New i18n key `p.d.search.formats` (English
   base + `es_ES`).
+- **The "Check for updates" feature now targets this fork's GitHub releases.** The old
+  `http://sancho.awardspace.com/version.php` host is long dead, so `VersionChecker` now
+  queries `https://api.github.com/repos/vsc55/sancho-p2p/releases/latest` over HTTPS (with
+  connect/read timeouts, the GitHub-required `User-Agent`, and `Accept: application/vnd.github+json`),
+  parses the release `tag_name`, and the "Visit" button opens the GitHub releases page.
+  Triggering the check from **Help → Check version** is now *interactive*: it shows an
+  explicit message box for every outcome — up to date, a newer release (dialog with a
+  Visit button), or an error — instead of silently updating only the status line. The
+  automatic start-up check stays quiet (status line, plus a pop-up only when a newer
+  version exists and the pop-up preference is on). New i18n key `l.upToDate`.
 
 ### Changed
 
@@ -60,6 +70,28 @@ authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
   change, verified three ways: a clean full-tree compile (413 files), a NUL/binary-corruption
   scan (none), and a per-file audit confirming every string/char literal is byte-identical
   to the previous version (no escape like ` `/` ` was altered).
+
+- **Preferences dialog: MLDonkey core option sections are grouped and localized.** The
+  left-hand tree used the core's raw English section names (`Bandwidth`, `Networks`, …).
+  They now appear under a localizable `Core:` / `Núcleo:` prefix (mirroring the `sancho:`
+  pages) with translated section names where available (`Bandwidth`→`Ancho de banda`,
+  `Main`→`General`, …), falling back to the raw core name for plugin / network / unknown
+  sections; the synthetic "Advanced" and "All" views get the same prefix. New i18n keys
+  `p.node.section.*` (English base + `es_ES`).
+
+### Fixed
+
+- **The Preferences dialog's Restore-Defaults / Apply buttons were English on the core-option
+  pages, and the "Restore Defaults" label was clipped.** They are now relabelled from Sancho's
+  translations on every page type — not just the `sancho:` `CPreferencePage`s but also the
+  `MLDonkeyPreferencePage` core pages — and each button is widened to fit its translated text.
+- **The "Popup on new version" preference is disabled while the automatic version check is
+  off.** The two checkboxes were independent, so the pop-up option looked meaningful even when
+  it had no effect; it now greys out and tracks the "Notify me…" checkbox live (and after
+  Restore Defaults).
+- **Spanish `ToolItem` labels are translated.** The Web-browser and Console shortcut fields
+  (and the "ToolItems" tab) showed the raw SWT term `ToolItem`; the `es_ES` labels now read
+  "Botón" / "Botones".
 
 ## [0.9.4-75] — 2026-07-19
 
