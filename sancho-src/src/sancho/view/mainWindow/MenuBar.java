@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MenuAdapter;
 import org.eclipse.swt.events.MenuEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -93,6 +94,12 @@ public class MenuBar implements Runnable {
             loader.data = new ImageData[]{image.getImageData()};
             loader.save(path, 5);
          }
+      } catch (Exception exception) {
+         // Don't let a failed save (e.g. a non-writable target path) disappear silently.
+         MessageBox box = new MessageBox(this.shell, SWT.ICON_ERROR | SWT.OK);
+         box.setText(VersionInfo.getName());
+         box.setMessage(SResources.getString("l.saveFailed") + " " + exception);
+         box.open();
       } finally {
          // The window-sized Image was never disposed (neither on save nor on
          // cancel), leaking a large native bitmap on every screenshot.

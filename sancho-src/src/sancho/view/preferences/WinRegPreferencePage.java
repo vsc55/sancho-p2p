@@ -121,7 +121,11 @@ public class WinRegPreferencePage extends CPreferencePage {
       String progName = System.getProperty("gnu.gcj.progname");
 
       try {
-         String regFile = dir + VersionInfo.getName() + ".reg";
+         // Write the .reg to a writable temp dir, NOT user.dir: an installed build runs
+         // from Program Files, whose working directory isn't writable for a normal user, so
+         // the old location made FileOutputStream throw Access Denied — swallowed by the
+         // outer catch, giving no dialog and no registration. java.io.tmpdir is always writable.
+         String regFile = new File(System.getProperty("java.io.tmpdir"), VersionInfo.getName() + ".reg").getAbsolutePath();
          String exe = dir + VersionInfo.getName() + ".exe";
          if (progName != null && !progName.toLowerCase().endsWith("exe")) {
             progName = progName + ".exe";
@@ -175,7 +179,10 @@ public class WinRegPreferencePage extends CPreferencePage {
          out.close();
          this.updateRegistry(regFile);
       } catch (Exception error) {
+         // Surface the failure instead of silently swallowing it (the user pressed a button
+         // and deserves feedback, e.g. if the temp .reg still could not be written).
          Sancho.pDebug("createRegFile: " + error);
+         MessageDialog.openWarning(this.getShell(), VersionInfo.getName(), SResources.getString("l.regUpdateFailed"));
       }
    }
 

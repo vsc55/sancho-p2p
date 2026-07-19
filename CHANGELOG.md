@@ -8,6 +8,25 @@ The upstream project's original changelog (2004–2006) is preserved at
 authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 (`git checkout 0.9.4-23`).
 
+## [0.9.4-77] — 2026-07-19
+
+### Fixed
+
+- **Windows file/protocol association did nothing on an installed (MSI) build.** The
+  `.reg` file was written to `user.dir`, which for an installed launcher is the
+  non-writable `C:\Program Files\…\Sancho` directory, so `FileOutputStream` threw *Access
+  Denied* — swallowed by a silent `catch`, so no dialog appeared and nothing was
+  registered (it only worked when run from a writable dev directory). It now writes the
+  `.reg` to `java.io.tmpdir` (always writable) and surfaces a warning dialog if creation
+  still fails. The executable path already resolves to the real `sancho.exe` via
+  `jpackage.app-path`.
+- **A failed screenshot save disappeared silently.** The Tools → Screenshot save
+  (`ImageLoader.save` to a user-chosen path) had no `catch`, so a write failure (e.g. a
+  non-writable target) produced no feedback; it now reports the error in a dialog. (Found
+  while auditing for other permission-prone file writes — the registry `.reg` was the only
+  one writing to a non-writable install-relative path; everything else writes under the
+  writable user home directory.) New i18n key `l.saveFailed`.
+
 ## [0.9.4-76] — 2026-07-19
 
 ### Added
