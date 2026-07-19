@@ -73,6 +73,8 @@ Sancho used a `0.9.4-NN` snapshot scheme.
 | `0.9.4-72` | Audit sweep: tree render, UI-freeze fixes, numeric overflows, ~6 dialog defaults, IRC, browser/DnD, tray & protocol-parsing regressions, cross-platform (macOS ⌘, Linux preview/tray) | [Release](../../releases/tag/0.9.4-72) |
 | `0.9.4-73` | Working localization: translations bundled in the jar, language picker fixed, dialog buttons + Preferences window + stray strings routed through i18n, all 14 locales updated (es_ES 100%) | [Release](../../releases/tag/0.9.4-73) |
 | `0.9.4-74` | Audit fixes: DecimalFormat data race, Windows-registry crash, Download-Complete parse crash, chunk-image cache leak, ETA sort + robustness guards | [Release](../../releases/tag/0.9.4-74) |
+| `0.9.4-75` | **IRC client removed** (drops the abandoned `pircbot` dependency); decompiler cleanup begun — inner classes merged back + descriptive variable names across `sancho.core`/`utility`/`model` + JFace viewers; per-user Windows association via `reg.exe` | [Release](../../releases/tag/0.9.4-75) |
+| `0.9.4-76` | **Decompiler cleanup finished** — every split `$` inner-class file merged and all `varN` renamed tree-wide; update check moved to the **GitHub releases API** (+ interactive Help-menu check); Preferences dialog i18n/UX (localized `Core:` sections, translated/relabelled buttons, dependent checkboxes); configurable advanced-search formats | [Release](../../releases/tag/0.9.4-76) |
 
 **`main`** always holds the newest modernized build; [CHANGELOG.md](CHANGELOG.md)
 and the [Releases](../../releases) page are the authoritative, up-to-date list.
