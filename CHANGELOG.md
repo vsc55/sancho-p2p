@@ -8,6 +8,27 @@ The upstream project's original changelog (2004–2006) is preserved at
 authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 (`git checkout 0.9.4-23`).
 
+## [Unreleased]
+
+### Changed
+
+- **Added a `docs/` technical documentation set** (English, with Mermaid diagrams rendered by
+  GitHub): overview, architecture (packages, patterns, execution flow), classes + data model,
+  MLDonkey protocol + CLI arguments, development guide, and version-history/provenance. Sections are
+  numbered by the `docs/README.md` index.
+- **Slimmed the root README** into a user-focused landing page: moved the deep
+  build/dependency/packaging/CI/AppImage/silent-MSI detail into `docs/DEVELOPMENT.md` and the
+  version-history table into `docs/HISTORY.md`, and added a Documentation section linking to `docs/`.
+- **Repo housekeeping:** pruned unreferenced, platform-mismatched files from the legacy
+  `appimage/usr/bin/distrib/` bundle (`sancho.reg`, `preview.sh`/`.bat`, `sendalltorrents`, the
+  Windows/macOS `sancho.ico`/`.icns` icons), keeping the license/authorship docs, the upstream
+  `ChangeLog` and the Linux icons; removed the dead `hm_0_protocol` preference default (never read).
+
+### Fixed
+
+- Corrected stale README content: dropped references to the removed IRC client, the abandoned
+  `pircbot` dependency, and the deleted `sancho.utility.regex` adapter.
+
 ## [0.9.6] — 2026-07-19
 
 ### Added
