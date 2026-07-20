@@ -21,7 +21,12 @@ public abstract class GTableContentProvider implements IGContentProvider, IStruc
    protected ArrayList sfList = new ArrayList();
 
    public synchronized Object getSFElement(int index) {
-      return this.sfList.get(index);
+      // The table widget's selection can momentarily reference a row the model has
+      // already cleared — e.g. a persisted/auto selection firing at startup before
+      // the content provider is populated (sfList still empty) — so bounds-check
+      // instead of letting ArrayList.get throw IndexOutOfBoundsException. Callers
+      // (getSelectionFromWidget) already skip a null element.
+      return index >= 0 && index < this.sfList.size() ? this.sfList.get(index) : null;
    }
 
    public void setNeedsRefresh(boolean needsRefresh) {

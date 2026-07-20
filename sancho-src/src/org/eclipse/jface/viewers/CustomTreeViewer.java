@@ -359,7 +359,11 @@ public class CustomTreeViewer extends TreeViewer implements ICustomViewer {
                } else {
                   for (int j = searchStart; j < allItems.length; j++) {
                      if (item == allItems[j]) {
-                        selection.add(contentProvider.getSFElement(j));
+                        Object element = contentProvider.getSFElement(j);
+                        if (element != null) {
+                           selection.add(element);
+                        }
+
                         searchStart = j;
                         break;
                      }

@@ -24,7 +24,10 @@ public abstract class GTreeContentProvider implements IGContentProvider, ITreeCo
    }
 
    public synchronized Object getSFElement(int index) {
-      return this.sfList.get(index);
+      // Same guard as GTableContentProvider: the widget selection can reference a
+      // row the model already cleared, so bounds-check instead of letting
+      // ArrayList.get throw IndexOutOfBoundsException. Callers tolerate null.
+      return index >= 0 && index < this.sfList.size() ? this.sfList.get(index) : null;
    }
 
    public synchronized int getSFIndex(Object element) {

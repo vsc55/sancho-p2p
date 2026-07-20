@@ -335,12 +335,26 @@ public class CustomTableViewer extends TableViewer implements ICustomViewer {
    }
 
    protected List getSelectionFromWidget() {
-      int[] selectionIndices = this.getTable().getSelectionIndices();
+      // Resolve the selection from each selected TableItem's stored element (set in
+      // replace() when the row was rendered) rather than by row index against the
+      // content provider's sfList. In this lazy/virtual table the sfList can lag the
+      // widget's row count for a moment (e.g. right after the sources model changed),
+      // and the old index->sfList.get() path then threw IndexOutOfBoundsException on a
+      // click — or, once guarded, returned null and silently dropped the selection so
+      // the right-click menu had nothing to act on. A clicked row is always rendered,
+      // so its item data is present; fall back to the content provider by index only
+      // for a not-yet-rendered row.
+      Table table = this.getTable();
+      TableItem[] selectedItems = table.getSelection();
       GTableContentProvider contentProvider = (GTableContentProvider)this.getContentProvider();
-      ArrayList selection = new ArrayList(selectionIndices.length);
+      ArrayList selection = new ArrayList(selectedItems.length);
 
-      for (int i = 0; i < selectionIndices.length; i++) {
-         Object element = contentProvider.getSFElement(selectionIndices[i]);
+      for (int i = 0; i < selectedItems.length; i++) {
+         Object element = selectedItems[i].getData();
+         if (element == null) {
+            element = contentProvider.getSFElement(table.indexOf(selectedItems[i]));
+         }
+
          if (element != null) {
             selection.add(element);
          }
