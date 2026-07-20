@@ -8,6 +8,41 @@ The upstream project's original changelog (2004–2006) is preserved at
 authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 (`git checkout 0.9.4-23`).
 
+## [0.9.8] — 2026-07-20
+
+### Fixed
+
+- **Clicking a client (or download) row could crash with `IndexOutOfBoundsException`**
+  and, once guarded, silently lost the selection so the right-click menu had nothing to
+  act on. The lazy/virtual Clients and Downloads tables resolved the selection by row
+  index against the content provider's `sfList`, which can lag the widget's row count for
+  a moment after the sources model changes. `CustomTableViewer.getSelectionFromWidget` now
+  resolves the selection from each selected `TableItem`'s stored element (a clicked row is
+  always rendered, so its element is present), falling back to the content provider by
+  index only for a not-yet-rendered row; `getSFElement` is bounds-guarded in both the table
+  and tree content providers, and null elements are skipped when building the tree selection.
+
+### Changed
+
+- **Detail dialogs no longer clip their field labels.** The File/Client detail dialogs gave
+  every field-name label a fixed 100px width, so longer (e.g. translated) labels like
+  "Visto por última vez" or "Antigüedad de las partes" were cut off. The labels now size to
+  their text (the GridLayout column still aligns to the widest label), so the dialog grows to
+  fit its content.
+- **The column selector and Link Ripper windows are now resizable/maximizable.** `IDSelector`
+  (its column table already fills, so a larger window shows more columns) gained a resizable
+  shell style; `LinkRipper`'s shell style was spelled out with named `SWT` constants instead
+  of the magic literal `2160` and a dead ternary, and gained a maximize button.
+- **Performance: dropped `String.intern()` from the hot display formatters and label
+  providers.** The size/rate/percent/time formatters in `SwissArmy`, the table label
+  providers, and the model's display getters interned every returned string. Those strings
+  are transient and mostly unique (they change every refresh), so interning deduplicated
+  nothing useful while paying a native string-pool lookup per call on the per-cell/per-refresh
+  path and permanently polluting the JVM-wide intern pool. Nothing compares these strings by
+  identity, so the calls were pure overhead — removed from 22 files (55 call sites). The
+  file-extension dedup and the wire-format intern in `MessageBuffer`, where identical strings
+  from the core genuinely repeat, were kept.
+
 ## [0.9.7] — 2026-07-19
 
 ### Changed
