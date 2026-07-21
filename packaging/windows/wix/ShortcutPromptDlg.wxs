@@ -3,7 +3,11 @@
   Overrides jpackage's ShortcutPromptDlg (shown with the win-shortcut-prompt option)
   to add a third checkbox that toggles the file/URL association registration
   (Property REGISTERASSOC, consumed by the association components in main.wxs).
-  Based on the JDK's ShortcutPromptDlg.wxs; original header kept below.
+  Based on the JDK 25 / WiX 6 ShortcutPromptDlg.wxs; original header kept below.
+
+  Deltas vs. the stock dialog: the extra RegisterAssociations checkbox, and the
+  checkbox Width widened from 200 to 330 so the longer translated labels fit (the
+  installer UI is localized; see packaging/windows/wix-lang/).
 -->
 <!--
 /*
@@ -18,15 +22,14 @@
  */
 -->
 
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
-     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
 
   <?define JpDesktopShortcutPromptControlY=140 ?>
   <?define JpStartMenuShortcutPromptControlY=180 ?>
 
   <?ifndef JpDesktopShortcutPrompt ?>
     <?define JpStartMenuShortcutPromptControlY=$(var.JpDesktopShortcutPromptControlY) ?>
-  <?endif?>
+  <?endif ?>
 
   <Fragment>
     <UI>
@@ -45,26 +48,26 @@
                  Id="InstallDesktopShortcut"
                  Y="$(var.JpDesktopShortcutPromptControlY)"
                  Property="JP_INSTALL_DESKTOP_SHORTCUT"
-                 Text="!(loc.ShortcutPromptDlgDesktopShortcutControlLabel)"/>
-        <?endif?>
+                 Text="!(loc.ShortcutPromptDlgDesktopShortcutControlLabel)" />
+        <?endif ?>
 
         <?ifdef JpStartMenuShortcutPrompt ?>
         <Control Type="CheckBox" X="20" Width="330" Height="17" CheckBoxValue="1"
                  Id="InstallStartMenuShortcut"
                  Y="$(var.JpStartMenuShortcutPromptControlY)"
                  Property="JP_INSTALL_STARTMENU_SHORTCUT"
-                 Text="!(loc.ShortcutPromptDlgStartMenuShortcutControlLabel)"/>
-        <?endif?>
+                 Text="!(loc.ShortcutPromptDlgStartMenuShortcutControlLabel)" />
+        <?endif ?>
 
         <!-- Sancho: register .torrent / ed2k / magnet / sig2dat associations.
              Label is localized via MsiInstallerStrings_<lang>.wxl (see the
              SanchoRegisterAssociationsLabel string); tools/wix-multilang.ps1
-             re-lights this dialog per language for the multilingual MSI. -->
+             re-builds this dialog per language for the multilingual MSI. -->
         <Control Type="CheckBox" X="20" Width="330" Height="26" CheckBoxValue="1"
                  Id="RegisterAssociations"
                  Y="205"
                  Property="REGISTERASSOC"
-                 Text="!(loc.SanchoRegisterAssociationsLabel)"/>
+                 Text="!(loc.SanchoRegisterAssociationsLabel)" />
 
         <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes"
                  Text="!(loc.WixUINext)" />
@@ -72,7 +75,7 @@
                  Text="!(loc.WixUIBack)" />
         <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes"
                  Text="!(loc.WixUICancel)">
-          <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+          <Publish Event="SpawnDialog" Value="CancelDlg" Condition="1" />
         </Control>
       </Dialog>
     </UI>

@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- English (en-us) installer strings. Overrides jpackage's built-in
      MsiInstallerStrings_en.wxl so the custom SanchoRegisterAssociationsLabel
-     (the associations checkbox in ShortcutPromptDlg.wxs) resolves at link time.
-     The first 13 strings mirror jpackage's defaults verbatim. -->
-<WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization" Codepage="1252">
-  <String Id="message.install.dir.exist">The folder [INSTALLDIR] already exist. Would you like to install to that folder anyway?</String>
-  <String Id="MainFeatureTitle">Main Feature</String>
-  <String Id="DowngradeErrorMessage">A higher version of [ProductName] is already installed. Downgrades disabled. Setup will now exit.</String>
-  <String Id="DisallowUpgradeErrorMessage">A lower version of [ProductName] is already installed. Upgrades disabled. Setup will now exit.</String>
+     (the associations checkbox in ShortcutPromptDlg.wxs) resolves at build time.
+     All but the last string mirror jpackage 25's defaults verbatim. -->
+<WixLocalization xmlns="http://wixtoolset.org/schemas/v4/wxl" Culture="en-us" Codepage="1252">
+  <String Id="MainFeatureTitle" Value="Main Feature" />
+  <String Id="DowngradeErrorMessage" Value="A higher version of [ProductName] is already installed. Downgrades disabled. Setup will now exit." />
+  <String Id="DisallowUpgradeErrorMessage" Value="A lower version of [ProductName] is already installed. Upgrades disabled. Setup will now exit." />
 
-  <String Id="ShortcutPromptDlg_Title">[ProductName] Setup</String>
-  <String Id="ShortcutPromptDlgTitle">{\WixUI_Font_Title}Shortcuts</String>
-  <String Id="ShortcutPromptDlgBannerBitmap">WixUI_Bmp_Banner</String>
-  <String Id="ShortcutPromptDlgDescription">Select shortcuts to create.</String>
-  <String Id="ShortcutPromptDlgDesktopShortcutControlLabel">Create desktop shortcut(s)</String>
-  <String Id="ShortcutPromptDlgStartMenuShortcutControlLabel">Create start menu shortcut(s)</String>
-  <String Id="InstallDirNotEmptyDlg_Title">[ProductName] Setup</String>
-  <String Id="ContextMenuCommandLabel">Open with [ProductName]</String>
+  <String Id="ShortcutPromptDlg_Title" Value="[ProductName] Setup" />
+  <String Id="ShortcutPromptDlgTitle" Value="{\WixUI_Font_Title}Shortcuts" />
+  <String Id="ShortcutPromptDlgBannerBitmap" Value="WixUI_Bmp_Banner" />
+  <String Id="ShortcutPromptDlgDescription" Value="Select shortcuts to create." />
+  <String Id="ShortcutPromptDlgDesktopShortcutControlLabel" Value="Create desktop shortcut(s)" />
+  <String Id="ShortcutPromptDlgStartMenuShortcutControlLabel" Value="Create start menu shortcut(s)" />
+
+  <String Id="InstallDirNotEmptyDlg_Title" Value="[ProductName] Setup" />
+  <String Id="InstallDirNotEmptyDlgInstallDirExistMessage" Value="The folder [INSTALLDIR] already exist. Would you like to install to that folder anyway?" />
+
+  <String Id="ContextMenuCommandLabel" Value="Open with [ProductName]" />
+
+  <String Id="OsConditionMessage" Value="[ProductName][ProductVersion] is not supported on this version of Windows" />
 
   <!-- Sancho custom: the file/URL association checkbox. -->
-  <String Id="SanchoRegisterAssociationsLabel">Register .torrent files and ed2k:, magnet:, sig2dat: links to open with Sancho</String>
+  <String Id="SanchoRegisterAssociationsLabel" Value="Register .torrent files and ed2k:, magnet:, sig2dat: links to open with Sancho" />
 </WixLocalization>

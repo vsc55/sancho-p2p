@@ -86,21 +86,25 @@ Backlog of improvements for the modernized `sancho-p2p` build. Done items live i
   every `MsiInstallerStrings_*.wxl` under `--resource-dir` and, on finding a locale it does
   not bundle (es), makes it the primary culture and mis-builds; only the base `en` override
   (needed so jpackage's own build resolves the checkbox token) stays in `packaging/windows/wix/`.
-  Still pinned to **JDK 21** (JDK 25's jpackage emits WiX 4 sources); CI already uses JDK 21 + WiX 3.14.
+  Toolchain is now **JDK 25 + WiX 6** (see Option B below), and the per-language step replays
+  jpackage's own `wix build` instead of the removed WiX 3 `light`/`torch`.
   Possible follow-up: cover more regional LCIDs that today fall back to English
   (es-MX 2058 and es traditional-sort 1034; fr-CA 3084; de-AT/CH) — cheap, just add
   the LCID to the language's `Lcids` in `wix-multilang.ps1`.
-- [ ] **(Option B — bigger) Modernize the Windows installer toolchain to WiX 4/6 +
-  jpackage JDK 25.** The current build is pinned to WiX 3 (EOL) because the custom
-  `packaging/windows/wix/{main.wxs,ShortcutPromptDlg.wxs,overrides.wxi}` are WiX 3 syntax
-  and the CI uses JDK 21. jpackage in JDK 22+ emits WiX 4 sources and drives `wix.exe`
-  (WiX 4/6); its auto-conversion of the WiX 3 template fails on the `<Condition>` child of
-  the association `<Component>`s (WiX 4 moved it to a `Condition` attribute). To modernize:
-  port the 3 custom WiX files to WiX 4 syntax (new namespace, `Condition` attribute,
-  `$(WIXUIARCH)`), switch the CI release job to JDK 25 + install the `wix` dotnet-tool, and
-  re-test the full MSI (install / upgrade / uninstall / associations / silent
-  `REGISTERASSOC=0`). Future-proofs the installer and removes the JDK-21 pin. Do the
-  multi-language work above on top of whichever toolchain wins.
+- [x] **(Option B) Modernize the Windows installer toolchain to WiX 6 + jpackage JDK 25.**
+  Done: the custom sources are WiX 4+ syntax now (`<Product>`+`<Package>` merged, Component
+  `<Condition>` child → `Condition` attribute, implicit `Guid`, `BinaryRef`, `<Custom>`
+  conditions as attributes), rebased on the jpackage 25 templates; the placeholder
+  `overrides.wxi` was dropped in favour of jpackage's. The `.wxl` moved to the `v4/wxl`
+  schema and jpackage 25's renamed/added strings (`InstallDirNotEmptyDlgInstallDirExistMessage`,
+  `OsConditionMessage`). CI installs the `wix` dotnet tool instead of using the runner's
+  WiX 3.14. The MSI also shrank 67.8 → 53.3 MB.
+  **Pinned to WiX 6.0.2 on purpose:** WiX **7** refuses to run until its Open Source
+  Maintenance Fee EULA is accepted (`error WIX7015`), so it is unusable in public CI —
+  re-evaluate only if that changes.
+  The multilingual step was rebuilt on top: WiX 4+ removed `light` and `torch`, so
+  `wix-multilang.ps1` now replays jpackage's own `wix build` (recovered from its `--verbose`
+  log) per culture and uses the COM `Database.GenerateTransform` in place of `torch`.
 
 ## Housekeeping
 

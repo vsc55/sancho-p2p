@@ -1,21 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Simplified Chinese (zh-CN) installer strings. The first 13 mirror jpackage's
-     bundled Chinese defaults verbatim; the last is the custom associations checkbox. -->
-<WixLocalization Culture="zh-cn" xmlns="http://schemas.microsoft.com/wix/2006/localization" Codepage="936">
-  <String Id="message.install.dir.exist">文件夹 [INSTALLDIR] 已存在。是否仍要安装到该文件夹？</String>
-  <String Id="MainFeatureTitle">主要功能</String>
-  <String Id="DowngradeErrorMessage">已安装更高版本的 [ProductName]。降级已禁用。现在将退出安装。</String>
-  <String Id="DisallowUpgradeErrorMessage">已安装更低版本的 [ProductName]。升级已禁用。现在将退出安装。</String>
+<!-- Simplified Chinese (zh-CN) installer strings. All but the last mirror
+     jpackage 25's bundled Chinese defaults verbatim; the last is the custom
+     associations checkbox. -->
+<WixLocalization xmlns="http://wixtoolset.org/schemas/v4/wxl" Culture="zh-cn" Codepage="936">
+  <String Id="MainFeatureTitle" Value="主要功能" />
+  <String Id="DowngradeErrorMessage" Value="已安装更高版本的 [ProductName]。降级已禁用。现在将退出安装。" />
+  <String Id="DisallowUpgradeErrorMessage" Value="已安装更低版本的 [ProductName]。升级已禁用。现在将退出安装。" />
 
-  <String Id="ShortcutPromptDlg_Title">[ProductName] 安装程序</String>
-  <String Id="ShortcutPromptDlgTitle">{\WixUI_Font_Title}快捷方式</String>
-  <String Id="ShortcutPromptDlgBannerBitmap">WixUI_Bmp_Banner</String>
-  <String Id="ShortcutPromptDlgDescription">选择要创建的快捷方式。</String>
-  <String Id="ShortcutPromptDlgDesktopShortcutControlLabel">创建桌面快捷方式</String>
-  <String Id="ShortcutPromptDlgStartMenuShortcutControlLabel">创建开始菜单快捷方式</String>
-  <String Id="InstallDirNotEmptyDlg_Title">[ProductName] 安装程序</String>
-  <String Id="ContextMenuCommandLabel">使用 [ProductName] 打开</String>
+  <String Id="ShortcutPromptDlg_Title" Value="[ProductName] 安装程序" />
+  <String Id="ShortcutPromptDlgTitle" Value="{\WixUI_Font_Title}快捷方式" />
+  <String Id="ShortcutPromptDlgBannerBitmap" Value="WixUI_Bmp_Banner" />
+  <String Id="ShortcutPromptDlgDescription" Value="选择要创建的快捷方式。" />
+  <String Id="ShortcutPromptDlgDesktopShortcutControlLabel" Value="创建桌面快捷方式" />
+  <String Id="ShortcutPromptDlgStartMenuShortcutControlLabel" Value="创建开始菜单快捷方式" />
+
+  <String Id="InstallDirNotEmptyDlg_Title" Value="[ProductName] 安装程序" />
+  <String Id="InstallDirNotEmptyDlgInstallDirExistMessage" Value="文件夹 [INSTALLDIR] 已存在。是否仍要安装到该文件夹？" />
+
+  <String Id="ContextMenuCommandLabel" Value="使用 [ProductName] 打开" />
+
+  <String Id="OsConditionMessage" Value="此版本的 Windows 不支持 [ProductName][ProductVersion]" />
 
   <!-- Sancho custom: the file/URL association checkbox. -->
-  <String Id="SanchoRegisterAssociationsLabel">注册 .torrent 文件和 ed2k:、magnet:、sig2dat: 链接以使用 Sancho 打开</String>
+  <String Id="SanchoRegisterAssociationsLabel" Value="注册 .torrent 文件和 ed2k:、magnet:、sig2dat: 链接以使用 Sancho 打开" />
 </WixLocalization>

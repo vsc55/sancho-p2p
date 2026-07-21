@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Japanese (ja-JP) installer strings. The first 13 mirror jpackage's bundled
-     Japanese defaults verbatim; the last is the custom associations checkbox. -->
-<WixLocalization Culture="ja-jp" xmlns="http://schemas.microsoft.com/wix/2006/localization" Codepage="932">
-  <String Id="message.install.dir.exist">フォルダ[INSTALLDIR]はすでに存在します。そのフォルダにインストールしますか?</String>
-  <String Id="MainFeatureTitle">主な機能</String>
-  <String Id="DowngradeErrorMessage">[ProductName]のより上位のバージョンがすでにインストールされています。ダウングレードは無効です。セットアップを終了します。</String>
-  <String Id="DisallowUpgradeErrorMessage">[ProductName]のより下位のバージョンがすでにインストールされています。アップグレードは無効です。セットアップを終了します。</String>
+<!-- Japanese (ja-JP) installer strings. All but the last mirror jpackage 25's
+     bundled Japanese defaults verbatim; the last is the custom associations checkbox. -->
+<WixLocalization xmlns="http://wixtoolset.org/schemas/v4/wxl" Culture="ja-jp" Codepage="932">
+  <String Id="MainFeatureTitle" Value="主な機能" />
+  <String Id="DowngradeErrorMessage" Value="[ProductName]のより上位のバージョンがすでにインストールされています。ダウングレードは無効です。セットアップを終了します。" />
+  <String Id="DisallowUpgradeErrorMessage" Value="[ProductName]のより下位のバージョンがすでにインストールされています。アップグレードは無効です。セットアップを終了します。" />
 
-  <String Id="ShortcutPromptDlg_Title">[ProductName]セットアップ</String>
-  <String Id="ShortcutPromptDlgTitle">{\WixUI_Font_Title}ショートカット</String>
-  <String Id="ShortcutPromptDlgBannerBitmap">WixUI_Bmp_Banner</String>
-  <String Id="ShortcutPromptDlgDescription">作成するショートカットを選択します。</String>
-  <String Id="ShortcutPromptDlgDesktopShortcutControlLabel">デスクトップ・ショートカットの作成</String>
-  <String Id="ShortcutPromptDlgStartMenuShortcutControlLabel">スタート・メニューのショートカットの作成</String>
-  <String Id="InstallDirNotEmptyDlg_Title">[ProductName]セットアップ</String>
-  <String Id="ContextMenuCommandLabel">[ProductName]で開く</String>
+  <String Id="ShortcutPromptDlg_Title" Value="[ProductName]セットアップ" />
+  <String Id="ShortcutPromptDlgTitle" Value="{\WixUI_Font_Title}ショートカット" />
+  <String Id="ShortcutPromptDlgBannerBitmap" Value="WixUI_Bmp_Banner" />
+  <String Id="ShortcutPromptDlgDescription" Value="作成するショートカットを選択します。" />
+  <String Id="ShortcutPromptDlgDesktopShortcutControlLabel" Value="デスクトップ・ショートカットの作成" />
+  <String Id="ShortcutPromptDlgStartMenuShortcutControlLabel" Value="スタート・メニューのショートカットの作成" />
+
+  <String Id="InstallDirNotEmptyDlg_Title" Value="[ProductName]セットアップ" />
+  <String Id="InstallDirNotEmptyDlgInstallDirExistMessage" Value="フォルダ[INSTALLDIR]はすでに存在します。そのフォルダにインストールしますか?" />
+
+  <String Id="ContextMenuCommandLabel" Value="[ProductName]で開く" />
+
+  <String Id="OsConditionMessage" Value="[ProductName][ProductVersion]は、 このバージョンのWindowsでサポートされていません" />
 
   <!-- Sancho custom: the file/URL association checkbox. -->
-  <String Id="SanchoRegisterAssociationsLabel">.torrent ファイルと ed2k:、magnet:、sig2dat: リンクを Sancho で開くように登録する</String>
+  <String Id="SanchoRegisterAssociationsLabel" Value=".torrent ファイルと ed2k:、magnet:、sig2dat: リンクを Sancho で開くように登録する" />
 </WixLocalization>

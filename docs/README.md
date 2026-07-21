@@ -65,7 +65,7 @@ Releases; **internationalization** in 15 languages; **system tray**.
 | GNU Trove | 2.1.0 | Primitive collections (`TIntObjectHashMap`, …) (`pom.xml:61-65`) |
 | JSch (mwiede fork) | 0.2.23 | SSH tunnel to the core (`pom.xml:68-73`) |
 | Maven | — | Build; `maven-shade` for the uber-jar; per-OS/arch profiles |
-| jpackage + WiX 3.14 | JDK | Native packaging (MSI/DEB/RPM/DMG/app-image) (`tools/build-app.ps1`) |
+| jpackage + WiX 6 | JDK (MSI needs JDK 25) | Native packaging (MSI/DEB/RPM/DMG/app-image) (`tools/build-app.ps1`) |
 | GitHub Actions | — | CI (`build.yml`) and multi-platform releases (`release.yml`) |
 
 Protocol: MLDonkey's **binary GUI protocol**, little-endian, up to version `41`
@@ -78,7 +78,7 @@ Protocol: MLDonkey's **binary GUI protocol**, little-endian, up to version `41`
   launched from the GUI if the `coreExecutable` preference is set (`Sancho.java:167-169`). With
   `-n`/`noCore` it starts without a core.
 - For SSH to the core: SSH keys/credentials (uses `~/.ssh/known_hosts`, `id_dsa`/`id_rsa`).
-- For Windows associations and the MSI: Windows; the MSI is built with WiX 3.14.
+- For Windows associations and the MSI: Windows; the MSI is built with JDK 25 + WiX 6.
 - _Not deducible from code:_ which specific MLDonkey core versions each protocol number maps to (the
   code only fixes `MAX_PROTOCOL = 41`).
 

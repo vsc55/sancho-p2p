@@ -3,21 +3,25 @@
      WiX dialogs/buttons come from WixUIExtension's fr-FR culture. The last string is
      the custom associations checkbox in ShortcutPromptDlg.wxs.
      Keep [ProductName]/[INSTALLDIR]/{\Font} tokens and the *Bitmap value verbatim. -->
-<WixLocalization Culture="fr-fr" xmlns="http://schemas.microsoft.com/wix/2006/localization" Codepage="1252">
-  <String Id="message.install.dir.exist">Le dossier [INSTALLDIR] existe déjà. Voulez-vous quand même installer dans ce dossier ?</String>
-  <String Id="MainFeatureTitle">Fonctionnalité principale</String>
-  <String Id="DowngradeErrorMessage">Une version plus récente de [ProductName] est déjà installée. Les rétrogradations sont désactivées. L'installation va se terminer.</String>
-  <String Id="DisallowUpgradeErrorMessage">Une version antérieure de [ProductName] est déjà installée. Les mises à niveau sont désactivées. L'installation va se terminer.</String>
+<WixLocalization xmlns="http://wixtoolset.org/schemas/v4/wxl" Culture="fr-fr" Codepage="1252">
+  <String Id="MainFeatureTitle" Value="Fonctionnalité principale" />
+  <String Id="DowngradeErrorMessage" Value="Une version plus récente de [ProductName] est déjà installée. Les rétrogradations sont désactivées. L'installation va se terminer." />
+  <String Id="DisallowUpgradeErrorMessage" Value="Une version antérieure de [ProductName] est déjà installée. Les mises à niveau sont désactivées. L'installation va se terminer." />
 
-  <String Id="ShortcutPromptDlg_Title">Installation de [ProductName]</String>
-  <String Id="ShortcutPromptDlgTitle">{\WixUI_Font_Title}Raccourcis</String>
-  <String Id="ShortcutPromptDlgBannerBitmap">WixUI_Bmp_Banner</String>
-  <String Id="ShortcutPromptDlgDescription">Sélectionnez les raccourcis à créer.</String>
-  <String Id="ShortcutPromptDlgDesktopShortcutControlLabel">Créer un ou des raccourcis sur le Bureau</String>
-  <String Id="ShortcutPromptDlgStartMenuShortcutControlLabel">Créer un ou des raccourcis dans le menu Démarrer</String>
-  <String Id="InstallDirNotEmptyDlg_Title">Installation de [ProductName]</String>
-  <String Id="ContextMenuCommandLabel">Ouvrir avec [ProductName]</String>
+  <String Id="ShortcutPromptDlg_Title" Value="Installation de [ProductName]" />
+  <String Id="ShortcutPromptDlgTitle" Value="{\WixUI_Font_Title}Raccourcis" />
+  <String Id="ShortcutPromptDlgBannerBitmap" Value="WixUI_Bmp_Banner" />
+  <String Id="ShortcutPromptDlgDescription" Value="Sélectionnez les raccourcis à créer." />
+  <String Id="ShortcutPromptDlgDesktopShortcutControlLabel" Value="Créer un ou des raccourcis sur le Bureau" />
+  <String Id="ShortcutPromptDlgStartMenuShortcutControlLabel" Value="Créer un ou des raccourcis dans le menu Démarrer" />
+
+  <String Id="InstallDirNotEmptyDlg_Title" Value="Installation de [ProductName]" />
+  <String Id="InstallDirNotEmptyDlgInstallDirExistMessage" Value="Le dossier [INSTALLDIR] existe déjà. Voulez-vous quand même installer dans ce dossier ?" />
+
+  <String Id="ContextMenuCommandLabel" Value="Ouvrir avec [ProductName]" />
+
+  <String Id="OsConditionMessage" Value="[ProductName][ProductVersion] n'est pas pris en charge sur cette version de Windows" />
 
   <!-- Sancho custom: the file/URL association checkbox. -->
-  <String Id="SanchoRegisterAssociationsLabel">Associer les fichiers .torrent et les liens ed2k:, magnet:, sig2dat: pour les ouvrir avec Sancho</String>
+  <String Id="SanchoRegisterAssociationsLabel" Value="Associer les fichiers .torrent et les liens ed2k:, magnet:, sig2dat: pour les ouvrir avec Sancho" />
 </WixLocalization>

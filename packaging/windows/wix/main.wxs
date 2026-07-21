@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Custom jpackage WiX 3 template (based on the jpackage 21 default). Two additions
-  over the stock template:
-    1. An optional, deselectable "SanchoAssociations" feature (registry from
-       overrides.wxi) so the installer ASKS whether to register .torrent / ed2k /
-       magnet / sig2dat.
-    2. WixUI_FeatureTree so that feature can be turned off on a "Custom Setup" page.
-  Everything else is the stock jpackage template; keep it in sync if the CI JDK
-  (hence the jpackage WiX template) changes.
+  Custom jpackage WiX template (based on the jpackage 25 / WiX 6 default). One
+  addition over the stock template: a "SanchoAssociations" component group whose
+  components are conditioned on the REGISTERASSOC property, so the installer can
+  optionally register the .torrent / ed2k / magnet / sig2dat associations (the
+  checkbox on the shortcut-prompt dialog, or REGISTERASSOC=0 for silent installs).
+
+  Everything else mirrors the stock jpackage template; keep it in sync if the CI
+  JDK (hence the jpackage WiX template) changes. jpackage generates it with an
+  explicit ns0: prefix; the default namespace used here is equivalent.
+
+  WiX 4+ syntax notes vs. the previous WiX 3 version of this file: <Product> and
+  its inner <Package> merged into one <Package>; a Component's <Condition> child
+  became the Condition attribute; Guid="*" is now the default (auto GUID);
+  CustomAction uses BinaryRef (was BinaryKey); <Custom> conditions moved from
+  element text to the Condition attribute.
 -->
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
-     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
 
   <?ifdef JpIsSystemWide ?>
     <?define JpInstallScope="perMachine"?>
-  <?else?>
+  <?else ?>
     <?define JpInstallScope="perUser"?>
-  <?endif?>
+  <?endif ?>
 
   <?define JpProductLanguage=1033 ?>
   <?define JpInstallerVersion=200 ?>
@@ -26,68 +32,63 @@
 
   <?ifdef JpAllowUpgrades ?>
     <?define JpUpgradeVersionOnlyDetectUpgrade="no"?>
-  <?else?>
+  <?else ?>
     <?define JpUpgradeVersionOnlyDetectUpgrade="yes"?>
-  <?endif?>
+  <?endif ?>
   <?ifdef JpAllowDowngrades ?>
     <?define JpUpgradeVersionOnlyDetectDowngrade="no"?>
-  <?else?>
+  <?else ?>
     <?define JpUpgradeVersionOnlyDetectDowngrade="yes"?>
-  <?endif?>
+  <?endif ?>
 
-  <Product
-    Id="$(var.JpProductCode)"
-    Name="$(var.JpAppName)"
-    Language="$(var.JpProductLanguage)"
-    Version="$(var.JpAppVersion)"
-    Manufacturer="$(var.JpAppVendor)"
-    UpgradeCode="$(var.JpProductUpgradeCode)">
-
-    <Package
-      Description="$(var.JpAppDescription)"
+  <Package
+      Name="$(var.JpAppName)"
+      Language="$(var.JpProductLanguage)"
+      Version="$(var.JpAppVersion)"
       Manufacturer="$(var.JpAppVendor)"
+      UpgradeCode="$(var.JpProductUpgradeCode)"
       InstallerVersion="$(var.JpInstallerVersion)"
       Compressed="$(var.JpCompressedMsi)"
-      InstallScope="$(var.JpInstallScope)" Platform="x64"
-    />
+      ProductCode="$(var.JpProductCode)"
+      Scope="$(var.JpInstallScope)">
+
+    <SummaryInformation Manufacturer="$(var.JpAppVendor)" Description="$(var.JpAppDescription)" />
 
     <Media Id="1" Cabinet="Data.cab" EmbedCab="yes" />
 
     <Upgrade Id="$(var.JpProductUpgradeCode)">
       <UpgradeVersion
-        OnlyDetect="$(var.JpUpgradeVersionOnlyDetectUpgrade)"
-        Property="JP_UPGRADABLE_FOUND"
-        Maximum="$(var.JpAppVersion)"
-        MigrateFeatures="yes"
-        IncludeMaximum="$(var.JpUpgradeVersionOnlyDetectUpgrade)" />
+          OnlyDetect="$(var.JpUpgradeVersionOnlyDetectUpgrade)"
+          Property="JP_UPGRADABLE_FOUND"
+          Maximum="$(var.JpAppVersion)"
+          MigrateFeatures="yes"
+          IncludeMaximum="$(var.JpUpgradeVersionOnlyDetectUpgrade)" />
       <UpgradeVersion
-        OnlyDetect="$(var.JpUpgradeVersionOnlyDetectDowngrade)"
-        Property="JP_DOWNGRADABLE_FOUND"
-        Minimum="$(var.JpAppVersion)"
-        MigrateFeatures="yes"
-        IncludeMinimum="$(var.JpUpgradeVersionOnlyDetectDowngrade)" />
+          OnlyDetect="$(var.JpUpgradeVersionOnlyDetectDowngrade)"
+          Property="JP_DOWNGRADABLE_FOUND"
+          Minimum="$(var.JpAppVersion)"
+          MigrateFeatures="yes"
+          IncludeMinimum="$(var.JpUpgradeVersionOnlyDetectDowngrade)" />
     </Upgrade>
 
     <?ifndef JpAllowUpgrades ?>
     <CustomAction Id="JpDisallowUpgrade" Error="!(loc.DisallowUpgradeErrorMessage)" />
-    <?endif?>
+    <?endif ?>
     <?ifndef JpAllowDowngrades ?>
     <CustomAction Id="JpDisallowDowngrade" Error="!(loc.DowngradeErrorMessage)" />
-    <?endif?>
+    <?endif ?>
 
-    <Binary Id="JpCaDll" SourceFile="wixhelper.dll"/>
+    <Binary Id="JpCaDll" SourceFile="wixhelper.dll" />
 
-    <CustomAction Id="JpFindRelatedProducts" BinaryKey="JpCaDll" DllEntry="FindRelatedProductsEx" />
-
-    <!-- Standard required root -->
-    <Directory Id="TARGETDIR" Name="SourceDir"/>
+    <CustomAction Id="JpFindRelatedProducts" BinaryRef="JpCaDll" DllEntry="FindRelatedProductsEx" />
 
     <Feature Id="DefaultFeature" Title="!(loc.MainFeatureTitle)" Level="1">
-      <ComponentGroupRef Id="Shortcuts"/>
-      <ComponentGroupRef Id="Files"/>
-      <ComponentGroupRef Id="FileAssociations"/>
+      <ComponentGroupRef Id="Shortcuts" />
+      <ComponentGroupRef Id="Files" />
+      <ComponentGroupRef Id="FileAssociations" />
+      <ComponentGroupRef Id="FragmentOsCondition" />
       <!-- Association registry components; each is conditioned on REGISTERASSOC. -->
-      <ComponentGroupRef Id="SanchoAssociations"/>
+      <ComponentGroupRef Id="SanchoAssociations" />
     </Feature>
 
     <!-- Whether to register .torrent + ed2k/magnet/sig2dat associations. Default on.
@@ -104,64 +105,65 @@
 
     <?ifdef JpHelpURL ?>
       <CustomAction Id="JpSetARPHELPLINK" Property="ARPHELPLINK" Value="$(var.JpHelpURL)" />
-    <?endif?>
+    <?endif ?>
 
     <?ifdef JpAboutURL ?>
       <CustomAction Id="JpSetARPURLINFOABOUT" Property="ARPURLINFOABOUT" Value="$(var.JpAboutURL)" />
-    <?endif?>
+    <?endif ?>
 
     <?ifdef JpUpdateURL ?>
       <CustomAction Id="JpSetARPURLUPDATEINFO" Property="ARPURLUPDATEINFO" Value="$(var.JpUpdateURL)" />
-    <?endif?>
+    <?endif ?>
 
     <?ifdef JpIcon ?>
-    <Property Id="ARPPRODUCTICON" Value="JpARPPRODUCTICON"/>
-    <Icon Id="JpARPPRODUCTICON" SourceFile="$(var.JpIcon)"/>
-    <?endif?>
+    <Property Id="ARPPRODUCTICON" Value="JpARPPRODUCTICON" />
+    <Icon Id="JpARPPRODUCTICON" SourceFile="$(var.JpIcon)" />
+    <?endif ?>
 
-    <UIRef Id="JpUI"/>
+    <UIRef Id="JpUI" />
 
     <InstallExecuteSequence>
-      <Custom Action="JpSetARPINSTALLLOCATION" After="CostFinalize">Not Installed</Custom>
-      <Custom Action="JpSetARPCOMMENTS" After="CostFinalize">Not Installed</Custom>
-      <Custom Action="JpSetARPCONTACT" After="CostFinalize">Not Installed</Custom>
-      <Custom Action="JpSetARPSIZE" After="CostFinalize">Not Installed</Custom>
+      <Custom Action="JpSetARPINSTALLLOCATION" After="CostFinalize" Condition="Not Installed" />
+      <Custom Action="JpSetARPCOMMENTS" After="CostFinalize" Condition="Not Installed" />
+      <Custom Action="JpSetARPCONTACT" After="CostFinalize" Condition="Not Installed" />
+      <Custom Action="JpSetARPSIZE" After="CostFinalize" Condition="Not Installed" />
       <?ifdef JpHelpURL ?>
-        <Custom Action="JpSetARPHELPLINK" After="CostFinalize">Not Installed</Custom>
-      <?endif?>
+        <Custom Action="JpSetARPHELPLINK" After="CostFinalize" Condition="Not Installed" />
+      <?endif ?>
       <?ifdef JpAboutURL ?>
-        <Custom Action="JpSetARPURLINFOABOUT" After="CostFinalize">Not Installed</Custom>
-      <?endif?>
+        <Custom Action="JpSetARPURLINFOABOUT" After="CostFinalize" Condition="Not Installed" />
+      <?endif ?>
       <?ifdef JpUpdateURL ?>
-        <Custom Action="JpSetARPURLUPDATEINFO" After="CostFinalize">Not Installed</Custom>
-      <?endif?>
+        <Custom Action="JpSetARPURLUPDATEINFO" After="CostFinalize" Condition="Not Installed" />
+      <?endif ?>
 
       <?ifndef JpAllowUpgrades ?>
-      <Custom Action="JpDisallowUpgrade" After="JpFindRelatedProducts">JP_UPGRADABLE_FOUND</Custom>
-      <?endif?>
+      <Custom Action="JpDisallowUpgrade" After="JpFindRelatedProducts" Condition="JP_UPGRADABLE_FOUND" />
+      <?endif ?>
       <?ifndef JpAllowDowngrades ?>
-      <Custom Action="JpDisallowDowngrade" After="JpFindRelatedProducts">JP_DOWNGRADABLE_FOUND</Custom>
-      <?endif?>
-      <RemoveExistingProducts Before="CostInitialize"/>
-      <Custom Action="JpFindRelatedProducts" After="FindRelatedProducts"/>
+      <Custom Action="JpDisallowDowngrade" After="JpFindRelatedProducts" Condition="JP_DOWNGRADABLE_FOUND" />
+      <?endif ?>
+      <LaunchConditions Before="AppSearch" />
+      <RemoveExistingProducts Before="CostInitialize" />
+      <Custom Action="JpFindRelatedProducts" After="FindRelatedProducts" />
     </InstallExecuteSequence>
 
     <InstallUISequence>
-      <Custom Action="JpFindRelatedProducts" After="FindRelatedProducts"/>
+      <Custom Action="JpFindRelatedProducts" After="FindRelatedProducts" />
     </InstallUISequence>
 
-  </Product>
+  </Package>
 
-  <!-- Registry for the optional SanchoAssociations feature. A Fragment here (after
-       </Product>) is valid; the AssocCommand string comes from overrides.wxi. HKMU
-       resolves to HKLM for a per-machine install. -->
+  <!-- Registry for the optional associations. HKMU resolves to HKLM for a
+       per-machine install. Each component carries the REGISTERASSOC condition, so
+       clearing the checkbox (or REGISTERASSOC=0) installs the app without touching
+       the shell associations. -->
   <Fragment>
     <ComponentGroup Id="SanchoAssociations">
 
       <!-- .torrent file extension -> "bittorrent" ProgId. ForceDeleteOnUninstall
            removes the whole key tree on uninstall so nothing is left behind. -->
-      <Component Id="SanchoAssocTorrent" Guid="*" Directory="INSTALLDIR">
-        <Condition>REGISTERASSOC = "1"</Condition>
+      <Component Id="SanchoAssocTorrent" Directory="INSTALLDIR" Condition='REGISTERASSOC = "1"'>
         <RegistryKey Root="HKMU" Key="Software\Classes\.torrent" ForceDeleteOnUninstall="yes">
           <RegistryValue Value="bittorrent" Type="string" KeyPath="yes"/>
         </RegistryKey>
@@ -173,8 +175,7 @@
       </Component>
 
       <!-- ed2k: URL protocol -->
-      <Component Id="SanchoAssocEd2k" Guid="*" Directory="INSTALLDIR">
-        <Condition>REGISTERASSOC = "1"</Condition>
+      <Component Id="SanchoAssocEd2k" Directory="INSTALLDIR" Condition='REGISTERASSOC = "1"'>
         <RegistryKey Root="HKMU" Key="Software\Classes\ed2k" ForceDeleteOnUninstall="yes">
           <RegistryValue Value="URL: ed2k Protocol" Type="string" KeyPath="yes"/>
           <RegistryValue Name="URL Protocol" Value="" Type="string"/>
@@ -183,8 +184,7 @@
       </Component>
 
       <!-- magnet: URL protocol -->
-      <Component Id="SanchoAssocMagnet" Guid="*" Directory="INSTALLDIR">
-        <Condition>REGISTERASSOC = "1"</Condition>
+      <Component Id="SanchoAssocMagnet" Directory="INSTALLDIR" Condition='REGISTERASSOC = "1"'>
         <RegistryKey Root="HKMU" Key="Software\Classes\magnet" ForceDeleteOnUninstall="yes">
           <RegistryValue Value="URL: magnet Protocol" Type="string" KeyPath="yes"/>
           <RegistryValue Name="URL Protocol" Value="" Type="string"/>
@@ -193,8 +193,7 @@
       </Component>
 
       <!-- sig2dat: URL protocol -->
-      <Component Id="SanchoAssocSig2dat" Guid="*" Directory="INSTALLDIR">
-        <Condition>REGISTERASSOC = "1"</Condition>
+      <Component Id="SanchoAssocSig2dat" Directory="INSTALLDIR" Condition='REGISTERASSOC = "1"'>
         <RegistryKey Root="HKMU" Key="Software\Classes\sig2dat" ForceDeleteOnUninstall="yes">
           <RegistryValue Value="URL: sig2dat Protocol" Type="string" KeyPath="yes"/>
           <RegistryValue Name="URL Protocol" Value="" Type="string"/>

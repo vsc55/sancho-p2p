@@ -113,7 +113,7 @@ From VS Code it can be launched with F5 (uses the jar / `sancho.core.Sancho` cla
 ### 5.3.3 Native packaging
 
 `tools/build-app.ps1` (pwsh 7+, jpackage; requires JDK 17+ and Maven — but the Windows `msi`
-needs **JDK 21** + **WiX 3.14**, see the multilingual note below; Linux `deb`→dpkg/fakeroot,
+needs **JDK 25** + **WiX 6**, see the toolchain note below; Linux `deb`→dpkg/fakeroot,
 `rpm`→rpmbuild):
 
 ```powershell
@@ -146,11 +146,17 @@ Brazil 1046), zh, es**. Windows Installer applies the embedded transform whose L
 language at install time, falling back to English; there is no language prompt and no per-language
 download. Build flow (in `build-app.ps1 -Type msi`, after jpackage):
 
-1. jpackage builds the base **en** MSI and, with `--temp target/wix-work`, leaves its WiX intermediates
-   (`wixobj/`, `config/`, the staged app image).
-2. `tools/wix-multilang.ps1` re-lights those `wixobj` once per culture → one MSI per language, then
-   `torch`es each against the base into a language transform (`.mst`).
-3. `tools/wix-embed-transforms.vbs` (WindowsInstaller COM, via `cscript` — no Windows SDK scripts
+1. jpackage builds the base **en** MSI with `--temp target/wix-work` (keeping `config/` and the staged
+   app image) and `--verbose`, whose log is captured to `target/jpackage-msi.log`.
+2. `tools/wix-multilang.ps1` recovers jpackage's **own `wix build` command line** (and working
+   directory) from that log and replays it once per culture, changing only `-culture`, `-loc` and
+   `-out`. Replaying rather than re-deriving the command matters: jpackage passes ~20 `-d` defines, and
+   the `JpProductCode` among them **must** match the base MSI or the transforms are invalid. A shared
+   `-cabcache` keeps the ~50 MB cabinet from being recompressed for every language.
+3. Each language MSI is diffed against the base with `Database.GenerateTransform` (+
+   `CreateTransformSummaryInfo`) — the WindowsInstaller COM equivalent of the WiX 3 `torch`, which
+   WiX 4+ removed — producing one `.mst` per language.
+4. `tools/wix-embed-transforms.vbs` (WindowsInstaller COM, via `cscript` — no Windows SDK scripts
    needed) embeds each `.mst` as an LCID-named sub-storage and sets the package `Template` language list.
 
 Localization strings live in **two** places, and the split matters:
@@ -168,10 +174,17 @@ Localization strings live in **two** places, and the split matters:
 add a row to the `$EXTRA` table in `wix-multilang.ps1` (a language may map to several LCIDs, as `pt`
 does). Then update the expected-LCID list in the release.yml verification step.
 
-> **Toolchain pin:** the multilingual step (and the custom WiX 3 template) require jpackage that emits
-> **WiX 3** sources — i.e. **JDK 21** + **WiX 3.14** (`light`/`torch` on PATH). JDK 22+ jpackage emits
-> WiX 4 and breaks the flow. Also note PowerShell's COM cannot set MSI indexed record properties
-> (`StringData(i)=x` → `DISP_E_TYPEMISMATCH`), which is why the embedding is done in VBScript.
+> **Toolchain:** the Windows installer is built with **JDK 25** + **WiX 6** (the `wix` dotnet tool:
+> `dotnet tool install --global wix --version 6.0.2`, plus `wix extension add --global
+> WixToolset.Util.wixext/6.0.2` and `.../WixToolset.UI.wixext/6.0.2` — jpackage passes those with
+> `-ext`, and extensions are registered per wix version). The custom `.wxs` files are WiX 4+ syntax,
+> so an older JDK whose jpackage drives WiX 3 (`candle`/`light`) will not build them.
+>
+> **Why 6.0.2 and not 7:** WiX 7 refuses to run until its _Open Source Maintenance Fee_ EULA is
+> accepted (`error WIX7015`), which a public CI build cannot do; 6.0.2 is the newest usable release.
+>
+> Also note PowerShell's COM cannot set MSI indexed record properties (`StringData(i)=x` →
+> `DISP_E_TYPEMISMATCH`), which is why the transform embedding is done in VBScript.
 
 **AppImage (legacy):** an AppImage of the older (pre-modernization) build can be generated from the
 `appimage/` AppDir — `./appimagetool-x86_64.AppImage Sancho.AppDir/` → `Sancho-x86_64.AppImage`. Kept
@@ -193,7 +206,12 @@ for preservation only; the maintained Linux artifacts are the `.deb`/`.rpm`/app-
 | Workflow | Trigger | Does |
 |---|---|---|
 | `build.yml` | push to `main` (ignores `**.md`, `appimage/**`; skips `Release …` commits), PRs, manual | `mvn -B -ntp clean package` on Ubuntu/JDK 21 (regression guard) |
-| `release.yml` | push of tag `v*` or `[0-9]*`; manual = build-only | Creates the release with `CHANGELOG.md` notes, a Win/Linux/macOS matrix (JDK 21) packaging the multilingual MSI + ZIP/DEB/RPM/DMG + uber-jars, a multilingual-MSI check + MSI smoke-test, and uploads 8 assets |
+| `release.yml` | push of tag `v*` or `[0-9]*`; `test*` tag or manual = dry run | Creates the release with `CHANGELOG.md` notes, a Win/Linux/macOS matrix (JDK 25; Windows also installs the WiX 6 dotnet tool) packaging the multilingual MSI + ZIP/DEB/RPM/DMG + uber-jars, a multilingual-MSI check + MSI smoke-test, and uploads 8 assets |
+
+**Dry-running a packaging change:** push a tag starting with `test` (`git tag -f test && git push -f origin test`).
+The whole matrix builds and the MSI is generated, multilingual-checked and smoke-tested exactly as for a
+real release, but no GitHub Release is created or uploaded to — the packages are attached to the workflow
+run as artifacts (`packages-<os>`, kept 14 days) instead. A manual `workflow_dispatch` run behaves the same.
 
 **Publishing a release:** bump `<version>` in `pom.xml`, turn `## [Unreleased]` in `CHANGELOG.md` into
 `## [x.y.z] — date`, commit, `git tag x.y.z`, push branch + tag → triggers `release.yml`.

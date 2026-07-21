@@ -8,6 +8,32 @@ The upstream project's original changelog (2004–2006) is preserved at
 authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 (`git checkout 0.9.4-23`).
 
+## [0.9.10] — 2026-07-21
+
+### Changed
+
+- **Windows installer toolchain modernized: WiX 3.14 → WiX 6, jpackage JDK 21 → 25.** WiX 3 has been
+  end-of-life for years and the build was pinned to it only because the custom installer sources were
+  WiX 3 syntax. `packaging/windows/wix/{main.wxs,ShortcutPromptDlg.wxs}` are now WiX 4+ syntax
+  (`<Product>` + inner `<Package>` merged; a Component's `<Condition>` child became the `Condition`
+  attribute; `Guid="*"` is now implicit; `BinaryRef`; `<Custom>` conditions as attributes), rebased on
+  the jpackage 25 templates; the placeholder `overrides.wxi` was dropped in favour of jpackage's own.
+  The installer localization files moved to the WiX 4 `v4/wxl` schema and picked up jpackage 25's
+  renamed/added strings (`InstallDirNotEmptyDlgInstallDirExistMessage`, `OsConditionMessage`).
+  Side benefit: the MSI shrank from **67.8 MB to 53.3 MB**.
+- **The multilingual MSI pipeline was rebuilt on WiX 6**, which removed the WiX 3 `light` and `torch`
+  that the previous flow used. `tools/wix-multilang.ps1` now recovers jpackage's own `wix build`
+  command line from its `--verbose` log and replays it once per culture (changing only `-culture`,
+  `-loc` and `-out`) — replaying rather than re-deriving it keeps the ~20 `-d` defines, and the
+  `JpProductCode` among them, identical to the base MSI, without which the language transforms would
+  be invalid. `torch` is replaced by the WindowsInstaller COM `Database.GenerateTransform`, and a
+  shared `-cabcache` avoids recompressing the ~50 MB cabinet for every language. The resulting
+  installer is unchanged in behaviour: one file, eight languages, auto-selected by the OS.
+- **CI:** the release workflow now sets up JDK 25 and installs the WiX 6 dotnet tool
+  (`wix 6.0.2` + the `WixToolset.Util`/`WixToolset.UI` extensions) instead of relying on the runner's
+  WiX 3.14. WiX **7** is deliberately not used: it refuses to run until its Open Source Maintenance
+  Fee EULA is accepted (`error WIX7015`), which a public CI build cannot do.
+
 ## [0.9.9] — 2026-07-20
 
 ### Added

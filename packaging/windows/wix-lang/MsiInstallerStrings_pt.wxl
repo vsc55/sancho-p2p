@@ -5,21 +5,25 @@
      Brazil (1046) in wix-multilang.ps1. The last string is the custom associations
      checkbox in ShortcutPromptDlg.wxs.
      Keep [ProductName]/[INSTALLDIR]/{\Font} tokens and the *Bitmap value verbatim. -->
-<WixLocalization Culture="pt-pt" xmlns="http://schemas.microsoft.com/wix/2006/localization" Codepage="1252">
-  <String Id="message.install.dir.exist">A pasta [INSTALLDIR] já existe. Pretende instalar nessa pasta mesmo assim?</String>
-  <String Id="MainFeatureTitle">Funcionalidade principal</String>
-  <String Id="DowngradeErrorMessage">Já está instalada uma versão mais recente do [ProductName]. As desatualizações estão desativadas. A instalação será encerrada.</String>
-  <String Id="DisallowUpgradeErrorMessage">Já está instalada uma versão anterior do [ProductName]. As atualizações estão desativadas. A instalação será encerrada.</String>
+<WixLocalization xmlns="http://wixtoolset.org/schemas/v4/wxl" Culture="pt-pt" Codepage="1252">
+  <String Id="MainFeatureTitle" Value="Funcionalidade principal" />
+  <String Id="DowngradeErrorMessage" Value="Já está instalada uma versão mais recente do [ProductName]. As desatualizações estão desativadas. A instalação será encerrada." />
+  <String Id="DisallowUpgradeErrorMessage" Value="Já está instalada uma versão anterior do [ProductName]. As atualizações estão desativadas. A instalação será encerrada." />
 
-  <String Id="ShortcutPromptDlg_Title">Instalação do [ProductName]</String>
-  <String Id="ShortcutPromptDlgTitle">{\WixUI_Font_Title}Atalhos</String>
-  <String Id="ShortcutPromptDlgBannerBitmap">WixUI_Bmp_Banner</String>
-  <String Id="ShortcutPromptDlgDescription">Selecione os atalhos a criar.</String>
-  <String Id="ShortcutPromptDlgDesktopShortcutControlLabel">Criar atalho(s) no ambiente de trabalho</String>
-  <String Id="ShortcutPromptDlgStartMenuShortcutControlLabel">Criar atalho(s) no menu Iniciar</String>
-  <String Id="InstallDirNotEmptyDlg_Title">Instalação do [ProductName]</String>
-  <String Id="ContextMenuCommandLabel">Abrir com o [ProductName]</String>
+  <String Id="ShortcutPromptDlg_Title" Value="Instalação do [ProductName]" />
+  <String Id="ShortcutPromptDlgTitle" Value="{\WixUI_Font_Title}Atalhos" />
+  <String Id="ShortcutPromptDlgBannerBitmap" Value="WixUI_Bmp_Banner" />
+  <String Id="ShortcutPromptDlgDescription" Value="Selecione os atalhos a criar." />
+  <String Id="ShortcutPromptDlgDesktopShortcutControlLabel" Value="Criar atalho(s) no ambiente de trabalho" />
+  <String Id="ShortcutPromptDlgStartMenuShortcutControlLabel" Value="Criar atalho(s) no menu Iniciar" />
+
+  <String Id="InstallDirNotEmptyDlg_Title" Value="Instalação do [ProductName]" />
+  <String Id="InstallDirNotEmptyDlgInstallDirExistMessage" Value="A pasta [INSTALLDIR] já existe. Pretende instalar nessa pasta mesmo assim?" />
+
+  <String Id="ContextMenuCommandLabel" Value="Abrir com o [ProductName]" />
+
+  <String Id="OsConditionMessage" Value="[ProductName][ProductVersion] não é suportado nesta versão do Windows" />
 
   <!-- Sancho custom: the file/URL association checkbox. -->
-  <String Id="SanchoRegisterAssociationsLabel">Associar ficheiros .torrent e ligações ed2k:, magnet:, sig2dat: para abrir com o Sancho</String>
+  <String Id="SanchoRegisterAssociationsLabel" Value="Associar ficheiros .torrent e ligações ed2k:, magnet:, sig2dat: para abrir com o Sancho" />
 </WixLocalization>

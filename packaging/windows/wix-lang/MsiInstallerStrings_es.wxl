@@ -4,21 +4,25 @@
      translated for free by WixUIExtension's es-ES culture. The last string is the
      custom associations checkbox in ShortcutPromptDlg.wxs.
      Keep [ProductName]/[INSTALLDIR]/{\Font} tokens and the *Bitmap value verbatim. -->
-<WixLocalization Culture="es-es" xmlns="http://schemas.microsoft.com/wix/2006/localization" Codepage="1252">
-  <String Id="message.install.dir.exist">La carpeta [INSTALLDIR] ya existe. ¿Desea instalar en esa carpeta de todos modos?</String>
-  <String Id="MainFeatureTitle">Característica principal</String>
-  <String Id="DowngradeErrorMessage">Ya hay instalada una versión más reciente de [ProductName]. No se permite instalar una versión anterior. La instalación finalizará.</String>
-  <String Id="DisallowUpgradeErrorMessage">Ya hay instalada una versión anterior de [ProductName]. No se permiten actualizaciones. La instalación finalizará.</String>
+<WixLocalization xmlns="http://wixtoolset.org/schemas/v4/wxl" Culture="es-es" Codepage="1252">
+  <String Id="MainFeatureTitle" Value="Característica principal" />
+  <String Id="DowngradeErrorMessage" Value="Ya hay instalada una versión más reciente de [ProductName]. No se permite instalar una versión anterior. La instalación finalizará." />
+  <String Id="DisallowUpgradeErrorMessage" Value="Ya hay instalada una versión anterior de [ProductName]. No se permiten actualizaciones. La instalación finalizará." />
 
-  <String Id="ShortcutPromptDlg_Title">Instalación de [ProductName]</String>
-  <String Id="ShortcutPromptDlgTitle">{\WixUI_Font_Title}Accesos directos</String>
-  <String Id="ShortcutPromptDlgBannerBitmap">WixUI_Bmp_Banner</String>
-  <String Id="ShortcutPromptDlgDescription">Seleccione los accesos directos que desea crear.</String>
-  <String Id="ShortcutPromptDlgDesktopShortcutControlLabel">Crear acceso(s) directo(s) en el escritorio</String>
-  <String Id="ShortcutPromptDlgStartMenuShortcutControlLabel">Crear acceso(s) directo(s) en el menú Inicio</String>
-  <String Id="InstallDirNotEmptyDlg_Title">Instalación de [ProductName]</String>
-  <String Id="ContextMenuCommandLabel">Abrir con [ProductName]</String>
+  <String Id="ShortcutPromptDlg_Title" Value="Instalación de [ProductName]" />
+  <String Id="ShortcutPromptDlgTitle" Value="{\WixUI_Font_Title}Accesos directos" />
+  <String Id="ShortcutPromptDlgBannerBitmap" Value="WixUI_Bmp_Banner" />
+  <String Id="ShortcutPromptDlgDescription" Value="Seleccione los accesos directos que desea crear." />
+  <String Id="ShortcutPromptDlgDesktopShortcutControlLabel" Value="Crear acceso(s) directo(s) en el escritorio" />
+  <String Id="ShortcutPromptDlgStartMenuShortcutControlLabel" Value="Crear acceso(s) directo(s) en el menú Inicio" />
+
+  <String Id="InstallDirNotEmptyDlg_Title" Value="Instalación de [ProductName]" />
+  <String Id="InstallDirNotEmptyDlgInstallDirExistMessage" Value="La carpeta [INSTALLDIR] ya existe. ¿Desea instalar en esa carpeta de todos modos?" />
+
+  <String Id="ContextMenuCommandLabel" Value="Abrir con [ProductName]" />
+
+  <String Id="OsConditionMessage" Value="[ProductName][ProductVersion] no es compatible con esta versión de Windows" />
 
   <!-- Sancho custom: the file/URL association checkbox. -->
-  <String Id="SanchoRegisterAssociationsLabel">Asociar archivos .torrent y enlaces ed2k:, magnet:, sig2dat: para abrirlos con Sancho</String>
+  <String Id="SanchoRegisterAssociationsLabel" Value="Asociar archivos .torrent y enlaces ed2k:, magnet:, sig2dat: para abrirlos con Sancho" />
 </WixLocalization>

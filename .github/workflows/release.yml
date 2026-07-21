@@ -3,11 +3,18 @@ name: Release
 # Tag a commit (on any branch) to build and publish that snapshot.
 #   git tag 0.9.4-65 && git push origin 0.9.4-65
 # The tagged commit decides what gets built.
+#
+# A tag starting with `test` is a DRY RUN: the full matrix builds and the MSI is
+# generated and smoke-tested exactly as for a real release, but no GitHub Release is
+# created and nothing is uploaded to one -- the packages are attached to the workflow
+# run as downloadable artifacts instead. Use it to validate packaging changes:
+#   git tag -f test && git push -f origin test
 on:
   push:
     tags:
       - 'v*'
       - '[0-9]*'            # bare version tags too, e.g. 0.9.4-65
+      - 'test*'             # dry run: build + smoke-test, publish nothing
   workflow_dispatch:        # manual run builds artifacts without publishing
 
 # Only one release run per ref at a time. If the tag is moved (re-release), the
@@ -31,7 +38,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Create release with CHANGELOG notes
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') && !startsWith(github.ref_name, 'test')
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
@@ -79,29 +86,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Set up JDK 21 (Temurin)
+      - name: Set up JDK 25 (Temurin)
         uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: '25'
           cache: maven
 
       - name: Install deb/rpm tooling (Linux)
         if: runner.os == 'Linux'
         run: sudo apt-get update && sudo apt-get install -y rpm fakeroot binutils
 
-      - name: Ensure WiX 3.14 on PATH (Windows, for the .msi installer)
+      - name: Install WiX 6 (Windows, for the .msi installer)
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          # windows-latest already ships WiX 3.14; install (unpinned, no downgrade)
-          # only if candle.exe is missing, then make sure its bin is on PATH so
-          # jpackage can find candle/light.
-          $bin = "C:\Program Files (x86)\WiX Toolset v3.14\bin"
-          if (-not (Test-Path (Join-Path $bin "candle.exe"))) {
-            choco install wixtoolset -y --no-progress
-          }
-          if (Test-Path $bin) { $bin | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8 }
+          # jpackage 25 drives the WiX 4+ `wix` CLI (it no longer supports the WiX 3
+          # candle/light). Pin 6.0.2: it is the newest release usable here, because
+          # WiX 7 refuses to run until its Open Source Maintenance Fee EULA is
+          # accepted (error WIX7015). The extensions jpackage passes with -ext must
+          # be registered explicitly, per wix version.
+          dotnet tool install --global wix --version 6.0.2
+          if ($LASTEXITCODE -ne 0) { throw "installing the wix dotnet tool failed" }
+          "$env:USERPROFILE\.dotnet\tools" | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
+          $env:PATH = "$env:USERPROFILE\.dotnet\tools;$env:PATH"
+          wix extension add --global WixToolset.Util.wixext/6.0.2
+          wix extension add --global WixToolset.UI.wixext/6.0.2
+          wix --version
 
       - name: Package
         shell: pwsh
@@ -222,7 +233,7 @@ jobs:
           }
 
       - name: Upload to release
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') && !startsWith(github.ref_name, 'test')
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
@@ -231,3 +242,13 @@ jobs:
           $files = Get-ChildItem out -File | ForEach-Object { $_.FullName }
           gh release upload "$tag" $files --clobber
           if ($LASTEXITCODE -ne 0) { throw "gh release upload failed" }
+
+      # Dry runs (a `test*` tag or a manual dispatch) publish nothing, so attach the
+      # packages to the workflow run instead -- that is how you get the built .msi.
+      - name: Upload packages as workflow artifacts (dry run)
+        if: ${{ !startsWith(github.ref, 'refs/tags/') || startsWith(github.ref_name, 'test') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages-${{ matrix.os }}
+          path: out/
+          retention-days: 14

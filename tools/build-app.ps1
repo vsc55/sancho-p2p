@@ -104,11 +104,14 @@ $jpArgs = @(
 # UUID (which, together with the build-number-bumped $appVersion above, lets a new
 # release replace the installed one), and the custom WiX (packaging/windows/wix)
 # that offers the optional .torrent/ed2k/magnet/sig2dat association registration.
-# Per-machine install (default) -> associations land in HKLM. Requires WiX 3.14.
+# Per-machine install (default) -> associations land in HKLM. Requires JDK 25 +
+# WiX 6 (the `wix` dotnet tool), which is what jpackage 25 drives.
 $wixWork = Join-Path $root "target/wix-work"
+$jpLog = Join-Path $root "target/jpackage-msi.log"
+$isWindowsMsi = ($Type -eq "msi") -and ($IsWindows -or $env:OS -eq "Windows_NT")
 if (($Type -eq "msi" -or $Type -eq "exe") -and ($IsWindows -or $env:OS -eq "Windows_NT")) {
-    # --temp keeps jpackage's WiX intermediates (wixobj/config/app image) so the
-    # multilingual post-step below can re-light them; the dir must not pre-exist.
+    # --temp keeps jpackage's WiX intermediates (config/ + the app image) so the
+    # multilingual post-step below can rebuild them; the dir must not pre-exist.
     if (Test-Path $wixWork) { Remove-Item -Recurse -Force $wixWork }
     $jpArgs += @(
         "--win-menu", "--win-menu-group", "Sancho",
@@ -118,10 +121,22 @@ if (($Type -eq "msi" -or $Type -eq "exe") -and ($IsWindows -or $env:OS -eq "Wind
         "--resource-dir", (Join-Path $root "packaging/windows/wix"),
         "--temp", $wixWork
     )
+    # wix-multilang.ps1 replays jpackage's own `wix build` per language, and recovers
+    # that command line (and its working directory) from this verbose log.
+    if ($isWindowsMsi) { $jpArgs += "--verbose" }
 }
 
-jpackage @jpArgs
-if ($LASTEXITCODE -ne 0) { throw "jpackage failed" }
+if ($isWindowsMsi) {
+    # Verbose output is long; keep it in the log and only surface it if jpackage fails.
+    jpackage @jpArgs *>&1 | Set-Content -Encoding UTF8 $jpLog
+    if ($LASTEXITCODE -ne 0) {
+        Get-Content $jpLog -Tail 40 | ForEach-Object { Write-Host $_ }
+        throw "jpackage failed (full log: $jpLog)"
+    }
+} else {
+    jpackage @jpArgs
+    if ($LASTEXITCODE -ne 0) { throw "jpackage failed" }
+}
 
 # jpackage names the installer sancho-<appVersion>.<ext>; rename it to carry the full
 # project version (with build number) so the local artifact is sancho-0.9.4-66.msi.
@@ -135,12 +150,13 @@ if (($Type -eq "msi" -or $Type -eq "exe") -and ($fullVersion -ne $appVersion)) {
 
 # Fold every UI language into that single .msi (embedded transforms auto-applied by
 # the OS language). Reuses jpackage's WiX intermediates left in target/wix-work.
-if ($Type -eq "msi" -and ($IsWindows -or $env:OS -eq "Windows_NT")) {
+if ($isWindowsMsi) {
     Write-Host "==> building multilingual installer"
     & (Join-Path $PSScriptRoot "wix-multilang.ps1") `
         -WorkDir $wixWork `
         -LangDir (Join-Path $root "packaging/windows/wix-lang") `
-        -OutFile $installerMsi
+        -OutFile $installerMsi `
+        -JpLog $jpLog
     if ($LASTEXITCODE) { throw "wix-multilang.ps1 failed" }
 }
 

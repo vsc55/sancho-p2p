@@ -3,21 +3,25 @@
      WiX dialogs/buttons come from WixUIExtension's it-IT culture. The last string is
      the custom associations checkbox in ShortcutPromptDlg.wxs.
      Keep [ProductName]/[INSTALLDIR]/{\Font} tokens and the *Bitmap value verbatim. -->
-<WixLocalization Culture="it-it" xmlns="http://schemas.microsoft.com/wix/2006/localization" Codepage="1252">
-  <String Id="message.install.dir.exist">La cartella [INSTALLDIR] esiste già. Installare comunque in tale cartella?</String>
-  <String Id="MainFeatureTitle">Funzionalità principale</String>
-  <String Id="DowngradeErrorMessage">È già installata una versione più recente di [ProductName]. I downgrade sono disabilitati. L'installazione verrà chiusa.</String>
-  <String Id="DisallowUpgradeErrorMessage">È già installata una versione precedente di [ProductName]. Gli aggiornamenti sono disabilitati. L'installazione verrà chiusa.</String>
+<WixLocalization xmlns="http://wixtoolset.org/schemas/v4/wxl" Culture="it-it" Codepage="1252">
+  <String Id="MainFeatureTitle" Value="Funzionalità principale" />
+  <String Id="DowngradeErrorMessage" Value="È già installata una versione più recente di [ProductName]. I downgrade sono disabilitati. L'installazione verrà chiusa." />
+  <String Id="DisallowUpgradeErrorMessage" Value="È già installata una versione precedente di [ProductName]. Gli aggiornamenti sono disabilitati. L'installazione verrà chiusa." />
 
-  <String Id="ShortcutPromptDlg_Title">Installazione di [ProductName]</String>
-  <String Id="ShortcutPromptDlgTitle">{\WixUI_Font_Title}Collegamenti</String>
-  <String Id="ShortcutPromptDlgBannerBitmap">WixUI_Bmp_Banner</String>
-  <String Id="ShortcutPromptDlgDescription">Seleziona i collegamenti da creare.</String>
-  <String Id="ShortcutPromptDlgDesktopShortcutControlLabel">Crea collegamento/i sul desktop</String>
-  <String Id="ShortcutPromptDlgStartMenuShortcutControlLabel">Crea collegamento/i nel menu Start</String>
-  <String Id="InstallDirNotEmptyDlg_Title">Installazione di [ProductName]</String>
-  <String Id="ContextMenuCommandLabel">Apri con [ProductName]</String>
+  <String Id="ShortcutPromptDlg_Title" Value="Installazione di [ProductName]" />
+  <String Id="ShortcutPromptDlgTitle" Value="{\WixUI_Font_Title}Collegamenti" />
+  <String Id="ShortcutPromptDlgBannerBitmap" Value="WixUI_Bmp_Banner" />
+  <String Id="ShortcutPromptDlgDescription" Value="Seleziona i collegamenti da creare." />
+  <String Id="ShortcutPromptDlgDesktopShortcutControlLabel" Value="Crea collegamento/i sul desktop" />
+  <String Id="ShortcutPromptDlgStartMenuShortcutControlLabel" Value="Crea collegamento/i nel menu Start" />
+
+  <String Id="InstallDirNotEmptyDlg_Title" Value="Installazione di [ProductName]" />
+  <String Id="InstallDirNotEmptyDlgInstallDirExistMessage" Value="La cartella [INSTALLDIR] esiste già. Installare comunque in tale cartella?" />
+
+  <String Id="ContextMenuCommandLabel" Value="Apri con [ProductName]" />
+
+  <String Id="OsConditionMessage" Value="[ProductName][ProductVersion] non è supportato in questa versione di Windows" />
 
   <!-- Sancho custom: the file/URL association checkbox. -->
-  <String Id="SanchoRegisterAssociationsLabel">Associa i file .torrent e i link ed2k:, magnet:, sig2dat: per aprirli con Sancho</String>
+  <String Id="SanchoRegisterAssociationsLabel" Value="Associa i file .torrent e i link ed2k:, magnet:, sig2dat: per aprirli con Sancho" />
 </WixLocalization>

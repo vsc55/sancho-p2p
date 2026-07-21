@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  jpackage's main.wxs includes this file inside <Wix> before <Product>, where only
-  preprocessor content is valid. We don't need anything here (the association
-  registry lives in a Fragment in main.wxs), but the file must exist so the
-  include resolves.
--->
-<Include/>
