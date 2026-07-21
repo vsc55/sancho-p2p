@@ -205,7 +205,7 @@ for preservation only; the maintained Linux artifacts are the `.deb`/`.rpm`/app-
 
 | Workflow | Trigger | Does |
 |---|---|---|
-| `build.yml` | push to `main` (ignores `**.md`, `appimage/**`; skips `Release …` commits), PRs, manual | `mvn -B -ntp clean package` on Ubuntu/JDK 21 (regression guard) |
+| `build.yml` | push to `main` (ignores `**.md`, `appimage/**`; skips `Release …` commits), PRs, manual | `mvn -B -ntp clean package` on Ubuntu/JDK 25 (regression guard) |
 | `release.yml` | push of tag `v*` or `[0-9]*`; `test*` tag or manual = dry run | Creates the release with `CHANGELOG.md` notes, a Win/Linux/macOS matrix (JDK 25; Windows also installs the WiX 6 dotnet tool) packaging the multilingual MSI + ZIP/DEB/RPM/DMG + uber-jars, a multilingual-MSI check + MSI smoke-test, and uploads 8 assets |
 
 **Dry-running a packaging change:** push a tag starting with `test` (`git tag -f test && git push -f origin test`).

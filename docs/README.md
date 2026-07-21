@@ -59,7 +59,7 @@ Releases; **internationalization** in 15 languages; **system tray**.
 
 | Technology | Version | Use |
 |---|---|---|
-| Java | **17+** (release 17; CI: JDK 21 for the build check, JDK 25 for releases) | Language and runtime (`pom.xml:21`) |
+| Java | **17+** (release 17; CI builds with JDK 25) | Language and runtime (`pom.xml:21`) |
 | SWT | 3.124.0 | Native widgets (signed fragment per OS/arch) (`pom.xml:25`) |
 | JFace | 3.31.0 **unsigned** | Viewers/preferences (local unsigned artifact; see Architecture) (`pom.xml:55-59`) |
 | GNU Trove | 2.1.0 | Primitive collections (`TIntObjectHashMap`, …) (`pom.xml:61-65`) |

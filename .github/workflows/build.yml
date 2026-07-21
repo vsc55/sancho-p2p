@@ -25,11 +25,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Set up JDK 21 (Temurin)
+      # Same JDK as the release workflow, so the regression check compiles on exactly
+      # what ships. The pom pins `release 17`, so the bytecode is 17 either way.
+      - name: Set up JDK 25 (Temurin)
         uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: '25'
           cache: maven
 
       # The pom's OS/arch profiles auto-select the SWT fragment; a Linux build is
