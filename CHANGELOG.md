@@ -8,6 +8,22 @@ The upstream project's original changelog (2004–2006) is preserved at
 authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 (`git checkout 0.9.4-23`).
 
+## [Unreleased]
+
+### Fixed
+
+- **Sancho could not see — or repair — a file/URL association left behind by an uninstall.**
+  `WinRegAssociations.level()` treated any `shell\open\command` naming `sancho.exe` as correctly
+  registered without checking that the executable still exists, so an association pointing at a
+  removed or moved install reported as fine: the *Windows Registry* preference page showed it as
+  registered and the startup check ignored it (it only offers the ones at `Level.NONE`). The state is
+  easy to reach and breaks the association outright — the app registers under `HKCU` (which needs no
+  elevation) while the MSI registers under `HKLM`, and since `HKCU` shadows `HKLM`, uninstalling
+  leaves a user-level key aimed at a deleted executable that *also* hides the machine-level entry a
+  later reinstall writes. Clicking a `.torrent` then silently does nothing. The association level now
+  verifies the command's executable is still on disk and reports it as not registered otherwise, so
+  the startup check offers to recreate it.
+
 ## [0.9.10] — 2026-07-21
 
 ### Changed
