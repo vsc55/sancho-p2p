@@ -90,7 +90,9 @@ diagrams):
 ## 🔧 Building
 
 Requires **JDK 17+** and Maven; the pom auto-selects the SWT fragment for your OS/arch
-(verified in CI on Windows, Linux and macOS).
+(verified in CI on Windows, Linux and macOS). Building the Windows `.msi` installer
+additionally needs **JDK 25** and **WiX 6** — see
+[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for the packaging toolchain.
 
 ```bash
 mvn clean package    # -> target/sancho-<version>.jar (+ the self-contained -all uber-jar)
