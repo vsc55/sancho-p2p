@@ -112,15 +112,28 @@ public class WinRegAssociations {
    }
 
    // The current association level of a Software\Classes key ("ed2k", "bittorrent", ...).
+   // A command naming our exe only counts while that exe is still there: uninstalling (or
+   // moving) an install leaves the user-level key behind pointing at a deleted file, and
+   // since HKCU shadows HKLM that stale entry also hides a perfectly good machine-level
+   // registration (the one the MSI writes). Reporting it as NONE is both honest — the
+   // association does not work — and useful: missingItems() then offers to recreate it.
    public static Level level(String progId) {
       String userCommand = queryCommand("HKCU", progId);
       if (userCommand != null) {
-         return referencesSancho(userCommand) ? Level.SANCHO_USER : Level.OTHER_USER;
+         if (!referencesSancho(userCommand)) {
+            return Level.OTHER_USER;
+         }
+
+         return commandExeExists(userCommand) ? Level.SANCHO_USER : Level.NONE;
       }
 
       String machineCommand = queryCommand("HKLM", progId);
       if (machineCommand != null) {
-         return referencesSancho(machineCommand) ? Level.SANCHO_MACHINE : Level.OTHER_MACHINE;
+         if (!referencesSancho(machineCommand)) {
+            return Level.OTHER_MACHINE;
+         }
+
+         return commandExeExists(machineCommand) ? Level.SANCHO_MACHINE : Level.NONE;
       }
 
       return Level.NONE;
@@ -128,6 +141,26 @@ public class WinRegAssociations {
 
    private static boolean referencesSancho(String command) {
       return command.toLowerCase().contains(VersionInfo.getName().toLowerCase() + ".exe");
+   }
+
+   // Whether the executable a shell\open\command would launch still exists on disk.
+   private static boolean commandExeExists(String command) {
+      String exe = commandExe(command);
+      return exe != null && new File(exe).isFile();
+   }
+
+   // The executable out of a shell\open\command value: the first quoted token (the form we
+   // and every installer write, since the path contains spaces), else the text up to the
+   // first space. Returns null when the value is malformed.
+   private static String commandExe(String command) {
+      String trimmed = command.trim();
+      if (trimmed.startsWith("\"")) {
+         int closing = trimmed.indexOf('"', 1);
+         return closing > 1 ? trimmed.substring(1, closing) : null;
+      }
+
+      int space = trimmed.indexOf(' ');
+      return space > 0 ? trimmed.substring(0, space) : (trimmed.isEmpty() ? null : trimmed);
    }
 
    // Read the default value of <hive>\Software\Classes\<progId>\shell\open\command via
