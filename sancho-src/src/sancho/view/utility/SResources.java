@@ -785,26 +785,40 @@ public class SResources {
       return createActiveImage(null, descriptor.getImageData());
    }
 
+   // Build the "highlighted" variant of a tab button (shown on hover / when active) by
+   // brightening every visible pixel and leaving the transparent ones alone.
+   //
+   // A pixel is transparent either via the palette's transparentPixel (indexed GIF/PNG)
+   // OR via the alpha channel (32-bit RGBA PNG). The previous version only honoured
+   // transparentPixel, so on modern SWT — which loads RGBA PNGs with an alpha channel and
+   // transparentPixel = -1 — the fully transparent background counted as "visible" and got
+   // painted with whatever RGB sat under the transparent pixels: a black or white box
+   // behind the small transfers/search/console icons (the only 32-bit ones). Honouring the
+   // alpha channel too, and writing the result as a fresh 32-bit image so per-pixel alpha
+   // (including anti-aliased edges) is preserved, fixes it for both icon formats.
    public static Image createActiveImage(Display display, ImageData imageData) {
-      Image image = new Image(display, imageData);
-      GC gc = new GC(image);
-      PaletteData palette = imageData.palette;
+      PaletteData sourcePalette = imageData.palette;
+      PaletteData rgbaPalette = new PaletteData(0xFF0000, 0xFF00, 0xFF);
+      ImageData active = new ImageData(imageData.width, imageData.height, 24, rgbaPalette);
+      active.alphaData = new byte[imageData.width * imageData.height];
 
       for (int x = 0; x < imageData.width; x++) {
          for (int y = 0; y < imageData.height; y++) {
             int pixel = imageData.getPixel(x, y);
-            RGB rgb = palette.getRGB(pixel);
-            if (pixel != imageData.transparentPixel) {
-               Color color = WidgetFactory.changeColor(rgb, 20, 255);
-               gc.setForeground(color);
-               gc.drawPoint(x, y);
-               color.dispose();
+            int alpha = pixel == imageData.transparentPixel ? 0 : imageData.getAlpha(x, y);
+            if (alpha == 0) {
+               active.setAlpha(x, y, 0);
+               continue;
             }
+
+            Color color = WidgetFactory.changeColor(sourcePalette.getRGB(pixel), 20, 255);
+            active.setPixel(x, y, rgbaPalette.getPixel(color.getRGB()));
+            active.setAlpha(x, y, alpha);
+            color.dispose();
          }
       }
 
-      gc.dispose();
-      return image;
+      return new Image(display, active);
    }
 
    private static ImageDescriptor createRawImage(String path) {
