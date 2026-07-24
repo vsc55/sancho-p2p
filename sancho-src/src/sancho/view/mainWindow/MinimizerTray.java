@@ -72,27 +72,13 @@ public class MinimizerTray extends Minimizer implements DisposeListener, IMenuLi
          this.trayItem.addSelectionListener(new SelectionAdapter() {
             public void widgetDefaultSelected(SelectionEvent event) {
                if (!PreferenceLoader.loadBoolean("systraySingleClick")) {
-                  if (MinimizerTray.this.shell.isVisible()) {
-                     MinimizerTray.this.hide();
-                  } else {
-                     MinimizerTray.this.restore();
-                     if (MinimizerTray.this.shell.getMinimized()) {
-                        MinimizerTray.this.shell.setMinimized(false);
-                     }
-                  }
+                  MinimizerTray.this.toggleFromTray();
                }
             }
 
             public void widgetSelected(SelectionEvent event) {
                if (PreferenceLoader.loadBoolean("systraySingleClick")) {
-                  if (MinimizerTray.this.shell.isVisible()) {
-                     MinimizerTray.this.hide();
-                  } else {
-                     MinimizerTray.this.restore();
-                     if (MinimizerTray.this.shell.getMinimized()) {
-                        MinimizerTray.this.shell.setMinimized(false);
-                     }
-                  }
+                  MinimizerTray.this.toggleFromTray();
                }
             }
          });
@@ -151,6 +137,24 @@ public class MinimizerTray extends Minimizer implements DisposeListener, IMenuLi
 
    public boolean minimize() {
       return this.minimize(false);
+   }
+
+   // Hide/restore toggle driven by a tray click. Ignored until the main window has
+   // finished loading, so a click during the splash cannot restore a half-built window
+   // (the tray icon already exists then, to support starting minimized to the tray).
+   private void toggleFromTray() {
+      if (!this.mainWindow.isGuiReady()) {
+         return;
+      }
+
+      if (this.shell.isVisible()) {
+         this.hide();
+      } else {
+         this.restore();
+         if (this.shell.getMinimized()) {
+            this.shell.setMinimized(false);
+         }
+      }
    }
 
    public void restore() {

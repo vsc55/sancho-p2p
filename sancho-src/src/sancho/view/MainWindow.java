@@ -84,6 +84,11 @@ public class MainWindow implements ShellListener, MyObserver, DisposeListener {
    private DownloadCompleteDialog downloadCompleteDialog;
    private DNDBox dndBox;
    private boolean closing;
+   // False until the constructor has finished building the tabs and opened the window.
+   // The tray icon is created early (so a start-in-tray launch can hide to it before the
+   // tabs exist), and the splash pumps the event loop while tabs are created, so without
+   // this guard a tray double-click during startup restores a half-built, empty window.
+   private volatile boolean guiReady;
 
    public MainWindow(Display display) {
       Sancho.bHasLoaded = true;
@@ -177,6 +182,9 @@ public class MainWindow implements ShellListener, MyObserver, DisposeListener {
 
       // Windows only: if some file/URL associations are missing, offer to create them.
       AssociationChecker.checkAndPrompt(this.shell);
+
+      // The window is fully built and opened now, so the tray icon may act on clicks.
+      this.guiReady = true;
 
       try {
          while (!this.shell.isDisposed()) {
@@ -552,6 +560,12 @@ public class MainWindow implements ShellListener, MyObserver, DisposeListener {
 
    public Minimizer getMinimizer() {
       return this.minimizer;
+   }
+
+   // Whether startup has finished (tabs built, window opened). The tray icon ignores
+   // clicks until then, so it cannot restore a half-constructed window during the splash.
+   public boolean isGuiReady() {
+      return this.guiReady;
    }
 
    public void setVisible(boolean visible) {
