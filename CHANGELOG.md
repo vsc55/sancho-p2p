@@ -8,6 +8,23 @@ The upstream project's original changelog (2004–2006) is preserved at
 authentic early **0.9.4-23** source lives at the `0.9.4-23` tag
 (`git checkout 0.9.4-23`).
 
+## [0.9.12] — 2026-07-24
+
+### Fixed
+
+- **Section-button icons no longer show a black or white box when active or hovered.** The
+  highlighted button image is generated at runtime by brightening the base icon's non-transparent
+  pixels, but transparency was detected only through the palette's `transparentPixel` (index-based,
+  as in indexed GIF/PNG). Modern SWT loads 32-bit RGBA PNGs with an alpha channel instead, so the
+  three 32-bit icons (Transfers, Search, Console — the only ones affected) had their transparent
+  background painted: a dark box for Transfers/Console, a white one for Search. The generator now
+  also honours alpha-channel transparency and preserves per-pixel alpha; indexed icons are unchanged.
+- **The tray icon no longer opens a half-built window during startup.** Double-clicking the tray icon
+  while the loading splash was still up restored an empty window with no work area — the tray exists
+  early (to support starting minimized to it) and the splash pumps the event loop while tabs are
+  created, so the click was handled mid-construction. Tray clicks are now ignored until startup has
+  finished building the tabs and opening the window.
+
 ## [0.9.11] — 2026-07-21
 
 ### Fixed
